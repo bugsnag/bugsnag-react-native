@@ -1,0 +1,23 @@
+source 'https://github.com/CocoaPods/Specs'
+
+workspace 'examples.xcworkspace'
+
+target 'examples' do
+  pod 'Bugsnag'
+end
+
+target 'BugsnagReactNative' do
+  project '../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj'
+  pod 'Bugsnag'
+end
+
+post_install do |installer|
+  require 'pry'
+  binding.pry
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+	  puts config.build_settings
+	  # config.build_settings['HEADER_SEARCH_PATHS'] << '$(SRCROOT)/../../react-native/React'
+    end
+  end
+end
