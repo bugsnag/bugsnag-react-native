@@ -7,25 +7,35 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  NativeModules,
   StyleSheet,
   Text,
   View
 } from 'react-native';
+import Button from 'react-native-button';
 
 class examples extends Component {
+  _raiseJavaError() {
+    NativeModules.CrashyCrashy.generateCrash();
+  }
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          BUGSNAG TEST APP!
         </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
+        <Button
+          containerStyle={styles.crashy}
+          style={styles.crash}
+          onPress={() => this._handlePress()}>
+          JS CRASH!
+        </Button>
+        <Button
+          containerStyle={styles.crashy}
+          style={styles.crash}
+          onPress={() => this._raiseJavaError ()}>
+          JAVA CRASH!
+        </Button>
       </View>
     );
   }
@@ -39,14 +49,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   welcome: {
-    fontSize: 20,
+    fontSize: 24,
     textAlign: 'center',
     margin: 10,
   },
-  instructions: {
+  crashy: {
+    padding:10,
+    height:64,
+    overflow:'hidden',
+    borderRadius:4,
+  },
+  crash: {
     textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    fontSize: 32,
+    color: 'red',
   },
 });
 
