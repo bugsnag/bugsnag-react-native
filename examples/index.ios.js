@@ -18,7 +18,7 @@ class examples extends Component {
   render() {
     this.client.leaveBreadcrumb('load main view',
         {type: 'navigation', firstLaunch: 'no'});
-    this.client.notify(new Error('Hello Bugsnag from React Native'));
+    this.client.setUser('123', 'John Jones');
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>

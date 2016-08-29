@@ -71,9 +71,10 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
 }
 
 RCT_EXPORT_METHOD(setUser:(NSDictionary *)userInfo) {
-    [[Bugsnag configuration] setUser:[RCTConvert NSString:userInfo[@"id"]]
-                            withName:[RCTConvert NSString:userInfo[@"name"]]
-                            andEmail:[RCTConvert NSString:userInfo[@"email"]]];
+    NSString *identifier = userInfo[@"id"] ? [RCTConvert NSString:userInfo[@"id"]] : nil;
+    NSString *name = userInfo[@"name"] ? [RCTConvert NSString:userInfo[@"name"]] : nil;
+    NSString *email = userInfo[@"email"] ? [RCTConvert NSString:userInfo[@"email"]] : nil;
+    [[Bugsnag configuration] setUser:identifier withName:name andEmail:email];
 }
 
 RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
