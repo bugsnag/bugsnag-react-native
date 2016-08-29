@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.lang.String;
+import java.lang.NumberFormatException;
+import java.io.IOException;
 
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
@@ -25,6 +27,8 @@ import com.bugsnag.android.*;
 public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   private ReactContext reactContext;
+  private String libraryVersion;
+  private String bugsnagAndroidVersion;
 
   public static ReactPackage getPackage() {
     return new BugsnagPackage();
@@ -33,6 +37,8 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   public BugsnagReactNative(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+    libraryVersion = null;
+    bugsnagAndroidVersion = null;
   }
 
   @Override
@@ -42,7 +48,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void startWithOptions(ReadableMap options) {
-      Bugsnag.init(this.reactContext, options.getString("apiKey"), true);
+      libraryVersion = options.getString("version");
+      Configuration config = createConfiguration(options);
+      bugsnagAndroidVersion = config.getClass().getPackage().getSpecificationVersion();
+
+      Bugsnag.init(this.reactContext, config);
   }
 
   @ReactMethod
@@ -54,14 +64,13 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void notify(ReadableMap payload) {
-      Exception exception = new Exception(payload.getString("errorMessage"));
-      // parse stacktrace
-      // merge metadata
-      // set context
-      // set groupingHash
-      Bugsnag.notify(exception,
-                     parseSeverity(payload.getString("severity")),
-                     new MetaData(readObjectMap(payload.getMap("metadata"))));
+      JavaScriptException exc = JavaScriptException(payload.getString("errorClass"),
+                                                    payload.getString("errorMessage"),
+                                                    payload.getString("stacktrace"));
+
+      Bugsnag.notify(exc, new DiagnosticsCallback(libraryVersion,
+                                                  bugsnagAndroidVersion,
+                                                  payload));
   }
 
   @ReactMethod
@@ -74,7 +83,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   /**
    * Convert a typed map into a string Map
    */
-  Map<String, String> readStringMap(ReadableMap map) {
+  private Map<String, String> readStringMap(ReadableMap map) {
     Map output = new HashMap<String,String>();
     ReadableMapKeySetIterator iterator = map.keySetIterator();
     while (iterator.hasNextKey()) {
@@ -85,36 +94,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     return output;
   }
 
-  /**
-   * Convert a typed map from JS into a Map
-   */
-  Map<String, Object> readObjectMap(ReadableMap map) {
-    Map output = new HashMap<String, Object>();
-    ReadableMapKeySetIterator iterator = map.keySetIterator();
-
-    while (iterator.hasNextKey()) {
-        String key = iterator.nextKey();
-        ReadableMap pair = map.getMap(key);
-        switch (pair.getString("type")) {
-            case "boolean":
-                output.put(key, pair.getBoolean("value"));
-                break;
-            case "number":
-                output.put(key, pair.getDouble("value"));
-                break;
-            case "string":
-                output.put(key, pair.getString("value"));
-                break;
-            case "map":
-                output.put(key, readObjectMap(pair.getMap("value")));
-                break;
-        }
-    }
-
-    return output;
-  }
-
-  BreadcrumbType parseBreadcrumbType(String value) {
+  private BreadcrumbType parseBreadcrumbType(String value) {
     for (BreadcrumbType type : BreadcrumbType.values()) {
         if (type.toString().equals(value)) {
             return type;
@@ -123,14 +103,27 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     return BreadcrumbType.MANUAL;
   }
 
-  Severity parseSeverity(String value) {
-      switch (value) {
-        case "error": return Severity.ERROR;
-        case "info": return Severity.INFO;
-        case "warning":
-        default:
-            return Severity.WARNING;
+  private Configuration createConfiguration(ReadableMap options) {
+      final String endpoint = options.getString("endpoint");
+      final String releaseStage = options.getString("releaseStage");
+
+      Configuration config = new Configuration(options.getString("apiKey"));
+
+      if (endpoint != null && endpoint.length() > 0)
+          config.setEndpoint(endpoint);
+      if (releaseStage != null && releaseStage.length() > 0)
+          config.setReleaseStage(releaseStage);
+
+      ReadableArray stages = options.getArray("notifyReleaseStages");
+      if (stages != null && stages.size() > 0) {
+          String releaseStages[] = new String[stages.size()];
+          for (int i = 0; i < stages.size(); i++) {
+            releaseStages[i] = stages.getString(i);
+          }
+          config.setNotifyReleaseStages(stages);
       }
+
+      return config;
   }
 }
 
@@ -152,4 +145,131 @@ class BugsnagPackage implements ReactPackage {
           ReactApplicationContext reactContext) {
     return Arrays.<NativeModule>asList(new BugsnagReactNative(reactContext));
   }
+}
+
+/**
+ * Attaches report diagnostics before delivery
+ */
+class DiagnosticsCallback extends Callback {
+    static final String NOTIFIER_NAME = "Bugsnag for React Native";
+    static final String NOTIFIER_URL = "https://github.com/bugsnag/bugsnag-react-native";
+
+    final private Severity severity;
+    final private String context;
+    final private String groupingHash;
+    final private MetaData metadata;
+    final private String libraryVersion;
+    final private String bugsnagAndroidVersion;
+
+    DiagnosticsCallback(String libraryVersion,
+                        String bugsnagAndroidVersion,
+                        ReadableMap payload) {
+        this.libraryVersion = libraryVersion;
+        this.bugsnagAndroidVersion = bugsnagAndroidVersion;
+        severity = parseSeverity(payload.getString("severity"));
+        context = payload.getString("context");
+        groupingHash = payload.getString("groupingHash");
+        metadata = new MetaData(readObjectMap(payload.get("metadata")));
+    }
+
+    Severity parseSeverity(String value) {
+        switch (value) {
+            case "error": return Severity.ERROR;
+            case "info": return Severity.INFO;
+            case "warning":
+            default:
+                return Severity.WARNING;
+        }
+    }
+
+    /**
+     * Convert a typed map from JS into a Map
+     */
+    Map<String, Object> readObjectMap(ReadableMap map) {
+        Map output = new HashMap<String, Object>();
+        ReadableMapKeySetIterator iterator = map.keySetIterator();
+
+        while (iterator.hasNextKey()) {
+            String key = iterator.nextKey();
+            ReadableMap pair = map.getMap(key);
+            switch (pair.getString("type")) {
+                case "boolean":
+                    output.put(key, pair.getBoolean("value"));
+                    break;
+                case "number":
+                    output.put(key, pair.getDouble("value"));
+                    break;
+                case "string":
+                    output.put(key, pair.getString("value"));
+                    break;
+                case "map":
+                    output.put(key, readObjectMap(pair.getMap("value")));
+                    break;
+            }
+        }
+
+        return output;
+    }
+
+    @Override
+    public void beforeNotify(Report report) {
+        report.setNotifierName(NOTIFIER_NAME);
+        report.setNotifierURL(NOTIFIER_URL);
+        report.setNotifierVersion(String.format("%s (Android %s)",
+                                                libraryVersion,
+                                                bugsnagAndroidVersion));
+
+        report.severity = severity;
+        if (groupingHash != null && groupingHash.length > 0)
+            report.setGroupingHash(groupingHash);
+        if (context != null && context.length > 0)
+            report.setContext(context);
+        if (metadata != null)
+            report.setMetaData(MetaData.merge(report.getMetaData(), metadata));
+    }
+}
+
+/**
+ * Creates a streamable exception with a JavaScript stacktrace
+ */
+class JavaScriptException extends Exception implements JsonStream.Streamable {
+    private final String name;
+    private final String rawStacktrace;
+
+    JavaScriptException(String name, String message, String rawStacktrace) {
+        super(message);
+        this.name = name;
+        this.rawStacktrace = rawStacktrace;
+    }
+
+    void toStream(JsonStream writer) throws IOException {
+        writer.name("errorClass").value(name);
+        writer.name("message").value(getLocalizedMessage());
+
+        writer.name("stacktrace");
+        writer.beginArray();
+        for (String rawFrame : rawStacktrace.split("\\n")) {
+            String methodComponents[] = rawFrame.split("@");
+            if (methodComponents.length == 2) {
+                String components[] = components[1].split(":");
+                if (components.length == 3) {
+                    int columnNumber = 0;
+                    int lineNumber = 0;
+                    try {
+                        columnNumber = Integer.parseInt(components[2]);
+                        lineNumber = Integer.parseInt(components[1]);
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+                    writer.beginObject();
+                        writer.name("method").value(methodComponents[0]);
+                        writer.name("columnNumber").value(columnNumber);
+                        writer.name("lineNumber").value(lineNumber);
+                        writer.name("file").value(components[0]);
+                    writer.endObject();
+                }
+            }
+        }
+        writer.endArray();
+    }
 }

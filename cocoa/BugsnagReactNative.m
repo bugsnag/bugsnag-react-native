@@ -44,6 +44,44 @@ NSDictionary *BSGConvertTypedNSDictionary(id rawData) {
     return converted;
 }
 
+/**
+ *  Convert a string stacktrace into individual frames
+ *
+ *  @param stacktrace a stacktrace represented as a single block
+ *
+ *  @return array of frames
+ */
+NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace) {
+    NSCharacterSet* methodSeparator = [NSCharacterSet characterSetWithCharactersInString:@"@"];
+    NSCharacterSet* locationSeparator = [NSCharacterSet characterSetWithCharactersInString:@":"];
+    NSArray *lines = [stacktrace componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    NSMutableArray *frames = [NSMutableArray arrayWithCapacity:lines.count];
+    for (NSString *line in lines) {
+        NSMutableDictionary *frame = [NSMutableDictionary new];
+        NSString *location = line;
+        NSRange methodRange = [line rangeOfCharacterFromSet:methodSeparator];
+        if (methodRange.location != NSNotFound) {
+            frame[@"method"] = [line substringToIndex:methodRange.location];
+            location = [line substringFromIndex:methodRange.location + 1];
+        }
+        NSRange search = [location rangeOfCharacterFromSet:locationSeparator options:NSBackwardsSearch];
+        if (search.location != NSNotFound) {
+            NSRange matchRange = NSMakeRange(search.location + 1, location.length - search.location - 1);
+            frame[@"columnNumber"] = [location substringWithRange:matchRange];
+            location = [location substringToIndex:search.location];
+        }
+        search = [location rangeOfCharacterFromSet:locationSeparator options:NSBackwardsSearch];
+        if (search.location != NSNotFound) {
+            NSRange matchRange = NSMakeRange(search.location + 1, location.length - search.location - 1);
+            frame[@"lineNumber"] = [location substringWithRange:matchRange];
+            location = [location substringToIndex:search.location];
+        }
+        frame[@"file"] = location;
+        [frames addObject:frame];
+    }
+    return frames;
+}
+
 @interface Bugsnag ()
 + (id)notifier;
 + (BOOL)bugsnagStarted;
@@ -59,6 +97,11 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
                               reason:[RCTConvert NSString:options[@"errorMessage"]]
                               userInfo:nil];
     [Bugsnag notify:exception block:^(BugsnagCrashReport *report) {
+        NSArray* stackframes = nil;
+        if (options[@"stacktrace"]) {
+            stackframes = BSGParseJavaScriptStacktrace([RCTConvert NSString:options[@"stacktrace"]]);
+            [report attachCustomStacktrace:stackframes withType:@"javascript"];
+        }
         if (options[@"context"])
             report.context = [RCTConvert NSString:options[@"context"]];
         if (options[@"groupingHash"])
