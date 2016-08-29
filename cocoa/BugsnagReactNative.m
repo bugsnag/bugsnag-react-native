@@ -119,12 +119,6 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     [self setNotifierDetails:[RCTConvert NSString:options[@"version"]]];
 }
 
-RCT_EXPORT_METHOD(causeNativeCrash) {
-    @throw [NSException exceptionWithName:@"Sadness"
-                                   reason:@"There weren't enough Stranger things episodes 0___0"
-                                 userInfo:nil];
-}
-
 - (void)setNotifierDetails:(NSString *)packageVersion {
     id notifier = [Bugsnag notifier];
     NSDictionary *details = [notifier valueForKey:@"details"];

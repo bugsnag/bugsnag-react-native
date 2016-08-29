@@ -9,6 +9,4 @@
 - (void)notify:(NSDictionary *)payload;
 - (void)setUser:(NSDictionary *)userInfo;
 
-- (void)causeNativeCrash;
-
 @end
