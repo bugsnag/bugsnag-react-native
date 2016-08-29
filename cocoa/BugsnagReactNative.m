@@ -65,8 +65,22 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
             report.groupingHash = [RCTConvert NSString:options[@"groupingHash"]];
         if (options[@"severity"])
             report.severity = BSGParseSeverity([RCTConvert NSString:options[@"severity"]]);
-        if (options[@"metadata"])
-            report.metaData = BSGConvertTypedNSDictionary(options[@"metadata"]);
+        if (options[@"metadata"]) {
+            NSDictionary *metadata = BSGConvertTypedNSDictionary(options[@"metadata"]);
+            NSMutableDictionary *targetMetadata = [report.metaData mutableCopy];
+            if (!targetMetadata)
+                targetMetadata = [NSMutableDictionary new];
+            for (NSString *sectionKey in metadata) {
+                NSMutableDictionary *section = [targetMetadata[sectionKey] mutableCopy];
+                if (!section)
+                    section = [NSMutableDictionary new];
+                for (NSString *key in metadata[sectionKey]) {
+                    section[key] = metadata[sectionKey][key];
+                }
+                targetMetadata[sectionKey] = section;
+            }
+            report.metaData = targetMetadata;
+        }
     }];
 }
 
