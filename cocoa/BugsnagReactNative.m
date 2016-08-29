@@ -46,6 +46,7 @@ NSDictionary *BSGConvertTypedNSDictionary(id rawData) {
 
 @interface Bugsnag ()
 + (id)notifier;
++ (BOOL)bugsnagStarted;
 @end
 
 @implementation BugsnagReactNative
@@ -84,14 +85,22 @@ RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
 }
 
 RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
-    BugsnagConfiguration *config = [BugsnagConfiguration new];
-    config.apiKey = [RCTConvert NSString:options[@"apiKey"]];
-    NSString *releaseStage = [RCTConvert NSString:options[@"releaseStage"]];
-    if ([releaseStage length] == 0) {
-        config.releaseStage = [self defaultReleaseStage];
+    NSString *apiKey = [RCTConvert NSString:options[@"apiKey"]];
+    NSString *releaseStage = [self  parseReleaseStage:[RCTConvert NSString:options[@"releaseStage"]]];
+    NSArray *notifyReleaseStages = [RCTConvert NSStringArray:options[@"notifyReleaseStages"]];
+    NSString *notifyURLPath = [RCTConvert NSString:options[@"endpoint"]];
+    BugsnagConfiguration* config = [Bugsnag bugsnagStarted] ? [Bugsnag configuration] : [BugsnagConfiguration new];
+    config.apiKey = apiKey;
+    config.releaseStage = releaseStage;
+    config.notifyReleaseStages = notifyReleaseStages;
+    if (notifyURLPath.length > 0) {
+        NSURL *notifyURL = [NSURL URLWithString:notifyURLPath];
+        if (notifyURL)
+            config.notifyURL = notifyURL;
     }
-    config.notifyReleaseStages = [RCTConvert NSStringArray:options[@"notifyReleaseStages"]];
-    [Bugsnag startBugsnagWithConfiguration:config];
+    if (![Bugsnag bugsnagStarted]) {
+        [Bugsnag startBugsnagWithConfiguration:config];
+    }
     [self setNotifierDetails:[RCTConvert NSString:options[@"version"]]];
 }
 
@@ -113,7 +122,10 @@ RCT_EXPORT_METHOD(causeNativeCrash) {
     [notifier setValue:newDetails forKey:@"details"];
 }
 
-- (NSString *)defaultReleaseStage {
+- (NSString *)parseReleaseStage:(NSString *)releaseStage {
+    if (releaseStage.length > 0)
+        return releaseStage;
+
 #ifdef DEBUG
     return @"development";
 #endif
