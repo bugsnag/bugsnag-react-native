@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react';
+import bugsnag, { Client } from 'bugsnag-react-native';
 import {
   AppRegistry,
   NativeModules,
@@ -15,9 +16,17 @@ import {
 import Button from 'react-native-button';
 
 class examples extends Component {
+
+  constructor(opts) {
+    super(opts);
+    this.client = new Client('f35a2472bd230ac0ab0f52715bbdc65d');
+    this.client.handleUncaughtErrors();
+  }
+
   _raiseJavaError() {
     NativeModules.CrashyCrashy.generateCrash();
   }
+
   render() {
     return (
       <View style={styles.container}>
