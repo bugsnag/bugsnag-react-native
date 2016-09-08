@@ -19,10 +19,4 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "examples";
     }
-
-    protected List<ReactPackage> getPackages() {
-        return Arrays.<ReactPackage>asList(
-            new MainReactPackage(), BugsnagReactNative.getPackage()
-        );
-    }
 }

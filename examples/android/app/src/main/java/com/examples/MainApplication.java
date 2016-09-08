@@ -2,6 +2,7 @@ package com.examples;
 
 import android.app.Application;
 
+import com.bugsnag.BugsnagReactNative;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -21,7 +22,7 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
-                new MainReactPackage(), new TestPackage()
+                new MainReactPackage(), new TestPackage(), BugsnagReactNative.getPackage()
             );
       }
     };
