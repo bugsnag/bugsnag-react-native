@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2EA2742CDFE98ADC5550383C /* libPods-BugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4236C0E149F051AD4F737CE1 /* libPods-BugsnagReactNative.a */; };
 		8AD256171D6DE5F600C7D842 /* BugsnagReactNative.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */; };
 		8AD256191D6DE5F600C7D842 /* BugsnagReactNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */; };
 /* End PBXBuildFile section */
@@ -26,14 +25,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4236C0E149F051AD4F737CE1 /* libPods-BugsnagReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BugsnagReactNative.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8A61F03B1D6E378C008F4C97 /* libReact.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libReact.a; path = "../examples/node_modules/react-native/React/build/Debug-iphoneos/libReact.a"; sourceTree = "<group>"; };
-		8A61F03D1D6E3B06008F4C97 /* libReact.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libReact.a; path = "../examples/node_modules/react-native/React/build/Debug-iphoneos/libReact.a"; sourceTree = "<group>"; };
 		8AD256131D6DE5F600C7D842 /* libBugsnagReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBugsnagReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BugsnagReactNative.h; sourceTree = SOURCE_ROOT; };
 		8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BugsnagReactNative.m; sourceTree = SOURCE_ROOT; };
-		E2DF6040088B7726ACA2113A /* Pods-BugsnagReactNative.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BugsnagReactNative.debug.xcconfig"; path = "../examples/ios/Pods/Target Support Files/Pods-BugsnagReactNative/Pods-BugsnagReactNative.debug.xcconfig"; sourceTree = "<group>"; };
-		EBD37156417F8F80D9FC1523 /* Pods-BugsnagReactNative.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BugsnagReactNative.release.xcconfig"; path = "../examples/ios/Pods/Target Support Files/Pods-BugsnagReactNative/Pods-BugsnagReactNative.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,7 +35,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EA2742CDFE98ADC5550383C /* libPods-BugsnagReactNative.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,8 +46,6 @@
 			children = (
 				8AD256151D6DE5F600C7D842 /* BugsnagReactNative */,
 				8AD256141D6DE5F600C7D842 /* Products */,
-				E9B4CE93682B55A71F0DF3AE /* Frameworks */,
-				E8D0A53C549F924D6C2AA5C8 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,25 +66,6 @@
 			path = BugsnagReactNative;
 			sourceTree = SOURCE_ROOT;
 		};
-		E8D0A53C549F924D6C2AA5C8 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				E2DF6040088B7726ACA2113A /* Pods-BugsnagReactNative.debug.xcconfig */,
-				EBD37156417F8F80D9FC1523 /* Pods-BugsnagReactNative.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		E9B4CE93682B55A71F0DF3AE /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				8A61F03D1D6E3B06008F4C97 /* libReact.a */,
-				8A61F03B1D6E378C008F4C97 /* libReact.a */,
-				4236C0E149F051AD4F737CE1 /* libPods-BugsnagReactNative.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -101,11 +73,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8AD2561C1D6DE5F600C7D842 /* Build configuration list for PBXNativeTarget "BugsnagReactNative" */;
 			buildPhases = (
-				B57E161DE213F8EE55519E60 /* [CP] Check Pods Manifest.lock */,
 				8AD2560F1D6DE5F600C7D842 /* Sources */,
 				8AD256101D6DE5F600C7D842 /* Frameworks */,
 				8AD256111D6DE5F600C7D842 /* CopyFiles */,
-				4DD2B530FDA17BE8271BAAD8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -146,39 +116,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		4DD2B530FDA17BE8271BAAD8 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../examples/ios/Pods/Target Support Files/Pods-BugsnagReactNative/Pods-BugsnagReactNative-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B57E161DE213F8EE55519E60 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8AD2560F1D6DE5F600C7D842 /* Sources */ = {
@@ -278,14 +215,8 @@
 		};
 		8AD2561D1D6DE5F600C7D842 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E2DF6040088B7726ACA2113A /* Pods-BugsnagReactNative.debug.xcconfig */;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/Bugsnag\"",
-					"\"${PODS_ROOT}/Headers/Public/KSCrash\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
@@ -297,14 +228,8 @@
 		};
 		8AD2561E1D6DE5F600C7D842 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EBD37156417F8F80D9FC1523 /* Pods-BugsnagReactNative.release.xcconfig */;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/Bugsnag\"",
-					"\"${PODS_ROOT}/Headers/Public/KSCrash\"",
-				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
