@@ -1,5 +1,16 @@
 #!/usr/bin/env node
-
+/**
+ * Post-installation script which vendors iOS native dependencies for
+ * bugsnag-react-native and links them as needed.
+ *
+ * Depends on:
+ * - child_process
+ * - fs
+ * - npmlog
+ * - path
+ * - react-native/local-cli/rnpm/link
+ * - xcode
+ */
 'use strict';
 
 const log = require('npmlog'),
