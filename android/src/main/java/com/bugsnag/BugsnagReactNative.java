@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.Map;
 import java.lang.String;
 import java.lang.NumberFormatException;
@@ -30,6 +31,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   private ReactContext reactContext;
   private String libraryVersion;
   private String bugsnagAndroidVersion;
+  final static Logger logger = Logger.getLogger("bugsnag-react-native");
 
   public static ReactPackage getPackage() {
     return new BugsnagPackage();
@@ -54,20 +56,31 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       bugsnagAndroidVersion = config.getClass().getPackage().getSpecificationVersion();
 
       Bugsnag.init(this.reactContext, config);
+      logger.info(String.format("Initialized Bugsnag React Native %s/Android %s",
+                  libraryVersion,
+                  bugsnagAndroidVersion));
   }
 
   @ReactMethod
   public void leaveBreadcrumb(ReadableMap options) {
-      Bugsnag.leaveBreadcrumb(options.getString("name"),
+      String name = options.getString("name");
+      logger.info(String.format("Leaving breadcrumb '%s'", name));
+      Bugsnag.leaveBreadcrumb(name,
                               parseBreadcrumbType(options.getString("type")),
                               readStringMap(options.getMap("metadata")));
   }
 
   @ReactMethod
   public void notify(ReadableMap payload) {
-      JavaScriptException exc = new JavaScriptException(payload.getString("errorClass"),
-                                                        payload.getString("errorMessage"),
-                                                        payload.getString("stacktrace"));
+      final String errorClass = payload.getString("errorClass");
+      final String errorMessage = payload.getString("errorMessage");
+      final String rawStacktrace = payload.getString("stacktrace");
+
+      logger.info(String.format("Sending exception: %s - %s\n",
+                                errorClass, errorMessage, rawStacktrace));
+      JavaScriptException exc = new JavaScriptException(errorClass,
+                                                        errorMessage,
+                                                        rawStacktrace);
 
       Bugsnag.notify(exc, new DiagnosticsCallback(libraryVersion,
                                                   bugsnagAndroidVersion,
@@ -76,6 +89,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setUser(ReadableMap userInfo) {
+      logger.info("Setting user data");
       Bugsnag.setUser(userInfo.getString("id"),
                       userInfo.getString("name"),
                       userInfo.getString("email"));
@@ -269,37 +283,55 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
     }
 
     public void toStream(JsonStream writer) throws IOException {
+        BugsnagReactNative.logger.info("Serializing exception");
+        writer.beginObject();
         writer.name("errorClass").value(name);
         writer.name("message").value(getLocalizedMessage());
 
         writer.name("stacktrace");
         writer.beginArray();
         for (String rawFrame : rawStacktrace.split("\\n")) {
-            String methodComponents[] = rawFrame.split("@");
+            writer.beginObject();
+            String methodComponents[] = rawFrame.split("@", 2);
             if (methodComponents.length == 2) {
-                String components[] = methodComponents[1].split(":");
-                if (components.length == 3) {
-                    int columnNumber = 0;
-                    int lineNumber = 0;
+                writer.name("method").value(methodComponents[0]);
+
+                String fragment = methodComponents[1];
+                int columnIndex = fragment.lastIndexOf(":");
+                if (columnIndex != -1) {
+                    String columnString = fragment.substring(columnIndex + 1, fragment.length());
                     try {
-                        columnNumber = Integer.parseInt(components[2]);
-                        lineNumber = Integer.parseInt(components[1]);
-                    } catch (NumberFormatException e) {
-                        continue;
-                    }
-                    writer.beginObject();
-                        writer.name("method").value(methodComponents[0]);
+                        int columnNumber = Integer.parseInt(columnString);
                         writer.name("columnNumber").value(columnNumber);
-                        writer.name("lineNumber").value(lineNumber);
-                        writer.name("file").value(components[0]);
-                    writer.endObject();
-                } else {
-                    throw new IOException(methodComponents[1]);
+                    } catch (NumberFormatException e) {
+                        BugsnagReactNative.logger.info(String.format(
+                                    "Failed to parse column: '%s'",
+                                    columnString));
+                    }
+                    fragment = fragment.substring(0, columnIndex);
                 }
+
+                int lineNumberIndex = fragment.lastIndexOf(":");
+                if (lineNumberIndex != -1) {
+                    String lineNumberString = fragment.substring(lineNumberIndex + 1, fragment.length());
+                    try {
+                        int lineNumber = Integer.parseInt(lineNumberString);
+                        writer.name("lineNumber").value(lineNumber);
+                    } catch (NumberFormatException e) {
+                        BugsnagReactNative.logger.info(String.format(
+                                    "Failed to parse lineNumber: '%s'",
+                                    lineNumberString));
+                    }
+                    fragment = fragment.substring(0, lineNumberIndex);
+                }
+
+                writer.name("file").value(fragment);
             } else {
-                throw new IOException(rawFrame);
+                writer.name("file").value(rawFrame);
             }
+            writer.endObject();
         }
         writer.endArray();
+        writer.endObject();
     }
 }
