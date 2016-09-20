@@ -4,18 +4,22 @@
 
 const log = require('npmlog'),
       xcode = require('xcode'),
+      PbxFile = require('xcode/lib/pbxFile'),
       fs = require('fs'),
       path = require('path'),
       spawn = require('child_process').spawn,
 
       rnpmLinkPath = path.resolve('node_modules/react-native/local-cli/rnpm/link'),
-      registerNativeModule = require(path.join(rnpmLinkPath, 'src/ios/registerNativeModule'));
+      addToHeaderSearchPaths = require(path.join(rnpmLinkPath, 'src/ios/addToHeaderSearchPaths')),
+      createGroupWithMessage = require(path.join(rnpmLinkPath, 'src/ios/createGroupWithMessage')),
+      getHeadersInFolder = require(path.join(rnpmLinkPath, 'src/ios/getHeadersInFolder')),
+      getHeaderSearchPath = require(path.join(rnpmLinkPath, 'src/ios/getHeaderSearchPath'));
 
 
 const main = function() {
   log.info("bugsnag", "installing native iOS dependencies");
   const vendorTargetPath = 'node_modules/bugsnag-react-native/cocoa/vendor',
-        mainProjectPath = 'node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj';
+        mainProjectPath = 'node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj/project.pbxproj';
 
   cloneVendorProjects(vendorTargetPath, function(err) {
     if (err) {
@@ -24,8 +28,11 @@ const main = function() {
     }
 
     log.info("bugsnag", "updating BugsnagReactNative project");
-    linkProject(mainProjectPath, vendorTargetPath);
-    addReactHeaderSearchPath(mainProjectPath);
+    var mainProject = xcode.project(mainProjectPath).parseSync();
+    linkProject(mainProject, vendorTargetPath);
+    addReactHeaderSearchPath(mainProject);
+
+    fs.writeFileSync(mainProject.filepath, mainProject.writeSync());
   });
 }
 
@@ -34,45 +41,57 @@ const parentIOSProjectPath = function() {
   return path.join('ios', name + '.xcodeproj/project.pbxproj');
 }
 
-const registerProjectAsDependency = function(mainProjectPath, dependencyPath, dependencySourceFolder) {
-  const dependencyData = {
-    'pbxprojPath': path.join(dependencyPath, 'project.pbxproj'),
-    'projectPath': dependencyPath,
-    'folder': path.normalize(path.join(dependencyPath, dependencySourceFolder)),
-    'sharedLibraries': []
-  },
-    mainProjectData = {
-      'sourceDir': path.dirname(mainProjectPath),
-      'libraryFolder': 'Libraries',
-      'pbxprojPath': path.join(mainProjectPath, 'project.pbxproj')
-  };
+const registerProjectAsDependency = function(mainProject, dependency) {
+  const dependencyProject = xcode.project(path.join(dependency.path, 'project.pbxproj')).parseSync(),
+        productsGroup = dependencyProject.pbxGroupByName('Products'),
+        libraries = createGroupWithMessage(mainProject, 'Libraries'),
+        headers = getHeadersInFolder(path.normalize(path.join(dependency.path, dependency.sourceFolder))),
+        relativePath = path.relative(path.dirname(path.dirname(mainProject.filepath)), dependency.path);
 
-  registerNativeModule(dependencyData, mainProjectData);
+  if (!mainProject.hasFile(relativePath)) {
+    const file = new PbxFile(relativePath);
+    file.uuid = mainProject.generateUuid();
+    file.fileRef = mainProject.generateUuid();
+    mainProject.addToPbxFileReferenceSection(file);
+    libraries.children.push({ value: file.fileRef, comment: file.basename });
+  }
+
+  for (var index in productsGroup.children) {
+    var child = productsGroup.children[index];
+    if (child.comment === dependency.framework) {
+      mainProject.addFramework(child.value, {customFramework: true});
+    } else {
+      log.info("bugsnag", "skipping product " + child);
+    }
+  }
+
+  if (headers && headers.length > 0) {
+    addToHeaderSearchPaths(
+      mainProject,
+      getHeaderSearchPath(path.dirname(mainProject.filepath), headers));
+  }
 }
 
-const addFramework = function(projectPath, frameworkPath) {
-  const pbxprojPath = path.join(projectPath, 'project.pbxproj'),
-        project = xcode.project(pbxprojPath).parseSync();
-
-  project.addFramework(frameworkPath);
-}
-
-const linkProject = function(mainProjectPath, vendorTargetPath) {
+const linkProject = function(mainProject, vendorTargetPath) {
   const bugsnagProjectPath = path.join(vendorTargetPath, 'iOS/Bugsnag.xcodeproj'),
-        kscrashProjectPath = path.join(vendorTargetPath, 'Carthage/Checkouts/KSCrash/iOS/KSCrash-ios.xcodeproj'),
-        bugsnagFrameworkPath = 'System/Library/Frameworks/Bugsnag.framework';
+        kscrashProjectPath = path.join(vendorTargetPath, 'Carthage/Checkouts/KSCrash/iOS/KSCrash-ios.xcodeproj');
 
-  registerProjectAsDependency(mainProjectPath, bugsnagProjectPath, '../Source');
-  registerProjectAsDependency(mainProjectPath, kscrashProjectPath, '../../Source');
-  addFramework(mainProjectPath, bugsnagFrameworkPath);
+  registerProjectAsDependency(mainProject, {
+    'path': bugsnagProjectPath,
+    'sourceFolder': '../Source',
+    'framework': 'Bugsnag.framework'
+  });
+  registerProjectAsDependency(mainProject, {
+    'path': kscrashProjectPath,
+    'sourceFolder': '../../Source',
+    'framework': 'KSCrash.framework'
+  });
 }
 
-const addReactHeaderSearchPath = function(mainProjectPath) {
+const addReactHeaderSearchPath = function(mainProject) {
   const searchPathKey = 'HEADER_SEARCH_PATHS',
         inherited = '"$(inherited)"',
         searchPath = '"$(SRCROOT)/../../react-native/React/**"',
-        mainPbxproj = path.resolve(path.join(mainProjectPath, 'project.pbxproj')),
-        mainProject = xcode.project(mainPbxproj).parseSync(),
         configurations = mainProject.pbxXCBuildConfigurationSection();
 
   for (var config in configurations) {
@@ -92,7 +111,6 @@ const addReactHeaderSearchPath = function(mainProjectPath) {
 
     buildSettings[searchPathKey].push(searchPath);
   }
-  fs.writeFileSync(mainPbxproj, mainProject.writeSync());
 }
 
 const cloneVendorProjects = function(vendorTargetPath, cb) {
@@ -132,6 +150,8 @@ const updateVendorSubmodules = function(vendorTargetPath, cb) {
 function unquote(str) {
   if (str)
     return str.replace(/^"(.*)"$/, "$1");
+
+  return null;
 }
 
 main();
