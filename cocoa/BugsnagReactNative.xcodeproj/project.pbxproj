@@ -41,9 +41,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8AD2560A1D6DE5F600C7D842 = {
 			isa = PBXGroup;
 			children = (
+				8AB63CFA1D918BEF0002381B /* Frameworks */,
 				8AD256151D6DE5F600C7D842 /* BugsnagReactNative */,
 				8AD256141D6DE5F600C7D842 /* Products */,
 			);
