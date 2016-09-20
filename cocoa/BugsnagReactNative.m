@@ -92,6 +92,7 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace) {
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
+    NSString *const EXCEPTION_TYPE = @"browserjs";
     NSException *exception = [NSException
                               exceptionWithName:[RCTConvert NSString:options[@"errorClass"]]
                               reason:[RCTConvert NSString:options[@"errorMessage"]]
@@ -100,7 +101,7 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
         NSArray* stackframes = nil;
         if (options[@"stacktrace"]) {
             stackframes = BSGParseJavaScriptStacktrace([RCTConvert NSString:options[@"stacktrace"]]);
-            [report attachCustomStacktrace:stackframes withType:@"javascript"];
+            [report attachCustomStacktrace:stackframes withType:EXCEPTION_TYPE];
         }
         if (options[@"context"])
             report.context = [RCTConvert NSString:options[@"context"]];

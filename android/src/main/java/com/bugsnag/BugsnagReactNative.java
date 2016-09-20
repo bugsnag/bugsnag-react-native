@@ -273,6 +273,7 @@ class DiagnosticsCallback implements Callback {
  * Creates a streamable exception with a JavaScript stacktrace
  */
 class JavaScriptException extends Exception implements JsonStream.Streamable {
+    private static final String EXCEPTION_TYPE = "browserjs";
     private final String name;
     private final String rawStacktrace;
 
@@ -287,6 +288,7 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
         writer.beginObject();
         writer.name("errorClass").value(name);
         writer.name("message").value(getLocalizedMessage());
+        writer.name("type").value(EXCEPTION_TYPE);
 
         writer.name("stacktrace");
         writer.beginArray();
