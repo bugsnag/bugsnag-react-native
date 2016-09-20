@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.ReactPackage;
@@ -64,9 +65,9 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void notify(ReadableMap payload) {
-      JavaScriptException exc = JavaScriptException(payload.getString("errorClass"),
-                                                    payload.getString("errorMessage"),
-                                                    payload.getString("stacktrace"));
+      JavaScriptException exc = new JavaScriptException(payload.getString("errorClass"),
+                                                        payload.getString("errorMessage"),
+                                                        payload.getString("stacktrace"));
 
       Bugsnag.notify(exc, new DiagnosticsCallback(libraryVersion,
                                                   bugsnagAndroidVersion,
@@ -104,23 +105,29 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   }
 
   private Configuration createConfiguration(ReadableMap options) {
-      final String endpoint = options.getString("endpoint");
-      final String releaseStage = options.getString("releaseStage");
-
       Configuration config = new Configuration(options.getString("apiKey"));
 
-      if (endpoint != null && endpoint.length() > 0)
-          config.setEndpoint(endpoint);
-      if (releaseStage != null && releaseStage.length() > 0)
-          config.setReleaseStage(releaseStage);
+      if (options.hasKey("endpoint")) {
+          String endpoint = options.getString("endpoint");
+          if (endpoint != null && endpoint.length() > 0)
+              config.setEndpoint(endpoint);
+      }
 
-      ReadableArray stages = options.getArray("notifyReleaseStages");
-      if (stages != null && stages.size() > 0) {
-          String releaseStages[] = new String[stages.size()];
-          for (int i = 0; i < stages.size(); i++) {
-            releaseStages[i] = stages.getString(i);
+      if (options.hasKey("releaseStage")) {
+          String releaseStage = options.getString("releaseStage");
+          if (releaseStage != null && releaseStage.length() > 0)
+              config.setReleaseStage(releaseStage);
+      }
+
+      if (options.hasKey("notifyReleaseStages")) {
+          ReadableArray stages = options.getArray("notifyReleaseStages");
+          if (stages != null && stages.size() > 0) {
+              String releaseStages[] = new String[stages.size()];
+              for (int i = 0; i < stages.size(); i++) {
+                releaseStages[i] = stages.getString(i);
+              }
+              config.setNotifyReleaseStages(releaseStages);
           }
-          config.setNotifyReleaseStages(stages);
       }
 
       return config;
@@ -150,14 +157,14 @@ class BugsnagPackage implements ReactPackage {
 /**
  * Attaches report diagnostics before delivery
  */
-class DiagnosticsCallback extends Callback {
+class DiagnosticsCallback implements Callback {
     static final String NOTIFIER_NAME = "Bugsnag for React Native";
     static final String NOTIFIER_URL = "https://github.com/bugsnag/bugsnag-react-native";
 
     final private Severity severity;
     final private String context;
     final private String groupingHash;
-    final private MetaData metadata;
+    final private Map<String, Object> metadata;
     final private String libraryVersion;
     final private String bugsnagAndroidVersion;
 
@@ -167,9 +174,18 @@ class DiagnosticsCallback extends Callback {
         this.libraryVersion = libraryVersion;
         this.bugsnagAndroidVersion = bugsnagAndroidVersion;
         severity = parseSeverity(payload.getString("severity"));
-        context = payload.getString("context");
-        groupingHash = payload.getString("groupingHash");
-        metadata = new MetaData(readObjectMap(payload.get("metadata")));
+        metadata = readObjectMap(payload.getMap("metadata"));
+
+        if (payload.hasKey("context"))
+            context = payload.getString("context");
+        else
+            context = null;
+
+        if (payload.hasKey("groupingHash"))
+            groupingHash = payload.getString("groupingHash");
+        else
+            groupingHash = null;
+
     }
 
     Severity parseSeverity(String value) {
@@ -219,13 +235,23 @@ class DiagnosticsCallback extends Callback {
                                                 libraryVersion,
                                                 bugsnagAndroidVersion));
 
-        report.severity = severity;
-        if (groupingHash != null && groupingHash.length > 0)
-            report.setGroupingHash(groupingHash);
-        if (context != null && context.length > 0)
-            report.setContext(context);
-        if (metadata != null)
-            report.setMetaData(MetaData.merge(report.getMetaData(), metadata));
+        report.getError().setSeverity(severity);
+        if (groupingHash != null && groupingHash.length() > 0)
+            report.getError().setGroupingHash(groupingHash);
+        if (context != null && context.length() > 0)
+            report.getError().setContext(context);
+        if (metadata != null) {
+            MetaData reportMetadata = report.getError().getMetaData();
+            for (String tab : metadata.keySet()) {
+                Object value = metadata.get(tab);
+                if (value instanceof Map) {
+                    Map<String, Object> values = (Map<String, Object>)value;
+                    for (String key : values.keySet()) {
+                        reportMetadata.addToTab(tab, key, values.get(key));
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -242,7 +268,7 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
         this.rawStacktrace = rawStacktrace;
     }
 
-    void toStream(JsonStream writer) throws IOException {
+    public void toStream(JsonStream writer) throws IOException {
         writer.name("errorClass").value(name);
         writer.name("message").value(getLocalizedMessage());
 
@@ -251,7 +277,7 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
         for (String rawFrame : rawStacktrace.split("\\n")) {
             String methodComponents[] = rawFrame.split("@");
             if (methodComponents.length == 2) {
-                String components[] = components[1].split(":");
+                String components[] = methodComponents[1].split(":");
                 if (components.length == 3) {
                     int columnNumber = 0;
                     int lineNumber = 0;
@@ -267,7 +293,11 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
                         writer.name("lineNumber").value(lineNumber);
                         writer.name("file").value(components[0]);
                     writer.endObject();
+                } else {
+                    throw new IOException(methodComponents[1]);
                 }
+            } else {
+                throw new IOException(rawFrame);
             }
         }
         writer.endArray();
