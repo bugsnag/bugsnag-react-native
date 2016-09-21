@@ -53,6 +53,7 @@
 			children = (
 				8AB63CFA1D918BEF0002381B /* Frameworks */,
 				8AD256151D6DE5F600C7D842 /* BugsnagReactNative */,
+				8AF662D91D929B7800ABD39A /* Libraries */,
 				8AD256141D6DE5F600C7D842 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -73,6 +74,13 @@
 			);
 			path = BugsnagReactNative;
 			sourceTree = SOURCE_ROOT;
+		};
+		8AF662D91D929B7800ABD39A /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Libraries;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 

@@ -22,10 +22,9 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		64AF98DC932347A3A912972A /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3717AB898C674BE68006C4E3 /* libBugsnagReactNative.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		8ADB8F2C1D9055B800C40CDC /* Bugsnag.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ADB8F2B1D9055B800C40CDC /* Bugsnag.framework */; };
-		8ADB8F301D9055F300C40CDC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ADB8F2F1D9055F300C40CDC /* libz.tbd */; };
+		8A839A6B1D9A9ACF00B7FD1E /* libBugsnagReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A839A481D9A99B400B7FD1E /* libBugsnagReactNative.a */; };
+		8A839A6E1D9A9B2200B7FD1E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ADB8F2F1D9055F300C40CDC /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,9 +105,9 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		8ADB8EF81D90554600C40CDC /* PBXContainerItemProxy */ = {
+		8A839A471D9A99B400B7FD1E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 95C00A2EE5E9431EB748F7C1 /* BugsnagReactNative.xcodeproj */;
+			containerPortal = 1F936C64B2924CCD833444EC /* BugsnagReactNative.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 8AD256131D6DE5F600C7D842;
 			remoteInfo = BugsnagReactNative;
@@ -135,13 +134,14 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = examples/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = examples/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		3717AB898C674BE68006C4E3 /* libBugsnagReactNative.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBugsnagReactNative.a; sourceTree = "<group>"; };
+		1F936C64B2924CCD833444EC /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		8A8399DE1D9A7AC700B7FD1E /* Bugsnag.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bugsnag.framework; path = "../node_modules/bugsnag-react-native/cocoa/vendor/iOS/build/Debug-iphoneos/Bugsnag.framework"; sourceTree = "<group>"; };
+		8AB63D1E1D918F570002381B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		8ADB8F2B1D9055B800C40CDC /* Bugsnag.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bugsnag.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/examples-ateazuopwzlglkgeoetlaberilfe/Build/Products/Debug-iphonesimulator/Bugsnag.framework"; sourceTree = "<group>"; };
 		8ADB8F2D1D9055E700C40CDC /* KSCrash.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KSCrash.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/examples-ateazuopwzlglkgeoetlaberilfe/Build/Products/Debug-iphonesimulator/KSCrash.framework"; sourceTree = "<group>"; };
 		8ADB8F2F1D9055F300C40CDC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		95C00A2EE5E9431EB748F7C1 /* BugsnagReactNative.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BugsnagReactNative.xcodeproj; path = "../node_modules/bugsnag-react-native/cocoa/BugsnagReactNative.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,8 +157,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8ADB8F301D9055F300C40CDC /* libz.tbd in Frameworks */,
-				8ADB8F2C1D9055B800C40CDC /* Bugsnag.framework in Frameworks */,
+				8A839A6E1D9A9B2200B7FD1E /* libz.tbd in Frameworks */,
+				8A839A6B1D9A9ACF00B7FD1E /* libBugsnagReactNative.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -169,7 +169,6 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				64AF98DC932347A3A912972A /* libBugsnagReactNative.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,7 +291,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
-				95C00A2EE5E9431EB748F7C1 /* BugsnagReactNative.xcodeproj */,
+				1F936C64B2924CCD833444EC /* BugsnagReactNative.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -327,10 +326,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8ADB8EED1D90554600C40CDC /* Products */ = {
+		8A839A441D9A99B400B7FD1E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8ADB8EF91D90554600C40CDC /* libBugsnagReactNative.a */,
+				8A839A481D9A99B400B7FD1E /* libBugsnagReactNative.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -338,6 +337,8 @@
 		8ADB8F2A1D9055B700C40CDC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A8399DE1D9A7AC700B7FD1E /* Bugsnag.framework */,
+				8AB63D1E1D918F570002381B /* libc++.tbd */,
 				8ADB8F2F1D9055F300C40CDC /* libz.tbd */,
 				8ADB8F2D1D9055E700C40CDC /* KSCrash.framework */,
 				8ADB8F2B1D9055B800C40CDC /* Bugsnag.framework */,
@@ -412,8 +413,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 8ADB8EED1D90554600C40CDC /* Products */;
-					ProjectRef = 95C00A2EE5E9431EB748F7C1 /* BugsnagReactNative.xcodeproj */;
+					ProductGroup = 8A839A441D9A99B400B7FD1E /* Products */;
+					ProjectRef = 1F936C64B2924CCD833444EC /* BugsnagReactNative.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -535,11 +536,11 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		8ADB8EF91D90554600C40CDC /* libBugsnagReactNative.a */ = {
+		8A839A481D9A99B400B7FD1E /* libBugsnagReactNative.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libBugsnagReactNative.a;
-			remoteRef = 8ADB8EF81D90554600C40CDC /* PBXContainerItemProxy */;
+			remoteRef = 8A839A471D9A99B400B7FD1E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -635,6 +636,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/examples.app/examples";
@@ -652,6 +654,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/examples.app/examples";
@@ -667,6 +670,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
 				);
 				INFOPLIST_FILE = examples/Info.plist;
@@ -689,6 +693,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
 				);
 				INFOPLIST_FILE = examples/Info.plist;
@@ -742,6 +747,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
+					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -782,6 +788,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
 					"$(SRCROOT)/../node_modules/bugsnag-react-native/cocoa",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
