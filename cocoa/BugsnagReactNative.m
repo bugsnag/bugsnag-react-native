@@ -51,7 +51,7 @@ NSDictionary *BSGConvertTypedNSDictionary(id rawData) {
  *
  *  @return array of frames
  */
-NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace) {
+NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *formatter) {
     NSCharacterSet* methodSeparator = [NSCharacterSet characterSetWithCharactersInString:@"@"];
     NSCharacterSet* locationSeparator = [NSCharacterSet characterSetWithCharactersInString:@":"];
     NSArray *lines = [stacktrace componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
@@ -67,14 +67,20 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace) {
         NSRange search = [location rangeOfCharacterFromSet:locationSeparator options:NSBackwardsSearch];
         if (search.location != NSNotFound) {
             NSRange matchRange = NSMakeRange(search.location + 1, location.length - search.location - 1);
-            frame[@"columnNumber"] = [location substringWithRange:matchRange];
-            location = [location substringToIndex:search.location];
+            NSNumber *value = [formatter numberFromString:[location substringWithRange:matchRange]];
+            if (value) {
+                frame[@"columnNumber"] = value;
+                location = [location substringToIndex:search.location];
+            }
         }
         search = [location rangeOfCharacterFromSet:locationSeparator options:NSBackwardsSearch];
         if (search.location != NSNotFound) {
             NSRange matchRange = NSMakeRange(search.location + 1, location.length - search.location - 1);
-            frame[@"lineNumber"] = [location substringWithRange:matchRange];
-            location = [location substringToIndex:search.location];
+            NSNumber *value = [formatter numberFromString:[location substringWithRange:matchRange]];
+            if (value) {
+                frame[@"lineNumber"] = value;
+                location = [location substringToIndex:search.location];
+            }
         }
         frame[@"file"] = location;
         [frames addObject:frame];
@@ -89,6 +95,16 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace) {
 
 @implementation BugsnagReactNative
 
++ (NSNumberFormatter *)numberFormatter {
+    static dispatch_once_t onceToken;
+    static NSNumberFormatter *formatter = nil;
+    dispatch_once(&onceToken, ^{
+        formatter = [NSNumberFormatter new];
+        formatter.numberStyle = NSNumberFormatterNoStyle;
+    });
+    return formatter;
+}
+
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
@@ -100,7 +116,8 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
     [Bugsnag notify:exception block:^(BugsnagCrashReport *report) {
         NSArray* stackframes = nil;
         if (options[@"stacktrace"]) {
-            stackframes = BSGParseJavaScriptStacktrace([RCTConvert NSString:options[@"stacktrace"]]);
+            stackframes = BSGParseJavaScriptStacktrace([RCTConvert NSString:options[@"stacktrace"]],
+                                                       [BugsnagReactNative numberFormatter]);
             [report attachCustomStacktrace:stackframes withType:EXCEPTION_TYPE];
         }
         if (options[@"context"])
