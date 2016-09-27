@@ -44,6 +44,56 @@ NSDictionary *BSGConvertTypedNSDictionary(id rawData) {
     return converted;
 }
 
+/**
+ *  Convert a string stacktrace into individual frames
+ *
+ *  @param stacktrace a stacktrace represented as a single block
+ *
+ *  @return array of frames
+ */
+NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *formatter) {
+    NSCharacterSet* methodSeparator = [NSCharacterSet characterSetWithCharactersInString:@"@"];
+    NSCharacterSet* locationSeparator = [NSCharacterSet characterSetWithCharactersInString:@":"];
+    NSArray *lines = [stacktrace componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    NSMutableArray *frames = [NSMutableArray arrayWithCapacity:lines.count];
+    for (NSString *line in lines) {
+        NSMutableDictionary *frame = [NSMutableDictionary new];
+        NSString *location = line;
+        NSRange methodRange = [line rangeOfCharacterFromSet:methodSeparator];
+        if (methodRange.location != NSNotFound) {
+            frame[@"method"] = [line substringToIndex:methodRange.location];
+            location = [line substringFromIndex:methodRange.location + 1];
+        }
+        NSRange search = [location rangeOfCharacterFromSet:locationSeparator options:NSBackwardsSearch];
+        if (search.location != NSNotFound) {
+            NSRange matchRange = NSMakeRange(search.location + 1, location.length - search.location - 1);
+            NSNumber *value = [formatter numberFromString:[location substringWithRange:matchRange]];
+            if (value) {
+                frame[@"columnNumber"] = value;
+                location = [location substringToIndex:search.location];
+            }
+        }
+        search = [location rangeOfCharacterFromSet:locationSeparator options:NSBackwardsSearch];
+        if (search.location != NSNotFound) {
+            NSRange matchRange = NSMakeRange(search.location + 1, location.length - search.location - 1);
+            NSNumber *value = [formatter numberFromString:[location substringWithRange:matchRange]];
+            if (value) {
+                frame[@"lineNumber"] = value;
+                location = [location substringToIndex:search.location];
+            }
+        }
+        NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+        if (bundlePath) {
+            search = [location rangeOfString:bundlePath];
+            if (search.location != NSNotFound)
+                location = [location substringFromIndex:search.location + search.length];
+        }
+        frame[@"file"] = location;
+        [frames addObject:frame];
+    }
+    return frames;
+}
+
 @interface Bugsnag ()
 + (id)notifier;
 + (BOOL)bugsnagStarted;
@@ -51,14 +101,31 @@ NSDictionary *BSGConvertTypedNSDictionary(id rawData) {
 
 @implementation BugsnagReactNative
 
++ (NSNumberFormatter *)numberFormatter {
+    static dispatch_once_t onceToken;
+    static NSNumberFormatter *formatter = nil;
+    dispatch_once(&onceToken, ^{
+        formatter = [NSNumberFormatter new];
+        formatter.numberStyle = NSNumberFormatterNoStyle;
+    });
+    return formatter;
+}
+
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
+    NSString *const EXCEPTION_TYPE = @"browserjs";
     NSException *exception = [NSException
                               exceptionWithName:[RCTConvert NSString:options[@"errorClass"]]
                               reason:[RCTConvert NSString:options[@"errorMessage"]]
                               userInfo:nil];
     [Bugsnag notify:exception block:^(BugsnagCrashReport *report) {
+        NSArray* stackframes = nil;
+        if (options[@"stacktrace"]) {
+            stackframes = BSGParseJavaScriptStacktrace([RCTConvert NSString:options[@"stacktrace"]],
+                                                       [BugsnagReactNative numberFormatter]);
+            [report attachCustomStacktrace:stackframes withType:EXCEPTION_TYPE];
+        }
         if (options[@"context"])
             report.context = [RCTConvert NSString:options[@"context"]];
         if (options[@"groupingHash"])

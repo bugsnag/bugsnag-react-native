@@ -41,10 +41,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8AD2560A1D6DE5F600C7D842 = {
 			isa = PBXGroup;
 			children = (
+				8AB63CFA1D918BEF0002381B /* Frameworks */,
 				8AD256151D6DE5F600C7D842 /* BugsnagReactNative */,
+				8AF662D91D929B7800ABD39A /* Libraries */,
 				8AD256141D6DE5F600C7D842 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +74,13 @@
 			);
 			path = BugsnagReactNative;
 			sourceTree = SOURCE_ROOT;
+		};
+		8AF662D91D929B7800ABD39A /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Libraries;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
