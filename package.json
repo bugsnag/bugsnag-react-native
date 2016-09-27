@@ -8,6 +8,10 @@
     "npmlog": "^2.0.4",
     "xcode": "^0.8.9"
   },
+  "bin": {
+    "bugsnag-vendor-deps": "./bin/vendorIOSNativeDependencies.js",
+    "bugsnag-rnpm-link": "./bin/linkIOSHeaders.js"
+  },
   "rnpm": {
     "ios": {
       "project": "cocoa/BugsnagReactNative.xcodeproj"
@@ -17,7 +21,7 @@
       "packageImportPath": "import com.bugsnag.BugsnagReactNative"
     },
     "commands": {
-      "postlink": "node_modules/bugsnag-react-native/scripts/addIOSNativeDependencies.js"
+      "postlink": "node_modules/bugsnag-react-native/bin/linkIOSHeaders.js"
     }
   }
 }
