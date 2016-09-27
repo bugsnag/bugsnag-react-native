@@ -82,6 +82,12 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
                 location = [location substringToIndex:search.location];
             }
         }
+        NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+        if (bundlePath) {
+            search = [location rangeOfString:bundlePath];
+            if (search.location != NSNotFound)
+                location = [location substringFromIndex:search.location + search.length];
+        }
         frame[@"file"] = location;
         [frames addObject:frame];
     }
