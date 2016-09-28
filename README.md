@@ -28,10 +28,5 @@
    * Select the `+` under Link Binary with Libraries
    * Add `Bugsnag.framework` and `KSCrash.framework`
 
-3. In the iOS project, select you app in the Project Navigator, then:
-   * Select the Build Phases tab
-   * Select the `+` under Link Binary with Libraries
-   * Add `libz.tbd`
-
 Once complete, start your project with either `react-native run-android` or
 `react-native run-ios`.
