@@ -1,32 +1,40 @@
-# bugsnag-react-native
+# Bugsnag exception reporter for React Native
 
-## Installation (dev mode)
+## Features
 
-1. Add `bugsnag-react-native` to your `package.json`:
+* Automatically report unhandled exceptions and crashes
+* Show full stacktraces with [source map integration](https://docs.bugsnag.com/platforms/react-native/show-full-stacktraces)
+* Report [handled exceptions](http://docs.bugsnag.com/platforms/react-native/#reporting-handled-exceptions)
+* [Log breadcrumbs](http://docs.bugsnag.com/platforms/react-native/#logging-breadcrumbs) which are attached to crash reports and add insight to users' actions
+* [Attach user information](http://docs.bugsnag.com/platforms/react-native/#identifying-users) to determine how many people are affected by a crash
 
-   ```json
-   {
-     "dependencies": {
-       "bugsnag-react-native": "../"
-     }
-   }
-   ```
 
-2. Run `npm install`
+## Getting started
 
-3. Run `react-native link`
+1. [Create a Bugsnag account](https://bugsnag.com)
+1. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/react-native) to report unhandled exceptions thrown from your app
+1. Report handled exceptions using [`Client.notify()`](https://docs.bugsnag.com/platforms/react-native/reporting-handled-exceptions/)
+1. Customize your integration using the [configuration options](http://docs.bugsnag.com/platforms/react-native/configuration-options/)
 
-### iOS Configuration
 
-1. Run `./node_modules/.bin/bugsnag-vendor-deps` to install the native
-   dependencies
+## Support
 
-2. Open the iOS project in `./ios`, and in the Project Navigator select
-   BugsnagReactNative in Libraries, then:
-   * Select the static library target
-   * Select the Build Phases tab
-   * Select the `+` under Link Binary with Libraries
-   * Add `Bugsnag.framework` and `KSCrash.framework`
+* Come chat with us in the
+  [Bugsnag #react-native slack channel](https://bugsnag-customers.slack.com/messages/react-native)
+* [Read the integration guide](http://docs.bugsnag.com/platforms/react-native/) or [configuration options documentation](http://docs.bugsnag.com/platforms/android/configuration-options/)
+* [Search open and closed issues](https://github.com/bugsnag/bugsnag-react-native/issues?utf8=✓&q=is%3Aissue) for similar problems
+* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-react-native/issues/new)
 
-Once complete, start your project with either `react-native run-android` or
-`react-native run-ios`.
+
+## Contributing
+
+All contributors are welcome! For information on how to build, test
+and release `bugsnag-react-native`, see our
+[contributing guide](https://github.com/bugsnag/bugsnag-react-native/blob/master/CONTRIBUTING.md).
+
+
+## License
+
+The Bugsnag Android notifier is free software released under the MIT License.
+See [LICENSE.txt](https://github.com/bugsnag/bugsnag-react-native/blob/master/LICENSE.txt)
+for details.
