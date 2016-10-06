@@ -1,4 +1,6 @@
 # Bugsnag exception reporter for React Native
+[![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
+
 
 ## Features
 
