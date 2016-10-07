@@ -1,6 +1,8 @@
-# Bugsnag exception reporter for React Native
-[![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
+# Bugsnag exception reporter for React Native (Beta)
+![status: beta](https://img.shields.io/badge/project_status-beta-orange.svg)
+[![Documentation](https://img.shields.io/badge/documentation-0.1.0-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
 
+_This is a beta release_
 
 ## Features
 
@@ -21,9 +23,10 @@
 
 ## Support
 
-* Come chat with us in the
+* Come chat with us in
+  [#bugsnag on freenode IRC](ircs://chat.freenode.net/%23bugsnag) or
   [Bugsnag #react-native slack channel](https://bugsnag-customers.slack.com/messages/react-native)
-* [Read the integration guide](http://docs.bugsnag.com/platforms/react-native/) or [configuration options documentation](http://docs.bugsnag.com/platforms/android/configuration-options/)
+* [Read the integration guide](http://docs.bugsnag.com/platforms/react-native/) or [configuration options documentation](http://docs.bugsnag.com/platforms/react-native/configuration-options/)
 * [Search open and closed issues](https://github.com/bugsnag/bugsnag-react-native/issues?utf8=✓&q=is%3Aissue) for similar problems
 * [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-react-native/issues/new)
 
@@ -37,6 +40,6 @@ and release `bugsnag-react-native`, see our
 
 ## License
 
-The Bugsnag Android notifier is free software released under the MIT License.
+The Bugsnag React Native library is free software released under the MIT License.
 See [LICENSE.txt](https://github.com/bugsnag/bugsnag-react-native/blob/master/LICENSE.txt)
 for details.

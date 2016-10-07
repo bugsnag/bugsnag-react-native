@@ -25,3 +25,12 @@ in.
 
 Run `npm install`, then use `react-native run-android` or `react-native run-ios`
 to run the example projects.
+
+## Releasing
+
+1. Update the version number in package.json, android/build.gradle, and the
+   README documentation badge.
+2. Update the changelog with new features and fixes
+3. Commit the changes and tag in the format `v[version]`. Push.
+4. Publish the package to npm using `npm release`.
+5. Create a new release on GitHub, copying the changelog entry.
