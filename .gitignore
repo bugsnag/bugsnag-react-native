@@ -1,3 +1,4 @@
 node_modules
 example*/ios/Pods
 *.bundle
+local.properties
