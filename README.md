@@ -7,7 +7,7 @@ _This is a beta release_
 ## Features
 
 * Automatically report unhandled exceptions and crashes
-* Show full stacktraces with [source map integration](https://docs.bugsnag.com/platforms/react-native/show-full-stacktraces)
+* Show full stacktraces with [source map integration](https://docs.bugsnag.com/platforms/react-native/showing-full-stacktraces)
 * Report [handled exceptions](http://docs.bugsnag.com/platforms/react-native/#reporting-handled-exceptions)
 * [Log breadcrumbs](http://docs.bugsnag.com/platforms/react-native/#logging-breadcrumbs) which are attached to crash reports and add insight to users' actions
 * [Attach user information](http://docs.bugsnag.com/platforms/react-native/#identifying-users) to determine how many people are affected by a crash
