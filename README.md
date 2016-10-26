@@ -1,8 +1,5 @@
-# Bugsnag exception reporter for React Native (Beta)
-![status: beta](https://img.shields.io/badge/project_status-beta-orange.svg)
-[![Documentation](https://img.shields.io/badge/documentation-0.1.0-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
-
-_This is a beta release_
+# Bugsnag exception reporter for React Native
+[![Documentation](https://img.shields.io/badge/documentation-1.0.0-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
 
 ## Features
 
