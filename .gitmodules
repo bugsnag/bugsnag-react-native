@@ -1,3 +1,0 @@
-[submodule "examples/vendor/bugsnag-cocoa"]
-	path = examples/vendor/bugsnag-cocoa
-	url = https://github.com/bugsnag/bugsnag-cocoa
