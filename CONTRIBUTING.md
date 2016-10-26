@@ -32,5 +32,5 @@ to run the example projects.
    README documentation badge.
 2. Update the changelog with new features and fixes
 3. Commit the changes and tag in the format `v[version]`. Push.
-4. Publish the package to npm using `npm release`.
+4. Publish the package to npm using `npm publish`.
 5. Create a new release on GitHub, copying the changelog entry.
