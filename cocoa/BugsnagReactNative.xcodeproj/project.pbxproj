@@ -7,9 +7,56 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8A5ACC5D1DC11FA500879C6D /* KSCrash.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A5ACC081DC11D7600879C6D /* KSCrash.framework */; };
+		8A5ACC601DC11FAA00879C6D /* Bugsnag.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A5ACBF91DC11D6D00879C6D /* Bugsnag.framework */; };
 		8AD256171D6DE5F600C7D842 /* BugsnagReactNative.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */; };
 		8AD256191D6DE5F600C7D842 /* BugsnagReactNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8A5ACBF81DC11D6D00879C6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8A2C8F181C6BBD2300846019;
+			remoteInfo = Bugsnag;
+		};
+		8A5ACBFA1DC11D6D00879C6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8A2C8F221C6BBD2300846019;
+			remoteInfo = Tests;
+		};
+		8A5ACC031DC11D7600879C6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CB6D132617EB749A00BC2C04;
+			remoteInfo = KSCrashLib;
+		};
+		8A5ACC051DC11D7600879C6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CB6D133317EB749A00BC2C04;
+			remoteInfo = KSCrashTests;
+		};
+		8A5ACC071DC11D7600879C6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03DE7B6A1C84DEF700F789BA;
+			remoteInfo = KSCrash;
+		};
+		8A5ACC091DC11D7600879C6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EDF2BF211CCF15AD004BADF4;
+			remoteInfo = KSCrash_static;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		8AD256111D6DE5F600C7D842 /* CopyFiles */ = {
@@ -25,6 +72,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Bugsnag.xcodeproj; path = "vendor/bugsnag-cocoa/iOS/Bugsnag.xcodeproj"; sourceTree = "<group>"; };
+		8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "KSCrash-iOS.xcodeproj"; path = "vendor/kscrash/iOS/KSCrash-iOS.xcodeproj"; sourceTree = "<group>"; };
+		8A5ACC3F1DC11F7A00879C6D /* Bugsnag.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bugsnag.framework; path = "../examples/node_modules/bugsnag-react-native/cocoa/vendor/bugsnag-cocoa/iOS/build/Debug-iphoneos/Bugsnag.framework"; sourceTree = "<group>"; };
 		8AD256131D6DE5F600C7D842 /* libBugsnagReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBugsnagReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BugsnagReactNative.h; sourceTree = SOURCE_ROOT; };
 		8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BugsnagReactNative.m; sourceTree = SOURCE_ROOT; };
@@ -35,15 +85,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A5ACC601DC11FAA00879C6D /* Bugsnag.framework in Frameworks */,
+				8A5ACC5D1DC11FA500879C6D /* KSCrash.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8A5ACBF41DC11D6D00879C6D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8A5ACBF91DC11D6D00879C6D /* Bugsnag.framework */,
+				8A5ACBFB1DC11D6D00879C6D /* Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8A5ACBFD1DC11D7600879C6D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8A5ACC041DC11D7600879C6D /* libKSCrashLib.a */,
+				8A5ACC061DC11D7600879C6D /* KSCrashTests.xctest */,
+				8A5ACC081DC11D7600879C6D /* KSCrash.framework */,
+				8A5ACC0A1DC11D7600879C6D /* KSCrash.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A5ACC3F1DC11F7A00879C6D /* Bugsnag.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -78,6 +151,8 @@
 		8AF662D91D929B7800ABD39A /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */,
+				8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -126,12 +201,67 @@
 			mainGroup = 8AD2560A1D6DE5F600C7D842;
 			productRefGroup = 8AD256141D6DE5F600C7D842 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 8A5ACBF41DC11D6D00879C6D /* Products */;
+					ProjectRef = 8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */;
+				},
+				{
+					ProductGroup = 8A5ACBFD1DC11D7600879C6D /* Products */;
+					ProjectRef = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8AD256121D6DE5F600C7D842 /* BugsnagReactNative */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8A5ACBF91DC11D6D00879C6D /* Bugsnag.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Bugsnag.framework;
+			remoteRef = 8A5ACBF81DC11D6D00879C6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8A5ACBFB1DC11D6D00879C6D /* Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = Tests.xctest;
+			remoteRef = 8A5ACBFA1DC11D6D00879C6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8A5ACC041DC11D7600879C6D /* libKSCrashLib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libKSCrashLib.a;
+			remoteRef = 8A5ACC031DC11D7600879C6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8A5ACC061DC11D7600879C6D /* KSCrashTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = KSCrashTests.xctest;
+			remoteRef = 8A5ACC051DC11D7600879C6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8A5ACC081DC11D7600879C6D /* KSCrash.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KSCrash.framework;
+			remoteRef = 8A5ACC071DC11D7600879C6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8A5ACC0A1DC11D7600879C6D /* KSCrash.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KSCrash.framework;
+			remoteRef = 8A5ACC091DC11D7600879C6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8AD2560F1D6DE5F600C7D842 /* Sources */ = {
@@ -232,7 +362,10 @@
 		8AD2561D1D6DE5F600C7D842 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../react-native/React/**",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
@@ -245,7 +378,10 @@
 		8AD2561E1D6DE5F600C7D842 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../react-native/React/**",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",
