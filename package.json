@@ -15,7 +15,7 @@
     },
     "android": {
       "packageInstance": "BugsnagReactNative.getPackage()",
-      "packageImportPath": "import com.bugsnag.BugsnagReactNative"
+      "packageImportPath": "import com.bugsnag.BugsnagReactNative;"
     }
   }
 }
