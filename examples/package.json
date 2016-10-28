@@ -8,7 +8,7 @@
   "dependencies": {
     "react": "15.3.1",
     "react-native-button": "1.6.0",
-    "react-native": "0.33.0",
+    "react-native": "0.36.0",
     "bugsnag-react-native": "../"
   }
 }
