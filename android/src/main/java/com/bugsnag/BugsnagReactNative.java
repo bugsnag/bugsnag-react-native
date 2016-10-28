@@ -76,10 +76,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
           logger.warning("Bugsnag could not notify: No error class");
           return;
       }
-      if (!payload.hasKey("errorMessage")) {
-          logger.warning("Bugsnag could not notify: No error message");
-          return;
-      }
       if (!payload.hasKey("stacktrace")) {
           logger.warning("Bugsnag could not notify: No stacktrace");
           return;
