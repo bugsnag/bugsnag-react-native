@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import bugsnag, { Client } from 'bugsnag-react-native';
+import { Client } from 'bugsnag-react-native';
 import {
   AppRegistry,
   StyleSheet,
@@ -7,18 +7,16 @@ import {
   View
 } from 'react-native';
 
+const client = new Client('API key');
+
 class examples extends Component {
 
-  constructor(opts) {
-    super(opts);
-    this.client = new Client('f35a2472bd230ac0ab0f52715bbdc65d');
-    this.client.handleUncaughtErrors();
-  }
-
   render() {
-    this.client.leaveBreadcrumb('load main view',
+    client.leaveBreadcrumb('load main view',
         {type: 'navigation', firstLaunch: 'no'});
-    this.client.setUser('123', 'John Jones');
+    client.setUser('123', 'John Jones');
+    client.notify(new Error('foo'));
+
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
