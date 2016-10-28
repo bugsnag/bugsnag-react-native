@@ -1,9 +1,13 @@
 Changelog
 =========
 
+## 1.0.3
+
+Fix the import path for Bugsnag on Android
+
 ## 1.0.2
 
-Fix the minimum Android SDK version to be consistent with React Nativ
+Fix the minimum Android SDK version to be consistent with React Native
 
 ## 1.0.1
 
