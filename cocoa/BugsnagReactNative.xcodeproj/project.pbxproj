@@ -97,34 +97,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8A5ACBF41DC11D6D00879C6D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8A5ACBF91DC11D6D00879C6D /* Bugsnag.framework */,
-				8A5ACBFB1DC11D6D00879C6D /* Tests.xctest */,
-				8A0F9E621DC3DE0E00BC83B2 /* libBugsnagLib.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8A5ACBFD1DC11D7600879C6D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8A5ACC041DC11D7600879C6D /* libKSCrashLib.a */,
-				8A5ACC061DC11D7600879C6D /* KSCrashTests.xctest */,
-				8A5ACC081DC11D7600879C6D /* KSCrash.framework */,
-				8A5ACC0A1DC11D7600879C6D /* KSCrash.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		8AD2560A1D6DE5F600C7D842 = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +115,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8AD256151D6DE5F600C7D842 /* BugsnagReactNative */ = {
 			isa = PBXGroup;
 			children = (
@@ -159,6 +138,27 @@
 				8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */,
 			);
 			name = Libraries;
+			sourceTree = "<group>";
+		};
+		8A5ACBF41DC11D6D00879C6D /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				8A5ACBF91DC11D6D00879C6D /* Bugsnag.framework */,
+				8A5ACBFB1DC11D6D00879C6D /* Tests.xctest */,
+				8A0F9E621DC3DE0E00BC83B2 /* libBugsnagLib.a */,
+			);
+			name = Generated;
+			sourceTree = "<group>";
+		};
+		8A5ACBFD1DC11D7600879C6D /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				8A5ACC041DC11D7600879C6D /* libKSCrashLib.a */,
+				8A5ACC061DC11D7600879C6D /* KSCrashTests.xctest */,
+				8A5ACC081DC11D7600879C6D /* KSCrash.framework */,
+				8A5ACC0A1DC11D7600879C6D /* KSCrash.framework */,
+			);
+			name = Generated;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

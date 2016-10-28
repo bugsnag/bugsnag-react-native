@@ -150,18 +150,18 @@
 				8A2C8F1A1C6BBD2300846019 /* Bugsnag */,
 				8A2C8F261C6BBD2300846019 /* Tests */,
 				8A2C8F751C6BBEBB00846019 /* Frameworks */,
-				8A2C8F191C6BBD2300846019 /* Products */,
+				8A2C8F191C6BBD2300846019 /* Generated */,
 			);
 			sourceTree = "<group>";
 		};
-		8A2C8F191C6BBD2300846019 /* Products */ = {
+		8A2C8F191C6BBD2300846019 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
 				8A2C8F181C6BBD2300846019 /* Bugsnag.framework */,
 				8A2C8F221C6BBD2300846019 /* Tests.xctest */,
 				8A0F9E401DC3DD9300BC83B2 /* libBugsnagLib.a */,
 			);
-			name = Products;
+			name = Generated;
 			sourceTree = "<group>";
 		};
 		8A2C8F1A1C6BBD2300846019 /* Bugsnag */ = {
@@ -341,7 +341,7 @@
 				en,
 			);
 			mainGroup = 8A2C8F0E1C6BBD2300846019;
-			productRefGroup = 8A2C8F191C6BBD2300846019 /* Products */;
+			productRefGroup = 8A2C8F191C6BBD2300846019 /* Generated */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -618,6 +618,7 @@
 				8A0F9E471DC3DD9300BC83B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8A2C8F121C6BBD2300846019 /* Build configuration list for PBXProject "Bugsnag" */ = {
 			isa = XCConfigurationList;
