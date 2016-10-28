@@ -188,7 +188,12 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
 - (void)setNotifierDetails:(NSString *)packageVersion {
     id notifier = [Bugsnag notifier];
     NSDictionary *details = [notifier valueForKey:@"details"];
-    NSString *version = [NSString stringWithFormat:@"%@ (Cocoa %@)", packageVersion, details[@"version"]];
+    NSString *version;
+    if ([details[@"version"] containsString:@"("]) {
+        version = details[@"version"];
+    } else {
+        version = [NSString stringWithFormat:@"%@ (Cocoa %@)", packageVersion, details[@"version"]];
+    }
     NSDictionary *newDetails = @{
         @"version": version,
         @"name": @"Bugsnag for React Native",
