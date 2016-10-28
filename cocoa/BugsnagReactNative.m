@@ -1,5 +1,4 @@
-#import <Bugsnag/Bugsnag.h>
-
+#import "Bugsnag.h"
 #import "BugsnagReactNative.h"
 #import "RCTConvert.h"
 

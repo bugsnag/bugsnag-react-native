@@ -817,12 +817,12 @@
 				CB6D12FF17EB743A00BC2C04 /* KSCrash */,
 				CB6D131417EB743A00BC2C04 /* KSCrashTests */,
 				CB52178E17EB735D007CB3C1 /* Frameworks */,
-				CB52178D17EB735D007CB3C1 /* Products */,
+				CB52178D17EB735D007CB3C1 /* Generated */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
 		};
-		CB52178D17EB735D007CB3C1 /* Products */ = {
+		CB52178D17EB735D007CB3C1 /* Generated */ = {
 			isa = PBXGroup;
 			children = (
 				CB6D132617EB749A00BC2C04 /* libKSCrashLib.a */,
@@ -830,7 +830,7 @@
 				03DE7B6A1C84DEF700F789BA /* KSCrash.framework */,
 				EDF2BF211CCF15AD004BADF4 /* KSCrash.framework */,
 			);
-			name = Products;
+			name = Generated;
 			sourceTree = "<group>";
 		};
 		CB52178E17EB735D007CB3C1 /* Frameworks */ = {
@@ -1618,7 +1618,7 @@
 				Base,
 			);
 			mainGroup = CB52178317EB735D007CB3C1;
-			productRefGroup = CB52178D17EB735D007CB3C1 /* Products */;
+			productRefGroup = CB52178D17EB735D007CB3C1 /* Generated */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
