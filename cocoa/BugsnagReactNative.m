@@ -175,6 +175,10 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     config.apiKey = apiKey;
     config.releaseStage = releaseStage;
     config.notifyReleaseStages = notifyReleaseStages;
+    [config addBeforeSendBlock:^bool(NSDictionary *_Nonnull rawEventData,
+                                     BugsnagCrashReport *_Nonnull report) {
+        return ![report.errorClass containsString:@"RCTFatalException"];
+    }];
     if (notifyURLPath.length > 0) {
         NSURL *notifyURL = [NSURL URLWithString:notifyURLPath];
         if (notifyURL)
