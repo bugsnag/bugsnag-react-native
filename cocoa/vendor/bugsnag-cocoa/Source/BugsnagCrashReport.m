@@ -223,10 +223,6 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
  */
 @property (nonatomic, readwrite, copy, nullable) NSString *errorType;
 /**
- *  Raw error data
- */
-@property (nonatomic, readwrite, copy, nullable) NSDictionary *error;
-/**
  *  The UUID of the dSYM file
  */
 @property (nonatomic, readonly, copy, nullable) NSString *dsymUUID;
@@ -242,22 +238,6 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
  *  Thread information captured at the time of the error
  */
 @property (nonatomic, readonly, copy, nullable) NSArray *threads;
-/**
- *  Device information such as OS name and version
- */
-@property (nonatomic, readwrite, copy, nullable) NSDictionary *device;
-/**
- *  Device state such as memory allocation at crash time
- */
-@property (nonatomic, readwrite, copy, nullable) NSDictionary *deviceState;
-/**
- *  App information such as the name, version, and bundle ID
- */
-@property (nonatomic, readwrite, copy, nullable) NSDictionary *app;
-/**
- *  Device state such as oreground status and run duration
- */
-@property (nonatomic, readwrite, copy, nullable) NSDictionary *appState;
 /**
  *  User-provided exception metadata
  */

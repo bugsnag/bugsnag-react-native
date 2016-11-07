@@ -132,4 +132,24 @@ NSString *_Nonnull BSGFormatSeverity(BSGSeverity severity);
  *  Number of frames to discard at the top of the stacktrace
  */
 @property(nonatomic, readwrite) NSUInteger depth;
+/**
+ *  Raw error data
+ */
+@property (nonatomic, readwrite, copy, nullable) NSDictionary *error;
+/**
+ *  Device information such as OS name and version
+ */
+@property (nonatomic, readwrite, copy, nullable) NSDictionary *device;
+/**
+ *  Device state such as memory allocation at crash time
+ */
+@property (nonatomic, readwrite, copy, nullable) NSDictionary *deviceState;
+/**
+ *  App information such as the name, version, and bundle ID
+ */
+@property (nonatomic, readwrite, copy, nullable) NSDictionary *app;
+/**
+ *  Device state such as oreground status and run duration
+ */
+@property (nonatomic, readwrite, copy, nullable) NSDictionary *appState;
 @end
