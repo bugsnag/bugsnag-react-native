@@ -130,6 +130,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       Configuration config = new Configuration(options.getString("apiKey"));
       config.setIgnoreClasses(new String[] {"com.facebook.react.common.JavascriptException"});
 
+      if (options.hasKey("appVersion")) {
+          String version = options.getString("appVersion");
+          if (version != null && version.length() > 0)
+              config.setAppVersion(version);
+      }
+
       if (options.hasKey("endpoint")) {
           String endpoint = options.getString("endpoint");
           if (endpoint != null && endpoint.length() > 0)

@@ -170,6 +170,7 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     NSString *releaseStage = [self  parseReleaseStage:[RCTConvert NSString:options[@"releaseStage"]]];
     NSArray *notifyReleaseStages = [RCTConvert NSStringArray:options[@"notifyReleaseStages"]];
     NSString *notifyURLPath = [RCTConvert NSString:options[@"endpoint"]];
+    NSString *appVersion = [RCTConvert NSString:options[@"appVersion"]];
     BugsnagConfiguration* config = [Bugsnag bugsnagStarted] ? [Bugsnag configuration] : [BugsnagConfiguration new];
     config.apiKey = apiKey;
     config.releaseStage = releaseStage;
@@ -178,6 +179,9 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
         NSURL *notifyURL = [NSURL URLWithString:notifyURLPath];
         if (notifyURL)
             config.notifyURL = notifyURL;
+    }
+    if (appVersion.length > 0) {
+        config.appVersion = appVersion;
     }
     if (![Bugsnag bugsnagStarted]) {
         [Bugsnag startBugsnagWithConfiguration:config];
