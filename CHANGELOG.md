@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 1.1.1 (2016-11-07)
+
+### Miscellaneous
+
+* Lower deployment target of embedded BugsnagLib to iOS 8.0
+* Update project settings to recommended configuration for Xcode 8
+* Check in missing Xcode scheme for libBugsnag
+
 ## 1.1.0 (2016-11-07)
 
 ### Enhancements
