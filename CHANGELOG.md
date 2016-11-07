@@ -1,6 +1,34 @@
 Changelog
 =========
 
+## 1.1.0 (2016-11-07)
+
+### Enhancements
+
+* Reports unhandled promise rejections. By default, unhandled promise rejections
+  are reported to Bugsnag when in a non-development environment. This is
+  disabled in a development environment to preserve the existing behavior of
+  showing a warning banner when a possible unhandled promise rejection is
+  detected.To toggle this behavior, set `handlePromiseRejections` when creating
+  a client.
+* Allow setting `appVersion` from a configuration option. This will override the
+  default of using the version specified in the app's Info.plist or android
+  manifest.
+* Update bugsnag-cocoa dependency to 5.6.4, which adds support for more robust
+  native client-side report customization through callbacks
+
+### Bug fixes
+
+* Fix double-reporting of unhandled JavaScript exceptions on iOS when in
+  production
+* Fix failure to invoke reporting callbacks
+  [Sam Aryasa](https://github.com/sbycrosz)
+  [#22](https://github.com/bugsnag/bugsnag-react-native/pull/22)
+* Fix syntax error in release stage filtering
+  [Sam Aryasa](https://github.com/sbycrosz)
+  [#22](https://github.com/bugsnag/bugsnag-react-native/pull/22)
+
+
 ## 1.0.4
 
 ### Bug fixes
