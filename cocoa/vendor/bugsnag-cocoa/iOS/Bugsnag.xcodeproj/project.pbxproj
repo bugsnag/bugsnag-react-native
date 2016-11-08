@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A0F9E4A1DC3DD9B00BC83B2 /* libKSCrashLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A0F9E491DC3DD9B00BC83B2 /* libKSCrashLib.a */; };
 		8A0F9E4B1DC3DDA300BC83B2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2C8F711C6BBEA400846019 /* MessageUI.framework */; };
 		8A0F9E4C1DC3DDA700BC83B2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2C8F6B1C6BBE9500846019 /* SystemConfiguration.framework */; };
 		8A0F9E4D1DC3DDAB00BC83B2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2C8F731C6BBEAD00846019 /* UIKit.framework */; };
@@ -54,6 +53,7 @@
 		8A2C8F961C6BC08600846019 /* report.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A2C8F951C6BC08600846019 /* report.json */; };
 		8A5ACC621DC11FCA00879C6D /* KSCrash.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A5ACC611DC11FCA00879C6D /* KSCrash.framework */; };
 		8A87351E1C6D2ADE00EDBD5B /* BSGKSCrashReportWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A87351D1C6D2ADE00EDBD5B /* BSGKSCrashReportWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8A8B7ABB1DD23AF5003EB34F /* libKSCrashLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A8B7ABA1DD23AF5003EB34F /* libKSCrashLib.a */; };
 		8AAA64011D2407CE00A9A123 /* Kiwi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AAA64001D2407CE00A9A123 /* Kiwi.framework */; };
 		8AAA64081D24088600A9A123 /* BugsnagSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AAA64071D24088600A9A123 /* BugsnagSpec.m */; };
 /* End PBXBuildFile section */
@@ -104,6 +104,7 @@
 		8A2C8F951C6BC08600846019 /* report.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = report.json; path = ../Tests/report.json; sourceTree = SOURCE_ROOT; };
 		8A5ACC611DC11FCA00879C6D /* KSCrash.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KSCrash.framework; path = "../../../../../../../../../../Library/Developer/Xcode/DerivedData/examples-dsulvmuqyteqoybgzaalyhrhvvvs/Build/Products/Debug-iphonesimulator/KSCrash.framework"; sourceTree = "<group>"; };
 		8A87351D1C6D2ADE00EDBD5B /* BSGKSCrashReportWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BSGKSCrashReportWriter.h; path = ../Source/BSGKSCrashReportWriter.h; sourceTree = SOURCE_ROOT; };
+		8A8B7ABA1DD23AF5003EB34F /* libKSCrashLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libKSCrashLib.a; path = "../../kscrash/iOS/build/Debug-iphoneos/libKSCrashLib.a"; sourceTree = "<group>"; };
 		8AAA63FE1D2404BB00A9A123 /* Nocilla.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nocilla.framework; path = "../development/Nocilla/build/Debug-iphoneos/Nocilla.framework"; sourceTree = "<group>"; };
 		8AAA64001D2407CE00A9A123 /* Kiwi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kiwi.framework; path = "../development/Kiwi/build/Debug-iphoneos/Kiwi.framework"; sourceTree = "<group>"; };
 		8AAA64071D24088600A9A123 /* BugsnagSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagSpec.m; path = ../Tests/BugsnagSpec.m; sourceTree = SOURCE_ROOT; };
@@ -117,7 +118,7 @@
 				8A0F9E4D1DC3DDAB00BC83B2 /* UIKit.framework in Frameworks */,
 				8A0F9E4C1DC3DDA700BC83B2 /* SystemConfiguration.framework in Frameworks */,
 				8A0F9E4B1DC3DDA300BC83B2 /* MessageUI.framework in Frameworks */,
-				8A0F9E4A1DC3DD9B00BC83B2 /* libKSCrashLib.a in Frameworks */,
+				8A8B7ABB1DD23AF5003EB34F /* libKSCrashLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +208,7 @@
 		8A2C8F751C6BBEBB00846019 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A8B7ABA1DD23AF5003EB34F /* libKSCrashLib.a */,
 				8A0F9E491DC3DD9B00BC83B2 /* libKSCrashLib.a */,
 				8A5ACC611DC11FCA00879C6D /* KSCrash.framework */,
 				8AAA64001D2407CE00A9A123 /* Kiwi.framework */,
@@ -318,7 +320,7 @@
 		8A2C8F0F1C6BBD2300846019 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Bugsnag;
 				TargetAttributes = {
 					8A0F9E3F1DC3DD9300BC83B2 = {
@@ -464,8 +466,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -488,7 +492,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -511,8 +515,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -529,7 +535,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -543,6 +549,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -566,6 +573,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
