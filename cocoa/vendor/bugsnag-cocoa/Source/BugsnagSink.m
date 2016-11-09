@@ -24,7 +24,7 @@
 // THE SOFTWARE.
 //
 
-#import <KSCrash/KSCrash.h>
+#import "KSCrash.h"
 #import "BugsnagSink.h"
 #import "BugsnagNotifier.h"
 #import "Bugsnag.h"

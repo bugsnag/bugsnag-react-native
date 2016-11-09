@@ -24,8 +24,8 @@
 // THE SOFTWARE.
 //
 
-#import <KSCrash/KSCrashAdvanced.h>
-#import <KSCrash/KSCrashC.h>
+#import "KSCrashAdvanced.h"
+#import "KSCrashC.h"
 
 #import "Bugsnag.h"
 #import "BugsnagBreadcrumb.h"
