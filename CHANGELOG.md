@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 1.1.2 (2016-11-08)
+
+### Bug fixes
+
+* Adjust header copy phase and search paths for iOS dependencies to ensure no
+  additional content is created in the root of archived projects
+  [#18](https://github.com/bugsnag/bugsnag-react-native/issues/18)
+
 ## 1.1.1 (2016-11-07)
 
 ### Miscellaneous
