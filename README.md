@@ -14,7 +14,7 @@
 
 1. [Create a Bugsnag account](https://bugsnag.com)
 1. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/react-native) to report unhandled exceptions thrown from your app
-1. Report handled exceptions using [`Client.notify()`](https://docs.bugsnag.com/platforms/react-native/reporting-handled-exceptions/)
+1. Report handled exceptions using [`Client.notify()`](https://docs.bugsnag.com/platforms/react-native/#reporting-handled-errors)
 1. Customize your integration using the [configuration options](http://docs.bugsnag.com/platforms/react-native/configuration-options/)
 
 
