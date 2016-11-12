@@ -20,9 +20,6 @@
 
 ## Support
 
-* Come chat with us in
-  [#bugsnag on freenode IRC](ircs://chat.freenode.net/%23bugsnag) or
-  [Bugsnag #react-native slack channel](https://bugsnag-customers.slack.com/messages/react-native)
 * [Read the integration guide](http://docs.bugsnag.com/platforms/react-native/) or [configuration options documentation](http://docs.bugsnag.com/platforms/react-native/configuration-options/)
 * [Search open and closed issues](https://github.com/bugsnag/bugsnag-react-native/issues?utf8=✓&q=is%3Aissue) for similar problems
 * [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-react-native/issues/new)
