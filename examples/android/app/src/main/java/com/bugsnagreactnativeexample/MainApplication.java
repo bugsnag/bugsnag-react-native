@@ -26,14 +26,15 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new VectorIconsPackage(),
-            BugsnagReactNative.getPackage()
+          new VectorIconsPackage(),
+          new CrashyPackage(),
+          BugsnagReactNative.getPackage()
       );
     }
   };
 
   @Override
   public ReactNativeHost getReactNativeHost() {
-      return mReactNativeHost;
+    return mReactNativeHost;
   }
 }
