@@ -6,7 +6,7 @@
   "nativePackage": true,
   "dependencies": {
     "npmlog": "^2.0.4",
-    "xcode": "^0.8.9"
+    "promise": "^7"
   },
   "rnpm": {
     "ios": {
