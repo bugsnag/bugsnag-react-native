@@ -5,7 +5,6 @@
   "main": "index.js",
   "nativePackage": true,
   "dependencies": {
-    "npmlog": "^2.0.4",
     "promise": "^7"
   },
   "rnpm": {
