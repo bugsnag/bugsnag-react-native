@@ -99,8 +99,8 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   public void setUser(ReadableMap userInfo) {
       logger.info("Setting user data");
       Bugsnag.setUser(userInfo.getString("id"),
-                      userInfo.getString("name"),
-                      userInfo.getString("email"));
+                      userInfo.getString("email"),
+                      userInfo.getString("name"));
   }
 
   /**
