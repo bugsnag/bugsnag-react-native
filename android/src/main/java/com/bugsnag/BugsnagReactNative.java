@@ -99,8 +99,8 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   public void setUser(ReadableMap userInfo) {
       logger.info("Setting user data");
       Bugsnag.setUser(userInfo.getString("id"),
-                      userInfo.getString("name"),
-                      userInfo.getString("email"));
+                      userInfo.getString("email"),
+                      userInfo.getString("name"));
   }
 
   /**
@@ -112,7 +112,20 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     while (iterator.hasNextKey()) {
         String key = iterator.nextKey();
         ReadableMap pair = map.getMap(key);
-        output.put(key, pair.getString("value"));
+        switch (pair.getString("type")) {
+            case "boolean":
+                output.put(key, String.valueOf(pair.getBoolean("value")));
+                break;
+            case "number":
+                output.put(key, String.valueOf(pair.getDouble("value")));
+                break;
+            case "string":
+                output.put(key, pair.getString("value"));
+                break;
+            case "map":
+                output.put(key, String.valueOf(readStringMap(pair.getMap("value"))));
+                break;
+        }
     }
     return output;
   }

@@ -49,8 +49,8 @@ typedef void (^BugsnagNotifyBlock)(BugsnagCrashReport *_Nonnull report);
  *  @return YES if the report should be sent
  */
 typedef bool (^BugsnagBeforeSendBlock)(
-    NSDictionary *_Nonnull rawEventData,
-    BugsnagCrashReport *_Nonnull reports);
+NSDictionary *_Nonnull rawEventData,
+BugsnagCrashReport *_Nonnull reports);
 
 /**
  *  A handler for modifying data before sending it to Bugsnag
@@ -62,7 +62,7 @@ typedef bool (^BugsnagBeforeSendBlock)(
  *  @return the report payload intended to be sent or nil to cancel sending
  */
 typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
-    NSArray *_Nonnull rawEventReports, NSDictionary *_Nonnull report);
+NSArray *_Nonnull rawEventReports, NSDictionary *_Nonnull report);
 
 @interface BugsnagConfiguration : NSObject
 /**
@@ -92,7 +92,7 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
 @property(nonatomic, readwrite, retain, nullable) NSString *appVersion;
 
 /**
- *  Additional information about the state of the app or environment at the 
+ *  Additional information about the state of the app or environment at the
  *  time the report was generated
  */
 @property(nonatomic, readwrite, retain, nullable) BugsnagMetaData *metaData;
@@ -104,7 +104,7 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
  *  Rolling snapshots of user actions leading up to a crash report
  */
 @property(nonatomic, readonly, strong, nullable)
-    BugsnagBreadcrumbs *breadcrumbs;
+BugsnagBreadcrumbs *breadcrumbs;
 
 /**
  *  Whether to allow collection of automatic breadcrumbs for notable events
@@ -115,12 +115,12 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
  *  Hooks for modifying crash reports before it is sent to Bugsnag
  */
 @property(nonatomic, readonly, strong, nullable)
-    NSArray <BugsnagBeforeSendBlock>* beforeSendBlocks;
+NSArray <BugsnagBeforeSendBlock>* beforeSendBlocks;
 /**
  *  Optional handler invoked when a crash or fatal signal occurs
  */
 @property(nonatomic) void (*_Nullable onCrashHandler)
-    (const BSGKSCrashReportWriter *_Nonnull writer);
+(const BSGKSCrashReportWriter *_Nonnull writer);
 /**
  *  YES if uncaught exceptions should be reported automatically
  */
@@ -145,6 +145,12 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
  */
 - (void)addBeforeSendBlock:(BugsnagBeforeSendBlock _Nonnull)block;
 
+
+/**
+ * Clear all callbacks
+ */
+- (void)clearBeforeSendBlocks;
+
 /**
  *  Whether reports shoould be sent, based on release stage options
  *
@@ -153,10 +159,10 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
 - (BOOL)shouldSendReports;
 
 - (void)addBeforeNotifyHook:(BugsnagBeforeNotifyHook _Nonnull)hook
-    __deprecated_msg("Use addBeforeSendBlock: instead.");
+__deprecated_msg("Use addBeforeSendBlock: instead.");
 /**
  *  Hooks for processing raw report data before it is sent to Bugsnag
  */
 @property(nonatomic, readonly, strong, nullable) NSArray *beforeNotifyHooks
-    __deprecated_msg("Use beforeNotify instead.");
+__deprecated_msg("Use beforeNotify instead.");
 @end

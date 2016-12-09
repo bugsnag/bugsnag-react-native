@@ -1,6 +1,23 @@
 Changelog
 =========
 
+## 1.1.3 (2016-11-14)
+
+### Enhancements
+
+* ES6 Code cleanup
+  [Shadi](https://github.com/TheSisb)
+  [#23](https://github.com/bugsnag/bugsnag-react-native/pull/23)
+
+### Bug fixes
+
+* Fix default error handling fallback when initializing Bugsnag early in app
+  cycle
+  [Christian Schlensker](https://github.com/wordofchristian)
+  [#26](https://github.com/bugsnag/bugsnag-react-native/pull/26)
+* Fix double-reporting of unhandled JavaScript exceptions on iOS when in
+  production
+
 ## 1.1.2 (2016-11-08)
 
 ### Bug fixes
@@ -35,8 +52,6 @@ Changelog
 
 ### Bug fixes
 
-* Fix double-reporting of unhandled JavaScript exceptions on iOS when in
-  production
 * Fix failure to invoke reporting callbacks
   [Sam Aryasa](https://github.com/sbycrosz)
   [#22](https://github.com/bugsnag/bugsnag-react-native/pull/22)
