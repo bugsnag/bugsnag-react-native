@@ -1,15 +1,11 @@
 import React from 'react';
-import { Text, View, StyleSheet, NativeModules, Platform } from 'react-native';
+import { Text, View, StyleSheet, Platform } from 'react-native';
 import { Button } from 'react-native-elements';
+import NativeCrash from 'lib/native_crash';
 
 function triggerException() {
   bogusFunction(); // eslint-disable-line no-undef
 }
-
-function triggerNativeException() {
-  NativeModules.CrashyCrashy.generateCrash();
-}
-
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +45,7 @@ const Crashy = () => (
         backgroundColor="#e1727d"
         color="#ffffff"
         title="Trigger Native Exception"
-        onPress={triggerNativeException}
+        onPress={NativeCrash.generateCrash}
         icon={{name: 'device-mobile', type: 'octicon'}}
         borderRadius={5}
         buttonStyle={styles.button}
