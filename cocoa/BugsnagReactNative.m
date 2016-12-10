@@ -137,6 +137,11 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
             if (!targetMetadata)
                 targetMetadata = [NSMutableDictionary new];
             for (NSString *sectionKey in metadata) {
+                if (![metadata[sectionKey] isKindOfClass:[NSDictionary class]]) {
+                    NSLog(@"Bugsnag: The metadata recorded for key '%@' is not formatted as key/value pairs. Discarding.", sectionKey);
+                    continue;
+                }
+
                 NSMutableDictionary *section = [targetMetadata[sectionKey] mutableCopy];
                 if (!section)
                     section = [NSMutableDictionary new];

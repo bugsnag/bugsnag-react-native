@@ -1,6 +1,24 @@
 Changelog
 =========
 
+## 1.1.4 (2016-12-08)
+
+### Bug fixes
+
+* Fix breadcrumbs being discarded when metadata is unable to be used
+  [#36](https://github.com/bugsnag/bugsnag-react-native/issues/36)
+* Fix object metadata being discarded from reports
+  [#36](https://github.com/bugsnag/bugsnag-react-native/issues/36)
+* Fix non-String breadcrumb metadata being incorrectly parsed on Android
+  [#33](https://github.com/bugsnag/bugsnag-react-native/pull/33)
+  [Kevin Cooper](https://github.com/cooperka)
+* Add promise as an explicit dependency
+  [#40](https://github.com/bugsnag/bugsnag-react-native/pull/40)
+  [Christian Schlensker](https://github.com/wordofchristian)
+* Fix username and email fields of `setUser` being reversed on Android
+  [#38](https://github.com/bugsnag/bugsnag-react-native/issues/38)
+
+
 ## 1.1.3 (2016-11-14)
 
 ### Enhancements
