@@ -942,12 +942,11 @@ buffer-to-vinyl@^1.0.0:
     uuid "^2.0.1"
     vinyl "^1.0.0"
 
-bugsnag-react-native@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.1.3.tgz#ff3a50b40b8733aeca218103629f3583fe5e6ce4"
+bugsnag-react-native@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/bugsnag-react-native/-/bugsnag-react-native-1.1.4.tgz#478d348f8a754a520d0a73454b451cca4829500e"
   dependencies:
-    npmlog "^2.0.4"
-    xcode "^0.8.9"
+    promise "^7"
 
 builtin-modules@^1.0.0, builtin-modules@^1.1.1:
   version "1.1.1"
