@@ -1,6 +1,24 @@
 Changelog
 =========
 
+## 1.2.0 (2016-12-23)
+
+### Enhancements
+
+* Add `clearUser` to the `Client`. Clear user removes any custom user data
+  from the report and adds the default device identifier
+  [#51](https://github.com/bugsnag/bugsnag-react-native/pulls/51)
+
+### Bug fixes
+
+* [ios] Fix stripping of source paths for release builds
+  [#35](https://github.com/bugsnag/bugsnag-react-native/issues/35)
+  [#52](https://github.com/bugsnag/bugsnag-react-native/pulls/52)
+
+* [android] Ensure unhandled errors are sent as blocking requests
+  [#46](https://github.com/bugsnag/bugsnag-react-native/issues/46)
+  [#47](https://github.com/bugsnag/bugsnag-react-native/issues/47)
+
 ## 1.1.4 (2016-12-08)
 
 ### Bug fixes
