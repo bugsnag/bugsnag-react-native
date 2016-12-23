@@ -103,6 +103,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                       userInfo.getString("name"));
   }
 
+  @ReactMethod
+  public void clearUser() {
+      Bugsnag.clearUser();
+  }
+
   /**
    * Convert a typed map into a string Map
    */

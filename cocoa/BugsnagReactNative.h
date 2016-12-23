@@ -8,5 +8,6 @@
 - (void)leaveBreadcrumb:(NSDictionary *)options;
 - (void)notify:(NSDictionary *)payload;
 - (void)setUser:(NSDictionary *)userInfo;
+- (void)clearUser;
 
 @end
