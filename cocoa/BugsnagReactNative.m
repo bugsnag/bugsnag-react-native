@@ -81,9 +81,12 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
                 location = [location substringToIndex:search.location];
             }
         }
-        NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
-        if (bundlePath) {
-            search = [location rangeOfString:bundlePath];
+        NSURL *bundleURL = [[NSBundle mainBundle] bundleURL];
+        search = [location rangeOfString:[bundleURL absoluteString]];
+        if (search.location != NSNotFound) {
+            location = [location substringFromIndex:search.location + search.length];
+        } else {
+            search = [location rangeOfString:[bundleURL path]];
             if (search.location != NSNotFound)
                 location = [location substringFromIndex:search.location + search.length + 1];
         }
