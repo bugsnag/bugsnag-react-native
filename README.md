@@ -1,5 +1,5 @@
 # Bugsnag exception reporter for React Native
-[![Documentation](https://img.shields.io/badge/documentation-1.2.0-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
+[![Documentation](https://img.shields.io/badge/documentation-1.2.1-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
 
 ## Features
 

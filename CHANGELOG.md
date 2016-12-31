@@ -1,6 +1,18 @@
 Changelog
 =========
 
+## 1.2.1 (2016-12-30)
+
+### Bug fixes
+
+* [ios] Fix failed call to `notifyBlocking`
+  [#54](https://github.com/bugsnag/bugsnag-react-native/pulls/54)
+  [Libin Lu](https://github.com/evollu)
+
+* [ios] Update spec installation to separate vendored files
+  [#55](https://github.com/bugsnag/bugsnag-react-native/pulls/55)
+  [Eugene Sokovikov](https://github.com/skv-headless)
+
 ## 1.2.0 (2016-12-23)
 
 ### Enhancements
