@@ -7,6 +7,10 @@ function triggerException() {
   bogusFunction(); // eslint-disable-line no-undef
 }
 
+function triggerNativeException() {
+  NativeCrash.generateCrash()
+}
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
@@ -45,7 +49,7 @@ const Crashy = () => (
         backgroundColor="#e1727d"
         color="#ffffff"
         title="Trigger Native Exception"
-        onPress={NativeCrash.generateCrash}
+        onPress={triggerNativeException}
         icon={{name: 'device-mobile', type: 'octicon'}}
         borderRadius={5}
         buttonStyle={styles.button}
