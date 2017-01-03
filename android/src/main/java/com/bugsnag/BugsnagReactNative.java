@@ -72,6 +72,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void notify(ReadableMap payload) {
+      notifyBlocking(payload, false, null);
+  }
+
+  @ReactMethod
+  public void notifyBlocking(ReadableMap payload, boolean blocking, com.facebook.react.bridge.Callback callback) {
       if (!payload.hasKey("errorClass")) {
           logger.warning("Bugsnag could not notify: No error class");
           return;
@@ -90,9 +95,17 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                                                         errorMessage,
                                                         rawStacktrace);
 
-      Bugsnag.notify(exc, new DiagnosticsCallback(libraryVersion,
-                                                  bugsnagAndroidVersion,
-                                                  payload));
+
+      DiagnosticsCallback handler = new DiagnosticsCallback(libraryVersion,
+                                                            bugsnagAndroidVersion,
+                                                            payload);
+      if (blocking) {
+        Bugsnag.getClient().notifyBlocking(exc, handler);
+      } else {
+        Bugsnag.notify(exc, handler);
+      }
+      if (callback != null)
+        callback.invoke();
   }
 
   @ReactMethod
@@ -101,6 +114,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       Bugsnag.setUser(userInfo.getString("id"),
                       userInfo.getString("email"),
                       userInfo.getString("name"));
+  }
+
+  @ReactMethod
+  public void clearUser() {
+      Bugsnag.clearUser();
   }
 
   /**

@@ -81,9 +81,12 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
                 location = [location substringToIndex:search.location];
             }
         }
-        NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
-        if (bundlePath) {
-            search = [location rangeOfString:bundlePath];
+        NSURL *bundleURL = [[NSBundle mainBundle] bundleURL];
+        search = [location rangeOfString:[bundleURL absoluteString]];
+        if (search.location != NSNotFound) {
+            location = [location substringFromIndex:search.location + search.length];
+        } else {
+            search = [location rangeOfString:[bundleURL path]];
             if (search.location != NSNotFound)
                 location = [location substringFromIndex:search.location + search.length + 1];
         }
@@ -160,6 +163,10 @@ RCT_EXPORT_METHOD(setUser:(NSDictionary *)userInfo) {
     NSString *name = userInfo[@"name"] ? [RCTConvert NSString:userInfo[@"name"]] : nil;
     NSString *email = userInfo[@"email"] ? [RCTConvert NSString:userInfo[@"email"]] : nil;
     [[Bugsnag configuration] setUser:identifier withName:name andEmail:email];
+}
+
+RCT_EXPORT_METHOD(clearUser) {
+    [[Bugsnag configuration] setUser:nil withName:nil andEmail:nil];
 }
 
 RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
