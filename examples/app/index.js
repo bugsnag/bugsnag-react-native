@@ -21,7 +21,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#eeeeee',
-  }
+  },
+
+  navBar: {
+    backgroundColor: '#212129',
+    alignItems: 'center',
+  },
 })
 
 export default class App extends Component {
@@ -32,7 +37,7 @@ export default class App extends Component {
         renderScene={this._renderScene}
         onWillFocus={leaveNavigationBreadcrumb}
         navigationBar={
-          <Navigator.NavigationBar style={{backgroundColor: '#212129'}}
+          <Navigator.NavigationBar style={styles.navBar}
             routeMapper={NavigationBarRouteMapper} />
         }
       />
