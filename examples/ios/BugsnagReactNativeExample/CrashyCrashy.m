@@ -14,7 +14,8 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(generateCrash)
 {
-  @throw [NSException exceptionWithName: @"Oopsy Exception" reason: @"oopsy!" userInfo:nil];
+  NSArray *items = [NSArray new];
+  NSLog(@"This item does not exist: %@", items[42]);
 }
 
 @end
