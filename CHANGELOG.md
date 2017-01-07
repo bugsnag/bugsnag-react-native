@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 1.2.2 (2017-01-06)
+
+### Bug fixes
+
+* [ios] Prevent discarding native exceptions invoked over JS bridge
+  [fac66b9](https://github.com/bugsnag/bugsnag-react-native/commit/fac66b9e1675982f60049de8103933c975c69738)
+
 ## 1.2.1 (2016-12-30)
 
 ### Bug fixes
