@@ -1,5 +1,10 @@
 Changelog
 =========
+## 2.0.0 (2017-01-11)
+
+*  Updated to support react native 0.40.0
+   [#60] https://github.com/bugsnag/bugsnag-react-native/pull/60
+   [Henrik Raitasola](https://github.com/henrikra)
 
 ## 1.2.2 (2017-01-06)
 

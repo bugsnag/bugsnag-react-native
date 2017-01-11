@@ -1,11 +1,14 @@
 {
   "name": "bugsnag-react-native",
-  "version": "1.2.2",
+  "version": "2.0.0",
   "license": "MIT",
   "main": "index.js",
   "nativePackage": true,
   "dependencies": {
     "promise": "^7"
+  },
+  "peerDependencies": {
+    "react-native": "^0.40"
   },
   "rnpm": {
     "ios": {
