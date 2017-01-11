@@ -1,6 +1,6 @@
 #import "Bugsnag.h"
 #import "BugsnagReactNative.h"
-#import "RCTConvert.h"
+#import <React/RCTConvert.h>
 
 BSGBreadcrumbType BreadcrumbTypeFromString(NSString *type) {
     if ([type isEqualToString:@"log"])
