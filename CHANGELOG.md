@@ -1,5 +1,13 @@
 Changelog
 =========
+
+## 2.0.1 (2017-01-12)
+
+### Bug fixes
+
+* Upgrade bugsnag-android dependency to fix issue with network requests being
+  sent on the main thread
+
 ## 2.0.0 (2017-01-11)
 
 *  Updated to support react native 0.40.0
