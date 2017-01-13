@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 1.2.3 (2017-01-12)
+
+### Bug fixes
+
+* Upgrade bugsnag-android dependency to fix issue with network requests being
+  sent on the main thread
+
 ## 1.2.2 (2017-01-06)
 
 ### Bug fixes
