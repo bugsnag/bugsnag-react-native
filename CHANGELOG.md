@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 1.2.4 (2017-01-13)
+
+* [ios] Fix regression where previous exception handler is not called
+
 ## 1.2.3 (2017-01-12)
 
 ### Bug fixes
