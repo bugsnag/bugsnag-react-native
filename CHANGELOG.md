@@ -1,6 +1,16 @@
 Changelog
 =========
 
+## 2.0.3 (2017-02-14)
+
+### Bug fixes
+* Change react-native dependency to allow for versions past 0.40
+  [#71](https://github.com/bugsnag/bugsnag-react-native/pull/71)
+  [Michael Patricios](https://github.com/mpatric)
+* Conventionalize to fix sneaky breadcrumb logging bugs
+  [#56](https://github.com/bugsnag/bugsnag-react-native/pull/56)
+  [Kevin Cooper](https://github.com/cooperka)
+
 ## 2.0.2 (2017-01-13)
 
 ### Bug fixes
@@ -159,4 +169,3 @@ Vendor iOS dependencies. Current version is 5.6.3.
 ## 1.0.0
 
 First public release
-
