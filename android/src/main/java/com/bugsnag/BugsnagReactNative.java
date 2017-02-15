@@ -111,9 +111,10 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   @ReactMethod
   public void setUser(ReadableMap userInfo) {
       logger.info("Setting user data");
-      Bugsnag.setUser(userInfo.getString("id"),
-                      userInfo.getString("email"),
-                      userInfo.getString("name"));
+      String userId = userInfo.hasKey("id") ? userInfo.getString("id") : null;
+      String email = userInfo.hasKey("email") ? userInfo.getString("email") : null;
+      String name = userInfo.hasKey("name") ? userInfo.getString("name") : null;
+      Bugsnag.setUser(userId, email, name);
   }
 
   @ReactMethod
