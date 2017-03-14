@@ -2,6 +2,8 @@
 #import "BugsnagReactNative.h"
 #import <React/RCTConvert.h>
 
+NSString *const BSGInfoPlistKey = @"BugsnagAPIKey";
+
 BSGBreadcrumbType BreadcrumbTypeFromString(NSString *type) {
     if ([type isEqualToString:@"log"])
         return BSGBreadcrumbTypeLog;
@@ -113,6 +115,24 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
     return formatter;
 }
 
++ (void)start {
+    [self startWithAPIKey:nil];
+}
+
++ (void)startWithAPIKey:(NSString *)APIKey {
+    if (APIKey.length == 0)
+        APIKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:BSGInfoPlistKey];
+
+    [Bugsnag startBugsnagWithApiKey:APIKey];
+}
+
++ (void)startWithConfiguration:(BugsnagConfiguration *)config {
+    if (config.apiKey.length == 0)
+        config.apiKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:BSGInfoPlistKey];
+
+    [Bugsnag startBugsnagWithConfiguration:config];
+}
+
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
@@ -179,6 +199,9 @@ RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
 
 RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     NSString *apiKey = [RCTConvert NSString:options[@"apiKey"]];
+    if (apiKey.length == 0)
+        apiKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:BSGInfoPlistKey];
+
     NSString *releaseStage = [self  parseReleaseStage:[RCTConvert NSString:options[@"releaseStage"]]];
     NSArray *notifyReleaseStages = [RCTConvert NSStringArray:options[@"notifyReleaseStages"]];
     NSString *notifyURLPath = [RCTConvert NSString:options[@"endpoint"]];

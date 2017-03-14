@@ -23,6 +23,8 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.uimanager.ViewManager;
 
+import android.content.Context;
+
 import com.bugsnag.android.*;
 
 
@@ -35,6 +37,18 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   public static ReactPackage getPackage() {
     return new BugsnagPackage();
+  }
+
+  public static Client start(Context context) {
+    return Bugsnag.init(context);
+  }
+
+  public static Client startWithApiKey(Context context, String APIKey) {
+    return Bugsnag.init(context, APIKey);
+  }
+
+  public static Client startWithConfiguration(Context context, Configuration config) {
+    return Bugsnag.init(context, config);
   }
 
   public BugsnagReactNative(ReactApplicationContext reactContext) {
