@@ -66,10 +66,15 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   @ReactMethod
   public void startWithOptions(ReadableMap options) {
       libraryVersion = options.getString("version");
-      Configuration config = createConfiguration(options);
-      bugsnagAndroidVersion = config.getClass().getPackage().getSpecificationVersion();
+      Client client = null;
+      if (options.hasKey("apiKey")) {
+          client = Bugsnag.init(this.reactContext, options.getString("apiKey"));
+      } else {
+          client = Bugsnag.init(this.reactContext);
+      }
+      bugsnagAndroidVersion = client.getClass().getPackage().getSpecificationVersion();
+      configureRuntimeOptions(client, options);
 
-      Bugsnag.init(this.reactContext, config);
       logger.info(String.format("Initialized Bugsnag React Native %s/Android %s",
                   libraryVersion,
                   bugsnagAndroidVersion));
@@ -172,26 +177,24 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     return BreadcrumbType.MANUAL;
   }
 
-  private Configuration createConfiguration(ReadableMap options) {
-      Configuration config = new Configuration(options.getString("apiKey"));
-      config.setIgnoreClasses(new String[] {"com.facebook.react.common.JavascriptException"});
-
+  private void configureRuntimeOptions(Client client, ReadableMap options) {
+      client.setIgnoreClasses(new String[] {"com.facebook.react.common.JavascriptException"});
       if (options.hasKey("appVersion")) {
           String version = options.getString("appVersion");
           if (version != null && version.length() > 0)
-              config.setAppVersion(version);
+              client.setAppVersion(version);
       }
 
       if (options.hasKey("endpoint")) {
           String endpoint = options.getString("endpoint");
           if (endpoint != null && endpoint.length() > 0)
-              config.setEndpoint(endpoint);
+              client.setEndpoint(endpoint);
       }
 
       if (options.hasKey("releaseStage")) {
           String releaseStage = options.getString("releaseStage");
           if (releaseStage != null && releaseStage.length() > 0)
-              config.setReleaseStage(releaseStage);
+              client.setReleaseStage(releaseStage);
       }
 
       if (options.hasKey("notifyReleaseStages")) {
@@ -201,11 +204,9 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
               for (int i = 0; i < stages.size(); i++) {
                 releaseStages[i] = stages.getString(i);
               }
-              config.setNotifyReleaseStages(releaseStages);
+              client.setNotifyReleaseStages(releaseStages);
           }
       }
-
-      return config;
   }
 }
 
