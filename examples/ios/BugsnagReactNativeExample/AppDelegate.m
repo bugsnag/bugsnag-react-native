@@ -8,6 +8,7 @@
  */
 
 #import "AppDelegate.h"
+#import <BugsnagReactNative/BugsnagReactNative.h>
 
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
@@ -16,6 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [BugsnagReactNative start];
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];

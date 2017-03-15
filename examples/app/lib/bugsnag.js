@@ -4,6 +4,6 @@
 //-------------------------------------------------------------------------------------------------
 // https://docs.bugsnag.com/platforms/react-native/#basic-configuration
 import { Client } from 'bugsnag-react-native';
-const client = new Client('API_KEY_GOES_HERE');
+const client = new Client();
 //-------------------------------------------------------------------------------------------------
 export default client;
