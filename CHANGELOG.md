@@ -1,16 +1,20 @@
 Changelog
 =========
 
+## 2.2.0 (2017-03-15)
+
+### Enhancements
+* Add convenience interface to setting up native-only error handling
 
 ## 2.1.0 (2017-02-28)
 
 ### Enhancements
 * Adds `codeBundleId` property as an alternative to appVersion to support CodePush
   [#74](https://github.com/bugsnag/bugsnag-react-native/pull/74)
-
-### Bug fixes
 * Add original error to report object
   [#61](https://github.com/bugsnag/bugsnag-react-native/pull/61)
+
+### Bug fixes
 * [android] Check each param before setting user
   [#73](https://github.com/bugsnag/bugsnag-react-native/issues/73)
 
