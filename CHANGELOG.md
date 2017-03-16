@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## 1.3.0 (2017-03-15)
+
+### Enhancements
+
+* Add convenience interface to setting up native-only error handling
+
 ## 1.2.4 (2017-01-13)
 
 * [ios] Fix regression where previous exception handler is not called
