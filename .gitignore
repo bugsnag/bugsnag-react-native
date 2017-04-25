@@ -1,5 +1,6 @@
 node_modules
 example*/ios/Pods
+lib
 *.bundle
 local.properties
 .idea

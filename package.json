@@ -7,6 +7,9 @@
   "dependencies": {
     "promise": "^7"
   },
+  "scripts": {
+    "prepublish": "mkdir -p lib && babel src/Bugsnag.js --presets=react-native -s -o lib/Bugsnag.js"
+  },
   "peerDependencies": {
     "react-native": ">=0.40"
   },
@@ -19,5 +22,9 @@
       "packageInstance": "BugsnagReactNative.getPackage()",
       "packageImportPath": "import com.bugsnag.BugsnagReactNative;"
     }
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-react-native": "^1.9.1"
   }
 }
