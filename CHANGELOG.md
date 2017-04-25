@@ -1,6 +1,17 @@
 Changelog
 =========
 
+## 2.2.1 (2017-04-25)
+
+* Generates `lib/Bugsnag.js` to improve compatibility with tooling which does
+  not transpile source files from `node_modules`, like haul and testing tools
+* Adds a warning when using breadcrumb names which will be truncated
+
+### Bug fixes
+
+* Reorder the header files in the podspec, to work around skipped files
+  [#92](https://github.com/bugsnag/bugsnag-react-native/issues/92)
+
 ## 2.2.0 (2017-03-15)
 
 ### Enhancements
