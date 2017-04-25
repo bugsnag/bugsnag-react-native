@@ -24,6 +24,7 @@
 // THE SOFTWARE.
 //
 #import "BugsnagBreadcrumb.h"
+#import "BugsnagLogger.h"
 #import "Bugsnag.h"
 
 NSString *const BSGBreadcrumbDefaultName = @"manual";
@@ -180,9 +181,9 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
             if (data.length <= BSGBreadcrumbMaxByteSize)
                 [contents addObject:objectValue];
             else
-                NSLog(@"Dropping Bugsnag breadcrumb (%@) exceeding %lu byte size limit", crumb.name, (unsigned long)BSGBreadcrumbMaxByteSize);
+                bsg_log_warn(@"Dropping breadcrumb (%@) exceeding %lu byte size limit", crumb.name, (unsigned long)BSGBreadcrumbMaxByteSize);
         } @catch (NSException *exception) {
-            NSLog(@"Unable to serialize breadcrumb for Bugsnag: %@", error);
+            bsg_log_err(@"Unable to serialize breadcrumb: %@", error);
         }
     }
     [self.lock unlock];

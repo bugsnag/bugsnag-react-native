@@ -33,7 +33,7 @@ void BSGDictSetSafeObject(NSMutableDictionary *dict, id object,
 /**
  *  Insert an object or NSNull into a collection
  *
- *  @param dict   a mutable array
+ *  @param array  a mutable array
  *  @param object an object or nil
  */
 void BSGArrayAddSafeObject(NSMutableArray *array, id object);
@@ -51,7 +51,7 @@ void BSGDictInsertIfNotNil(NSMutableDictionary *dict, id object,
 /**
  *  Insert an object into a collection only if not nil
  *
- *  @param dict   a mutable array
+ *  @param array  a mutable array
  *  @param object an object or nil
  */
 void BSGArrayInsertIfNotNil(NSMutableArray *array, id object);

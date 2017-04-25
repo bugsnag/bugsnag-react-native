@@ -29,4 +29,9 @@
 
 @interface BugsnagSink : NSObject <KSCrashReportFilter>
 
+
+/**
+ * Send outstanding error reports
+ */
+- (void)sendPendingReports;
 @end

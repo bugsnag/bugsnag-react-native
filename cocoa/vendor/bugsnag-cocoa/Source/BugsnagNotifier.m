@@ -33,6 +33,7 @@
 #import "BugsnagCollections.h"
 #import "BugsnagCrashReport.h"
 #import "BugsnagSink.h"
+#import "BugsnagLogger.h"
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
@@ -41,7 +42,7 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.6.5";
+NSString *const NOTIFIER_VERSION = @"5.8.0";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSTabConfig = @"config";
@@ -49,6 +50,7 @@ NSString *const BSAttributeSeverity = @"severity";
 NSString *const BSAttributeDepth = @"depth";
 NSString *const BSAttributeBreadcrumbs = @"breadcrumbs";
 NSString *const BSEventLowMemoryWarning = @"lowMemoryWarning";
+NSUInteger const BSG_MAX_STORED_REPORTS = 12;
 
 struct bugsnag_data_t {
     // Contains the user-specified metaData, including the user tab from config.
@@ -106,7 +108,7 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
         NSData *json = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&error];
 
         if (!json) {
-            NSLog(@"Bugsnag could not serialize metaData: %@", error);
+            bsg_log_err(@"could not serialize metaData: %@", error);
             return;
         }
         *destination = reallocf(*destination, [json length] + 1);
@@ -115,7 +117,7 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
             (*destination)[[json length]] = '\0';
         }
     } @catch (NSException *exception) {
-        NSLog(@"Bugsnag could not serialize metaData: %@", exception);
+        bsg_log_err(@"could not serialize metaData: %@", exception);
     }
 }
 
@@ -128,9 +130,9 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
         self.configuration = initConfiguration;
         self.state = [[BugsnagMetaData alloc] init];
         self.details = [@{
-                          @"name": @"Bugsnag Objective-C",
-                          @"version": NOTIFIER_VERSION,
-                          @"url": NOTIFIER_URL} mutableCopy];
+                         @"name": @"Bugsnag Objective-C",
+                         @"version": NOTIFIER_VERSION,
+                         @"url": NOTIFIER_URL} mutableCopy];
 
         self.metaDataLock = [[NSLock alloc] init];
         self.configuration.metaData.delegate = self;
@@ -147,52 +149,56 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
 }
 
 - (void) start {
-    [KSCrash sharedInstance].sink = [[BugsnagSink alloc] init];
+    BugsnagSink* sink = [BugsnagSink new];
+    [KSCrash sharedInstance].sink = sink;
     // We don't use this feature yet, so we turn it off
     [KSCrash sharedInstance].introspectMemory = NO;
     [KSCrash sharedInstance].deleteBehaviorAfterSendAll = KSCDeleteOnSucess;
     [KSCrash sharedInstance].onCrash = &BSSerializeDataCrashHandler;
+    [KSCrash sharedInstance].maxStoredReports = BSG_MAX_STORED_REPORTS;
+    [KSCrash sharedInstance].demangleLanguages = 0;
 
     if (!configuration.autoNotify) {
         kscrash_setHandlingCrashTypes(KSCrashTypeUserReported);
     }
-    [[KSCrash sharedInstance] install];
+    if (![[KSCrash sharedInstance] install])
+        bsg_log_err(@"Failed to install crash handler. No exceptions will be reported!");
 
-    [self performSelectorInBackground:@selector(sendPendingReports) withObject:nil];
+    [sink sendPendingReports];
     [self updateAutomaticBreadcrumbDetectionSettings];
 #if TARGET_OS_TV
-    [self.details setValue:@"tvOS Bugsnag Notifier" forKey:@"name"];
+  [self.details setValue:@"tvOS Bugsnag Notifier" forKey:@"name"];
 #elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-    [self.details setValue:@"iOS Bugsnag Notifier" forKey:@"name"];
+  [self.details setValue:@"iOS Bugsnag Notifier" forKey:@"name"];
 
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(batteryChanged:)
-     name:UIDeviceBatteryStateDidChangeNotification
-     object:nil];
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(batteryChanged:)
-     name:UIDeviceBatteryLevelDidChangeNotification
-     object:nil];
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(orientationChanged:)
-     name:UIDeviceOrientationDidChangeNotification
-     object:nil];
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(lowMemoryWarning:)
-     name:UIApplicationDidReceiveMemoryWarningNotification
-     object:nil];
+  [[NSNotificationCenter defaultCenter]
+      addObserver:self
+         selector:@selector(batteryChanged:)
+             name:UIDeviceBatteryStateDidChangeNotification
+           object:nil];
+  [[NSNotificationCenter defaultCenter]
+      addObserver:self
+         selector:@selector(batteryChanged:)
+             name:UIDeviceBatteryLevelDidChangeNotification
+           object:nil];
+  [[NSNotificationCenter defaultCenter]
+      addObserver:self
+         selector:@selector(orientationChanged:)
+             name:UIDeviceOrientationDidChangeNotification
+           object:nil];
+  [[NSNotificationCenter defaultCenter]
+      addObserver:self
+         selector:@selector(lowMemoryWarning:)
+             name:UIApplicationDidReceiveMemoryWarningNotification
+           object:nil];
 
-    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+  [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+  [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
-    [self batteryChanged:nil];
-    [self orientationChanged:nil];
+  [self batteryChanged:nil];
+  [self orientationChanged:nil];
 #elif TARGET_OS_MAC
-    [self.details setValue:@"OSX Bugsnag Notifier" forKey:@"name"];
+  [self.details setValue:@"OSX Bugsnag Notifier" forKey:@"name"];
 #endif
 }
 
@@ -245,12 +251,14 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
     [self metaDataChanged:self.configuration.metaData];
     [[self state] clearTab:BSTabCrash];
     [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb * _Nonnull crumb) {
-        crumb.type = BSGBreadcrumbTypeError;
-        crumb.name = reportName;
-        crumb.metadata = @{ @"message": reportMessage, @"severity": BSGFormatSeverity(report.severity) };
+      crumb.type = BSGBreadcrumbTypeError;
+      crumb.name = reportName;
+      crumb.metadata = @{ @"message": reportMessage, @"severity": BSGFormatSeverity(report.severity) };
     }];
 
-    [self performSelectorInBackground:@selector(sendPendingReports) withObject:nil];
+    BugsnagSink *sink = [KSCrash sharedInstance].sink;
+    if ([sink isKindOfClass:[BugsnagSink class]])
+        [sink sendPendingReports];
 }
 
 - (void)addBreadcrumbWithBlock:(void(^ _Nonnull)(BugsnagBreadcrumb *_Nonnull))block {
@@ -269,22 +277,6 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
     [self.state addAttribute:BSAttributeBreadcrumbs withValue:arrayValue toTabWithName:BSTabCrash];
 }
 
-- (void) sendPendingReports {
-    @autoreleasepool {
-        @try {
-            [[KSCrash sharedInstance] sendAllReportsWithCompletion:^(NSArray *filteredReports, BOOL completed, NSError *error) {
-                if (error)
-                    NSLog(@"Failed to send Bugsnag reports: %@", error);
-                else if (filteredReports.count > 0)
-                    NSLog(@"Bugsnag reports sent.");
-            }];
-        }
-        @catch (NSException* e) {
-            NSLog(@"Error sending report to Bugsnag: %@", e);
-        }
-    }
-}
-
 - (void) metaDataChanged:(BugsnagMetaData *)metaData {
 
     if (metaData == self.configuration.metaData) {
@@ -297,72 +289,72 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
     } else if (metaData == self.state) {
         BSSerializeJSONDictionary([metaData toDictionary], &g_bugsnag_data.stateJSON);
     } else {
-        NSLog(@"Unknown metadata dictionary changed");
+        bsg_log_debug(@"Unknown metadata dictionary changed");
     }
 }
 
 #if TARGET_OS_TV
 #elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 - (void)batteryChanged:(NSNotification *)notif {
-    NSNumber *batteryLevel =
-    [NSNumber numberWithFloat:[UIDevice currentDevice].batteryLevel];
-    NSNumber *charging =
-    [NSNumber numberWithBool:[UIDevice currentDevice].batteryState ==
-     UIDeviceBatteryStateCharging];
+  NSNumber *batteryLevel =
+      [NSNumber numberWithFloat:[UIDevice currentDevice].batteryLevel];
+  NSNumber *charging =
+      [NSNumber numberWithBool:[UIDevice currentDevice].batteryState ==
+                               UIDeviceBatteryStateCharging];
 
-    [[self state] addAttribute:@"batteryLevel"
-                     withValue:batteryLevel
-                 toTabWithName:@"deviceState"];
-    [[self state] addAttribute:@"charging"
-                     withValue:charging
-                 toTabWithName:@"deviceState"];
+  [[self state] addAttribute:@"batteryLevel"
+                   withValue:batteryLevel
+               toTabWithName:@"deviceState"];
+  [[self state] addAttribute:@"charging"
+                   withValue:charging
+               toTabWithName:@"deviceState"];
 }
 
 - (void)orientationChanged:(NSNotification *)notif {
-    NSString *orientation;
-    switch ([UIDevice currentDevice].orientation) {
-        case UIDeviceOrientationPortraitUpsideDown:
-            orientation = @"portraitupsidedown";
-            break;
-        case UIDeviceOrientationPortrait:
-            orientation = @"portrait";
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            orientation = @"landscaperight";
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            orientation = @"landscapeleft";
-            break;
-        case UIDeviceOrientationFaceUp:
-            orientation = @"faceup";
-            break;
-        case UIDeviceOrientationFaceDown:
-            orientation = @"facedown";
-            break;
-        case UIDeviceOrientationUnknown:
-        default:
-            orientation = @"unknown";
-    }
-    [[self state] addAttribute:@"orientation"
-                     withValue:orientation
-                 toTabWithName:@"deviceState"];
-    if ([self.configuration automaticallyCollectBreadcrumbs]) {
-        [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
-            breadcrumb.type = BSGBreadcrumbTypeState;
-            breadcrumb.name = BSGBreadcrumbNameForNotificationName(notif.name);
-            breadcrumb.metadata = @{ @"orientation" : orientation };
-        }];
-    }
+  NSString *orientation;
+  switch ([UIDevice currentDevice].orientation) {
+  case UIDeviceOrientationPortraitUpsideDown:
+    orientation = @"portraitupsidedown";
+    break;
+  case UIDeviceOrientationPortrait:
+    orientation = @"portrait";
+    break;
+  case UIDeviceOrientationLandscapeRight:
+    orientation = @"landscaperight";
+    break;
+  case UIDeviceOrientationLandscapeLeft:
+    orientation = @"landscapeleft";
+    break;
+  case UIDeviceOrientationFaceUp:
+    orientation = @"faceup";
+    break;
+  case UIDeviceOrientationFaceDown:
+    orientation = @"facedown";
+    break;
+  case UIDeviceOrientationUnknown:
+  default:
+    orientation = @"unknown";
+  }
+  [[self state] addAttribute:@"orientation"
+                   withValue:orientation
+               toTabWithName:@"deviceState"];
+  if ([self.configuration automaticallyCollectBreadcrumbs]) {
+    [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
+      breadcrumb.type = BSGBreadcrumbTypeState;
+      breadcrumb.name = BSGBreadcrumbNameForNotificationName(notif.name);
+      breadcrumb.metadata = @{ @"orientation" : orientation };
+    }];
+  }
 }
 
 - (void)lowMemoryWarning:(NSNotification *)notif {
-    [[self state] addAttribute:BSEventLowMemoryWarning
-                     withValue:[[Bugsnag payloadDateFormatter]
-                                stringFromDate:[NSDate date]]
-                 toTabWithName:@"deviceState"];
-    if ([self.configuration automaticallyCollectBreadcrumbs]) {
-        [self sendBreadcrumbForNotification:notif];
-    }
+  [[self state] addAttribute:BSEventLowMemoryWarning
+                   withValue:[[Bugsnag payloadDateFormatter]
+                                 stringFromDate:[NSDate date]]
+               toTabWithName:@"deviceState"];
+  if ([self.configuration automaticallyCollectBreadcrumbs]) {
+    [self sendBreadcrumbForNotification:notif];
+  }
 }
 #endif
 
@@ -387,9 +379,9 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
         }
     } else {
         NSArray* eventNames = [[[[self automaticBreadcrumbStateEvents]
-                                 arrayByAddingObjectsFromArray:[self automaticBreadcrumbControlEvents]]
-                                arrayByAddingObjectsFromArray:[self automaticBreadcrumbMenuItemEvents]]
-                               arrayByAddingObjectsFromArray:[self automaticBreadcrumbTableItemEvents]];
+          arrayByAddingObjectsFromArray:[self automaticBreadcrumbControlEvents]]
+          arrayByAddingObjectsFromArray:[self automaticBreadcrumbMenuItemEvents]]
+          arrayByAddingObjectsFromArray:[self automaticBreadcrumbTableItemEvents]];
         for (NSString *name in eventNames) {
             [[NSNotificationCenter defaultCenter] removeObserver:self
                                                             name:name
@@ -475,22 +467,22 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
 }
 
 - (void)crumbleNotification:(NSString *)notificationName {
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(sendBreadcrumbForNotification:)
-     name:notificationName
-     object:nil];
+  [[NSNotificationCenter defaultCenter]
+      addObserver:self
+         selector:@selector(sendBreadcrumbForNotification:)
+             name:notificationName
+           object:nil];
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)sendBreadcrumbForNotification:(NSNotification *)note {
-    [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
-        breadcrumb.type = BSGBreadcrumbTypeState;
-        breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
-    }];
+  [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
+    breadcrumb.type = BSGBreadcrumbTypeState;
+    breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
+  }];
 }
 
 - (void)sendBreadcrumbForTableViewNotification:(NSNotification *)note {
@@ -502,9 +494,9 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
         breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
         if (indexPath) {
             breadcrumb.metadata = @{
-                                    @"row": @(indexPath.row),
-                                    @"section": @(indexPath.section)
-                                    };
+                @"row": @(indexPath.row),
+                @"section": @(indexPath.section)
+            };
         }
     }];
 #elif TARGET_OS_MAC
@@ -514,9 +506,9 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
         breadcrumb.name = BSGBreadcrumbNameForNotificationName(note.name);
         if (tableView) {
             breadcrumb.metadata = @{
-                                    @"selectedRow": @(tableView.selectedRow),
-                                    @"selectedColumn": @(tableView.selectedColumn)
-                                    };
+                @"selectedRow": @(tableView.selectedRow),
+                @"selectedColumn": @(tableView.selectedColumn)
+            };
         }
     }];
 #endif
@@ -529,11 +521,11 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
     NSMenuItem *menuItem = [[notif userInfo] valueForKey:@"MenuItem"];
     if ([menuItem isKindOfClass:[NSMenuItem class]]) {
         [self addBreadcrumbWithBlock:^(BugsnagBreadcrumb *_Nonnull breadcrumb) {
-            breadcrumb.type = BSGBreadcrumbTypeState;
-            breadcrumb.name = BSGBreadcrumbNameForNotificationName(notif.name);
-            if (menuItem.title.length > 0)
-                breadcrumb.metadata = @{ @"action" : menuItem.title };
-        }];
+             breadcrumb.type = BSGBreadcrumbTypeState;
+             breadcrumb.name = BSGBreadcrumbNameForNotificationName(notif.name);
+             if (menuItem.title.length > 0)
+                 breadcrumb.metadata = @{ @"action" : menuItem.title };
+         }];
     }
 #endif
 }

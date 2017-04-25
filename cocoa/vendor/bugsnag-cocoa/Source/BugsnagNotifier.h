@@ -44,7 +44,7 @@
 /**
  *  Notify Bugsnag of an error
  *
- *  @param erroName Name or class of the error
+ *  @param errorName Name or class of the error
  *  @param message  Message of or reason for the error
  *  @param block    Configuration block with information for this report
  */

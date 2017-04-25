@@ -30,6 +30,7 @@
 #import "BugsnagCrashReport.h"
 #import "BugsnagNotifier.h"
 #import "BugsnagSink.h"
+#import "BugsnagLogger.h"
 #import "KSCrashAdvanced.h"
 
 static BugsnagNotifier* g_bugsnag_notifier = NULL;
@@ -139,7 +140,7 @@ static BugsnagNotifier* g_bugsnag_notifier = NULL;
 
 + (BOOL) bugsnagStarted {
     if (self.notifier == nil) {
-        NSLog(@"Ensure you have started Bugsnag with startWithApiKey: before calling any other Bugsnag functions.");
+        bsg_log_err(@"Ensure you have started Bugsnag with startWithApiKey: before calling any other Bugsnag functions.");
 
         return NO;
     }
