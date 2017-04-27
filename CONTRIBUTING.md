@@ -24,6 +24,14 @@ to run the example projects.
 
 ## Releasing
 
+### Preflight testing
+
+* Ensure the example app sends the correct error for each type on iOS and
+  Android
+* Archive the iOS app and validate the bundle
+
+### Making a new release
+
 1. Update the version number in package.json, android/build.gradle, and the
    README documentation badge.
 2. Update the changelog with new features and fixes
