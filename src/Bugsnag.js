@@ -139,12 +139,13 @@ export class Client {
     }
 
     let type = metadata['type'] || 'manual';
-    delete metadata['type'];
+    const breadcrumbMetaData = { ...metadata };
+    delete breadcrumbMetaData['type'];
 
     NativeClient.leaveBreadcrumb({
       name,
       type,
-      metadata: typedMap(metadata)
+      metadata: typedMap(breadcrumbMetaData)
     });
   }
 }
