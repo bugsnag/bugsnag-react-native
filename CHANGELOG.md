@@ -1,6 +1,17 @@
 Changelog
 =========
 
+## 2.2.4 (2017-07-14)
+
+### Bug fixes
+
+* Copy breadcrumb data to avoid mutation
+  [Jakob Kerkhove](https://github.com/dejakob)
+  [#101](https://github.com/bugsnag/bugsnag-react-native/pull/101)
+* Tweak podspec to work around missing public headers issue
+  [Jonathan Sibley](https://github.com/sibljon)
+  [#116](https://github.com/bugsnag/bugsnag-react-native/pull/116)
+
 ## 2.2.3 (2017-04-27)
 
 ### Bug fixes
