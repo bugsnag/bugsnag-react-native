@@ -23,9 +23,7 @@ Pod::Spec.new do |s|
                    'cocoa/vendor/kscrash/Source/KSCrash/**/*.{h,m,mm,cpp,c}',
                    'cocoa/vendor/kscrash/Source/Framework/**/*.{h,m,mm,cpp,c}',
 
-  s.public_header_files = 'cocoa/vendor/bugsnag-cocoa/Source/Bugsnag{,MetaData,Configuration,Breadcrumb,CrashReport}.h',
-                          'cocoa/vendor/bugsnag-cocoa/Source/BSGKSCrashReportWriter.h',
-                          'cocoa/BugsnagReactNative.h'
+  s.public_header_files = 'cocoa/**/{Bugsnag,BugsnagReactNative,BugsnagMetaData,BugsnagConfiguration,BugsnagBreadcrumb,BugsnagCrashReport,BSGKSCrashReportWriter}.h'
 
   # If Bugsnag is previously installed via CocoaPods, use the Core subspec.
   s.subspec 'Core' do |core|
