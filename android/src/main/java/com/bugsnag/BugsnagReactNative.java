@@ -212,6 +212,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
 class BugsnagPackage implements ReactPackage {
 
+
   @Override
   public List<ViewManager> createViewManagers(
           ReactApplicationContext reactContext) {
