@@ -9,7 +9,7 @@
   "dependencies": {
     "bugsnag-react-native": "^1.1.4",
     "react": "15.3.2",
-    "react-native": "0.37.0",
+    "react-native": "0.47.0-rc.4",
     "react-native-elements": "^0.6.3",
     "react-native-vector-icons": "^3.0.0",
     "whatwg-fetch": "^1.0.0"
