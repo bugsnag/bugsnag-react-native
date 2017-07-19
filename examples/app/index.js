@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Navigator, View, StatusBar, StyleSheet } from 'react-native';
+import { View, StatusBar, StyleSheet } from 'react-native';
+import { Navigator } from 'react-native-deprecated-custom-components';
 import bugsnag from 'lib/bugsnag';
 import NavigationBarRouteMapper from './components/navigation_bar_route_mapper';
 import Main from './components/scenes/main';
