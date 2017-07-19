@@ -4,3 +4,4 @@ lib
 *.bundle
 local.properties
 .idea
+*.DS_STORE

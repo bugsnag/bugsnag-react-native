@@ -97,49 +97,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8AD2560A1D6DE5F600C7D842 = {
-			isa = PBXGroup;
-			children = (
-				8AB63CFA1D918BEF0002381B /* Frameworks */,
-				8AD256151D6DE5F600C7D842 /* BugsnagReactNative */,
-				8AF662D91D929B7800ABD39A /* Libraries */,
-				8AD256141D6DE5F600C7D842 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		8AD256141D6DE5F600C7D842 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8AD256131D6DE5F600C7D842 /* libBugsnagReactNative.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		8AD256151D6DE5F600C7D842 /* BugsnagReactNative */ = {
-			isa = PBXGroup;
-			children = (
-				8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */,
-				8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */,
-			);
-			path = BugsnagReactNative;
-			sourceTree = SOURCE_ROOT;
-		};
-		8AF662D91D929B7800ABD39A /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */,
-				8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */,
-			);
-			name = Libraries;
-			sourceTree = "<group>";
-		};
 		8A5ACBF41DC11D6D00879C6D /* Generated */ = {
 			isa = PBXGroup;
 			children = (
@@ -159,6 +116,49 @@
 				8A5ACC0A1DC11D7600879C6D /* KSCrash.framework */,
 			);
 			name = Generated;
+			sourceTree = "<group>";
+		};
+		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8AD2560A1D6DE5F600C7D842 = {
+			isa = PBXGroup;
+			children = (
+				8AB63CFA1D918BEF0002381B /* Frameworks */,
+				8AD256151D6DE5F600C7D842 /* BugsnagReactNative */,
+				8AF662D91D929B7800ABD39A /* Libraries */,
+				8AD256141D6DE5F600C7D842 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8AD256141D6DE5F600C7D842 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8AD256131D6DE5F600C7D842 /* libBugsnagReactNative.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8AD256151D6DE5F600C7D842 /* BugsnagReactNative */ = {
+			isa = PBXGroup;
+			children = (
+				8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */,
+				8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */,
+			);
+			path = BugsnagReactNative;
+			sourceTree = SOURCE_ROOT;
+		};
+		8AF662D91D929B7800ABD39A /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */,
+				8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */,
+			);
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,11 +207,11 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 8A5ACBF41DC11D6D00879C6D /* Products */;
+					ProductGroup = 8A5ACBF41DC11D6D00879C6D /* Generated */;
 					ProjectRef = 8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */;
 				},
 				{
-					ProductGroup = 8A5ACBFD1DC11D7600879C6D /* Products */;
+					ProductGroup = 8A5ACBFD1DC11D7600879C6D /* Generated */;
 					ProjectRef = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
 				},
 			);
