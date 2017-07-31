@@ -1,3 +1,2 @@
-'use strict';
-import * as bugsnag from './lib/Bugsnag';
-module.exports = bugsnag;
+'use strict'
+module.exports = require('./lib/Bugsnag');
