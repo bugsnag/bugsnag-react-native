@@ -1,6 +1,6 @@
 {
   "name": "bugsnag-react-native",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "license": "MIT",
   "main": "index.js",
   "nativePackage": true,

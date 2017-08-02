@@ -7,11 +7,13 @@
     "test": "jest"
   },
   "dependencies": {
-    "bugsnag-react-native": "^1.1.4",
-    "react": "15.3.2",
-    "react-native": "0.37.0",
+    "bugsnag-react-native": "file:../.",
+    "react": "16.0.0-alpha.12",
+    "react-native": "0.47.0-rc.4",
+    "react-navigation": "1.0.0-beta.11",
+    "react-native-deprecated-custom-components": "0.1.0",
     "react-native-elements": "^0.6.3",
-    "react-native-vector-icons": "^3.0.0",
+    "react-native-vector-icons": "^4.3.0",
     "whatwg-fetch": "^1.0.0"
   },
   "jest": {
@@ -25,6 +27,6 @@
     "eslint-plugin-babel": "^4.0.0",
     "jest": "17.0.0",
     "jest-react-native": "17.0.0",
-    "react-test-renderer": "15.3.2"
+    "react-test-renderer": "16.0.0-alpha.12"
   }
 }
