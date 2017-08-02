@@ -41,7 +41,7 @@ export class Client {
 
       ErrorUtils.setGlobalHandler((error, isFatal) => {
         if (this.config.autoNotify && this.config.shouldNotify()) {
-          this.notify(error, report => {report.severity = 'error'}, !!NativeClient.notifyBlocking, () => {
+          this.notify(error, report => {report.severity = 'error'}, !!NativeClient.notifyBlocking, (queued) => {
             if (previousHandler) {
               previousHandler(error, isFatal);
             }
@@ -76,9 +76,13 @@ export class Client {
   notify = async (error, beforeSendCallback, blocking, postSendCallback) => {
     if (!(error instanceof Error)) {
       console.warn('Bugsnag could not notify: error must be of type Error');
+      if (postSendCallback)
+        postSendCallback(false);
       return;
     }
     if (!this.config.shouldNotify()) {
+      if (postSendCallback)
+        postSendCallback(false);
       return;
     }
 
@@ -87,6 +91,8 @@ export class Client {
 
     for (callback of this.config.beforeSendCallbacks) {
       if (callback(report, error) === false) {
+        if (postSendCallback)
+          postSendCallback(false);
         return;
       }
     }
@@ -99,7 +105,7 @@ export class Client {
     } else {
       NativeClient.notify(report.toJSON());
       if (postSendCallback)
-        postSendCallback();
+        postSendCallback(true);
     }
   }
 
