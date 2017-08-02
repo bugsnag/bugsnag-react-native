@@ -287,8 +287,8 @@ const typedMap = function(map) {
 
     const value = map[key];
 
-    // Checks for both `null` and `undefined`.
-    if (value == undefined) {
+    // Checks for `null`, NaN, and `undefined`.
+    if (value == undefined || isNaN(value)) {
       output[key] = {type: 'string', value: String(value)}
     } else if (typeof value === 'object') {
       output[key] = {type: 'map', value: typedMap(value)};
