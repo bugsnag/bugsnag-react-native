@@ -1,6 +1,27 @@
 Changelog
 =========
 
+## 2.3.0 (2017-08-02)
+
+### Enhancements
+
+* Add compatibility for React Native 0.47
+  [Jamie Lynch](https://github.com/fractalwrench)
+  [#120](https://github.com/bugsnag/bugsnag-react-native/pull/120)
+
+* Make index.js ES2015-compatible
+  [Rubén Sospedra](https://github.com/sospedra)
+  [#104](https://github.com/bugsnag/bugsnag-react-native/pull/104)
+
+### Bug fixes
+
+* Call previous exception handler when `notify` is cancelled by a callback
+  [#106](https://github.com/bugsnag/bugsnag-react-native/issues/106)
+
+* Stringify NaN in breadcrumb metadata before sending over native bridge to
+  avoid fatal error
+  [#107](https://github.com/bugsnag/bugsnag-react-native/issues/107)
+
 ## 2.2.4 (2017-07-14)
 
 ### Bug fixes
