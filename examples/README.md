@@ -27,15 +27,29 @@ A robust example of how to make best use of the Bugsnag React Native notifier.
 1. [Create a bugsnag account](https://app.bugsnag.com/user/new) and create
    a react native project.
 
-1. Add your project api key to [app/lib/bugsnag.js](app/lib/bugsnag.js#L7). The
-   API key can be found in the the bugsnag settings for your project.
+1. Add your project api key to [android/app/src/main/AndroidManifest.xml](android/app/src/main/AndroidManifest.xml#L30-L31):
 
-   ```javascript
-   const client = new Client('API_KEY_GOES_HERE');
+   ```xml
+      <meta-data android:name="com.bugsnag.android.API_KEY"
+                 android:value="YOUR-API-KEY-HERE" />
    ```
+
+   and [ios/BugsnagReactNativeExample/Info.plist](ios/BugsnagReactNativeExample/Info.plist#L4-L5):
+
+   ```xml
+    <key>BugsnagAPIKey</key>
+    <string>YOUR-API-KEY-HERE</string>
+   ```
+
+   The API key can be found in the the bugsnag settings for your project.
 
 1. Run the app
    ```
    react-native run-ios
+   ```
+
+   or
+   ```
+   react-native run-android
    ```
 
