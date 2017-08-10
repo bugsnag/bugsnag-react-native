@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 2.3.1 (2017-08-10)
+
+### Bug fixes
+
+* Fix codeBundleId being unset in unhandled exceptions when using CodePush 2+
+  [#127](https://github.com/bugsnag/bugsnag-react-native/issues/127)
+  [#128](https://github.com/bugsnag/bugsnag-react-native/issues/128)
+
 ## 2.3.0 (2017-08-02)
 
 ### Enhancements
