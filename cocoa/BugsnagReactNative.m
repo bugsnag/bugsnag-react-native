@@ -206,6 +206,7 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     NSArray *notifyReleaseStages = [RCTConvert NSStringArray:options[@"notifyReleaseStages"]];
     NSString *notifyURLPath = [RCTConvert NSString:options[@"endpoint"]];
     NSString *appVersion = [RCTConvert NSString:options[@"appVersion"]];
+    NSString *codeBundleId = [RCTConvert NSString:options[@"codeBundleId"]];
     BugsnagConfiguration* config = [Bugsnag bugsnagStarted] ? [Bugsnag configuration] : [BugsnagConfiguration new];
     config.apiKey = apiKey;
     config.releaseStage = releaseStage;
@@ -222,6 +223,11 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     }
     if (appVersion.length > 0) {
         config.appVersion = appVersion;
+    }
+    if (codeBundleId.length > 0) {
+        [config.metaData addAttribute:@"codeBundleId"
+                            withValue:codeBundleId
+                        toTabWithName:@"app"];
     }
     if (![Bugsnag bugsnagStarted]) {
         [Bugsnag startBugsnagWithConfiguration:config];

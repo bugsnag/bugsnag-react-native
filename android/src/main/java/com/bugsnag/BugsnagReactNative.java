@@ -197,6 +197,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
               client.setReleaseStage(releaseStage);
       }
 
+      if (options.hasKey("codeBundleId")) {
+          String codeBundleId = options.getString("codeBundleId");
+          if (codeBundleId != null && codeBundleId.length() > 0)
+              client.addToTab("app", "codeBundleId", codeBundleId);
+      }
+
       if (options.hasKey("notifyReleaseStages")) {
           ReadableArray stages = options.getArray("notifyReleaseStages");
           if (stages != null && stages.size() > 0) {
