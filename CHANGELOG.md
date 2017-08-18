@@ -1,6 +1,15 @@
 Changelog
 =========
 
+## 2.3.2 (2017-08-18)
+
+### Bug fixes
+
+* Fix regression introduced in 2.3.0 where nested JavaScript objects were being
+  serialized incorrectly before being sent to Bugsnag
+  [#132](https://github.com/bugsnag/bugsnag-react-native/issues/132)
+  [#133](https://github.com/bugsnag/bugsnag-react-native/issues/133)
+
 ## 2.3.1 (2017-08-10)
 
 ### Bug fixes
