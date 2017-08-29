@@ -5,3 +5,4 @@ lib
 local.properties
 .idea
 *.DS_STORE
+xcuserdata
