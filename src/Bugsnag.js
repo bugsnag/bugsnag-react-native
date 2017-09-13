@@ -4,6 +4,7 @@ const NativeClient = NativeModules.BugsnagReactNative;
 
 const BREADCRUMB_MAX_LENGTH = 30;
 
+
 /**
  * A Bugsnag monitoring and reporting client
  */
@@ -35,13 +36,13 @@ export class Client {
    * Registers a global error handler which sends any uncaught error to
    * Bugsnag before invoking the previous handler, if any.
    */
-  handleUncaughtErrors = () => {
+  handleUncaughtErrors = () => { // TODO should report errors are unhandled here
     if (ErrorUtils) {
       const previousHandler = ErrorUtils.getGlobalHandler();
 
       ErrorUtils.setGlobalHandler((error, isFatal) => {
         if (this.config.autoNotify && this.config.shouldNotify()) {
-          this.notify(error, report => {report.severity = 'error'}, !!NativeClient.notifyBlocking, (queued) => {
+          this.notify(error, undefined, !!NativeClient.notifyBlocking, (queued) => {
             if (previousHandler) {
               previousHandler(error, isFatal);
             }
@@ -49,16 +50,18 @@ export class Client {
         } else if (previousHandler) {
           previousHandler(error, isFatal);
         }
-      });
+      }, new EventHandledState('error', true, 'exception_handler'));
     }
   }
 
-  handlePromiseRejections = () => {
+  handlePromiseRejections = () => { // TODO should report errors are promise rejections here
     const tracking = require('promise/setimmediate/rejection-tracking'),
           client = this;
     tracking.enable({
       allRejections: true,
-      onUnhandled: function(id, error) { client.notify(error); },
+      onUnhandled: function(id, error) {
+        client.notify(error, undefined, false, undefined, new EventHandledState('error', true, 'promise_rejection'));
+      },
       onHandled: function() {}
     });
   }
@@ -73,7 +76,7 @@ export class Client {
    *                            request asynchronously
    * @param postSendCallback    Callback invoked after request is queued
    */
-  notify = async (error, beforeSendCallback, blocking, postSendCallback) => {
+  notify = async (error, beforeSendCallback, blocking, postSendCallback, eventHandledState) => {
     if (!(error instanceof Error)) {
       console.warn('Bugsnag could not notify: error must be of type Error');
       if (postSendCallback)
@@ -86,7 +89,7 @@ export class Client {
       return;
     }
 
-    const report = new Report(this.config.apiKey, error);
+    const report = new Report(this.config.apiKey, error, eventHandledState);
     report.addMetadata('app', 'codeBundleId', this.config.codeBundleId);
 
     for (callback of this.config.beforeSendCallbacks) {
@@ -227,7 +230,15 @@ export class Configuration {
 export class StandardDelivery {
 
   constructor(endpoint) {
-    this.endpoint = endpoint || 'https://notify.bugsnag.com';
+    this.endpoint = endpoint || 'https://fake.bugsnag.com'; // FIXME
+  }
+}
+
+class EventHandledState {
+  constructor(originalSeverity, unhandled, severityType) {
+    this.originalSeverity = originalSeverity;
+    this.unhandled;
+    this.severityType = severityType;
   }
 }
 
@@ -236,16 +247,17 @@ export class StandardDelivery {
  */
 export class Report {
 
-  constructor(apiKey, error) {
+  constructor(apiKey, error, eventHandledState) {
     this.apiKey = apiKey;
     this.errorClass = error.constructor.name;
     this.errorMessage = error.message;
     this.context = undefined;
     this.groupingHash = undefined;
     this.metadata = {};
-    this.severity = 'warning';
+    this.severity = eventHandledState.severity;
     this.stacktrace = error.stack;
     this.user = {};
+    this.eventHandledState = eventHandledState;
   }
 
   /**
@@ -269,7 +281,12 @@ export class Report {
       metadata: typedMap(this.metadata),
       severity: this.severity,
       stacktrace: this.stacktrace,
-      user: this.user
+      user: this.user,
+      defaultSeverity: this.eventHandledState.defaultSeverity === this.severity,
+      unhandled: this.eventHandledState.unhandled,
+      severityReason: {
+        "severityReason": this.eventHandledState.severityReason
+      }
     }
   }
 }
