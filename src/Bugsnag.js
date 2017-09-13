@@ -237,7 +237,7 @@ export class StandardDelivery {
 class EventHandledState {
   constructor(originalSeverity, unhandled, severityType) {
     this.originalSeverity = originalSeverity;
-    this.unhandled;
+    this.unhandled = unhandled;
     this.severityType = severityType;
   }
 }
@@ -280,7 +280,7 @@ export class Report {
     var severityObj = null;
     if (this._eventHandledState.severityReason) {
       severityObj = {
-        "severityReason": this._eventHandledState.severityReason
+        "type": this._eventHandledState.severityReason
       };
     }
 
