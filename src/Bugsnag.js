@@ -46,11 +46,11 @@ export class Client {
             if (previousHandler) {
               previousHandler(error, isFatal);
             }
-          });
+          }, new EventHandledState('error', true, 'exception_handler'));
         } else if (previousHandler) {
           previousHandler(error, isFatal);
         }
-      }, new EventHandledState('error', true, 'exception_handler'));
+      });
     }
   }
 
