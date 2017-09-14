@@ -16,6 +16,21 @@ Native itself for the headers and macros used in linking a native extension.
 Because of these dependencies, it is easiest to hack on the library as a part of
 an example project where all of these components are integrated.
 
+## Testing
+
+Unit tests for the JavaScript client are run with [Jest](https://facebook.github.io/jest/).
+
+```sh
+npm i
+npm run test:unit:js
+```
+
+Code coverage is reported in the `./coverage` directory. On a Mac, the following command
+will open the coverage report in your default browser:
+
+```sh
+open coverage/lcov-report/index.html
+```
 
 ## Running the examples app
 
