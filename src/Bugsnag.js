@@ -279,9 +279,9 @@ export class Report {
 
   toJSON = () => {
     var severityObj = null;
-    if (this._handledState.severityReason) {
+    if (this._handledState.severityType) {
       severityObj = {
-        "type": this._handledState.severityReason
+        "type": this._handledState.severityType
       };
     }
 
