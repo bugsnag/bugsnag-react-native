@@ -174,7 +174,7 @@ test('notify(): supplying unhandled state as param changes payload', () => {
   )
 
   // mutate severity
-  c.notify(new Error('Mutate Severity'), null, true, null, {
+  c.notify(new Error('Mutate Severity'), report => {report.severity = 'info'}, true, null, {
     originalSeverity: 'warning',
     unhandled: true,
     severityType: "exception_handler",
@@ -183,16 +183,10 @@ test('notify(): supplying unhandled state as param changes payload', () => {
     expect.objectContaining({
       severity: 'info',
       defaultSeverity: false,
-      unhandled: true,
-      severityReason: {
-        type: "exception_handler",
-      }
     }),
     true,
     null
   )
-
-
 })
 
 test('notify(): doesn’t call native notify/notifyBlocking when shouldNotify() returns false', () => {
