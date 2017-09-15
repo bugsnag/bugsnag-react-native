@@ -76,7 +76,11 @@ test('handlePromiseRejections(): error handler calls notify(…) correctly', () 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
-        expect(c.notify).toHaveBeenCalledWith(expect.any(Error))
+        expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, false, null, {
+          originalSeverity: "error",
+          severityType: "promise_rejection",
+          unhandled: true
+        })
       } catch (e) {
         reject(e)
       }
