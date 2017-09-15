@@ -103,10 +103,11 @@ export class Client {
       beforeSendCallback(report);
     }
 
+    const payload = report.toJSON();
     if (blocking) {
-      NativeClient.notifyBlocking(report.toJSON(), blocking, postSendCallback);
+      NativeClient.notifyBlocking(payload, blocking, postSendCallback);
     } else {
-      NativeClient.notify(report.toJSON());
+      NativeClient.notify(payload);
       if (postSendCallback)
         postSendCallback(true);
     }
@@ -230,7 +231,7 @@ export class Configuration {
 export class StandardDelivery {
 
   constructor(endpoint) {
-    this.endpoint = endpoint || 'https://fake.bugsnag.com'; // FIXME
+    this.endpoint = endpoint || 'http://10.0.2.2:9999'; // FIXME
   }
 }
 
@@ -261,7 +262,7 @@ export class Report {
       _eventHandledState = new EventHandledState('warning', false, null);
     }
 
-    this.severity = _eventHandledState.severity;
+    this.severity = _eventHandledState.originalSeverity;
     this._eventHandledState = _eventHandledState;
   }
 
@@ -294,7 +295,7 @@ export class Report {
       severity: this.severity,
       stacktrace: this.stacktrace,
       user: this.user,
-      defaultSeverity: this._eventHandledState.defaultSeverity === this.severity,
+      defaultSeverity: this._eventHandledState.originalSeverity === this.severity,
       unhandled: this._eventHandledState.unhandled,
       severityReason: severityObj
     }
