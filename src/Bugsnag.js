@@ -46,7 +46,7 @@ export class Client {
             if (previousHandler) {
               previousHandler(error, isFatal);
             }
-          }, new EventHandledState('error', true, 'exception_handler'));
+          }, new HandledState('error', true, 'exception_handler'));
         } else if (previousHandler) {
           previousHandler(error, isFatal);
         }
@@ -60,7 +60,7 @@ export class Client {
     tracking.enable({
       allRejections: true,
       onUnhandled: function(id, error) {
-        client.notify(error, null, false, null, new EventHandledState('error', true, 'promise_rejection'));
+        client.notify(error, null, false, null, new HandledState('error', true, 'promise_rejection'));
       },
       onHandled: function() {}
     });
@@ -76,7 +76,7 @@ export class Client {
    *                            request asynchronously
    * @param postSendCallback    Callback invoked after request is queued
    */
-  notify = async (error, beforeSendCallback, blocking, postSendCallback, _eventHandledState) => {
+  notify = async (error, beforeSendCallback, blocking, postSendCallback, _handledState) => {
     if (!(error instanceof Error)) {
       console.warn('Bugsnag could not notify: error must be of type Error');
       if (postSendCallback)
@@ -89,7 +89,7 @@ export class Client {
       return;
     }
 
-    const report = new Report(this.config.apiKey, error, _eventHandledState);
+    const report = new Report(this.config.apiKey, error, _handledState);
     report.addMetadata('app', 'codeBundleId', this.config.codeBundleId);
 
     for (callback of this.config.beforeSendCallbacks) {
@@ -235,7 +235,7 @@ export class StandardDelivery {
   }
 }
 
-class EventHandledState {
+class HandledState {
   constructor(originalSeverity, unhandled, severityType) {
     this.originalSeverity = originalSeverity;
     this.unhandled = unhandled;
@@ -248,7 +248,7 @@ class EventHandledState {
  */
 export class Report {
 
-  constructor(apiKey, error, _eventHandledState) {
+  constructor(apiKey, error, _handledState) {
     this.apiKey = apiKey;
     this.errorClass = error.constructor.name;
     this.errorMessage = error.message;
@@ -258,12 +258,12 @@ export class Report {
     this.stacktrace = error.stack;
     this.user = {};
 
-    if (!_eventHandledState) {
-      _eventHandledState = new EventHandledState('warning', false, null);
+    if (!_handledState) {
+      _handledState = new HandledState('warning', false, null);
     }
 
-    this.severity = _eventHandledState.originalSeverity;
-    this._eventHandledState = _eventHandledState;
+    this.severity = _handledState.originalSeverity;
+    this._handledState = _handledState;
   }
 
   /**
@@ -279,9 +279,9 @@ export class Report {
 
   toJSON = () => {
     var severityObj = null;
-    if (this._eventHandledState.severityReason) {
+    if (this._handledState.severityReason) {
       severityObj = {
-        "type": this._eventHandledState.severityReason
+        "type": this._handledState.severityReason
       };
     }
 
@@ -295,8 +295,8 @@ export class Report {
       severity: this.severity,
       stacktrace: this.stacktrace,
       user: this.user,
-      defaultSeverity: this._eventHandledState.originalSeverity === this.severity,
-      unhandled: this._eventHandledState.unhandled,
+      defaultSeverity: this._handledState.originalSeverity === this.severity,
+      unhandled: this._handledState.unhandled,
       severityReason: severityObj
     }
   }
