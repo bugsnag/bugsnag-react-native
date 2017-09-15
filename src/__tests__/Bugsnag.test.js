@@ -3,7 +3,7 @@ beforeEach(() => {
   jest.resetModules()
 
   // mock globals set by RN at runtime
-  global.__DEV__ = false
+  global.__DEV__ = true
   global.ErrorUtils = {
     setGlobalHandler: jest.fn(),
     getGlobalHandler: jest.fn()
@@ -55,18 +55,30 @@ test('handleUncaughtErrors(): error handler calls notify(…) correctly', () => 
 
 test('handlePromiseRejections(): error handler calls notify(…) correctly', () => {
   jest.mock('react-native', () => ({
-    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn() } }
+    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn() } },
   }), { virtual: true })
 
+  const Promise = require('promise/setimmediate')
   const { Client, Configuration } = require('../Bugsnag')
   const config = new Configuration('API_KEY')
   config.handlePromiseRejections = true
   const c = new Client(config)
 
   c.notify = jest.fn()
-  Promise.reject(new Error('pboom!'))
-  // promise rejection handler has a slight async delay before running, so check after minimal timeout
-  setTimeout(() => expect(c.notify).toHaveBeenCalledWith(expect.any(Error)))
+  Promise.reject(new Error('boom!'))
+
+  // promise rejection handler has a 2 second delay before running, so check after minimum viable timeout
+  // https://github.com/then/promise/blob/7f33b7bccf07a2da37569095c53d91bea7dbd226/src/rejection-tracking.js#L54
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        expect(c.notify).toHaveBeenCalledWith(expect.any(Error))
+      } catch (e) {
+        reject(e)
+      }
+      resolve()
+    }, 2001)
+  })
 })
 
 test('shouldNotify(): returns true/false in the correct situations', () => {
