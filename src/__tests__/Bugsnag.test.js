@@ -52,7 +52,7 @@ test('handleUncaughtErrors(): error handler calls notify(…) correctly', () => 
   handler(new Error('boom!'), false)
   expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, false, expect.any(Function), {
     originalSeverity: "error",
-    severityType: "exception_handler",
+    severityReason: "unhandledException",
     unhandled: true
   })
 })
@@ -78,7 +78,7 @@ test('handlePromiseRejections(): error handler calls notify(…) correctly', () 
       try {
         expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, false, null, {
           originalSeverity: "error",
-          severityType: "promise_rejection",
+          severityReason: "unhandledPromiseRejection",
           unhandled: true
         })
       } catch (e) {
@@ -130,9 +130,10 @@ test('notify(): calls the correct native notify/notifyBlocking method', () => {
       errorClass: 'Error',
       errorMessage: 'boom!',
       severity: 'warning',
-      defaultSeverity: true,
       unhandled: false,
-      severityReason: null,
+      severityReason: {
+        type: 'handledException'
+      }
     })
   )
 
@@ -144,9 +145,10 @@ test('notify(): calls the correct native notify/notifyBlocking method', () => {
       errorClass: 'Error',
       errorMessage: 'nb boom!',
       severity: 'warning',
-      defaultSeverity: true,
       unhandled: false,
-      severityReason: null,
+      severityReason: {
+        type: 'handledException'
+      }
     }),
     true,
     undefined
@@ -172,16 +174,15 @@ test('notify(): supplying unhandled state as param changes payload', () => {
   // send unhandled state
   c.notify(new Error('nb boom!'), null, true, null, {
     originalSeverity: 'warning',
-    unhandled: true,
-    severityType: "exception_handler",
+    unhandled: false,
+    severityReason: "handledException",
   })
   expect(mockNotifyBlocking).toHaveBeenCalledWith(
     expect.objectContaining({
       severity: 'warning',
-      defaultSeverity: true,
-      unhandled: true,
+      unhandled: false,
       severityReason: {
-        type: "exception_handler",
+        type: "handledException",
       }
     }),
     true,
@@ -191,13 +192,15 @@ test('notify(): supplying unhandled state as param changes payload', () => {
   // mutate severity
   c.notify(new Error('Mutate Severity'), report => {report.severity = 'info'}, true, null, {
     originalSeverity: 'warning',
-    unhandled: true,
-    severityType: "exception_handler",
+    unhandled: false,
+    severityReason: "handledException",
   })
   expect(mockNotifyBlocking).toHaveBeenCalledWith(
     expect.objectContaining({
       severity: 'info',
-      defaultSeverity: false,
+      severityReason: {
+        type: "userCallbackSetSeverity",
+      }
     }),
     true,
     null

@@ -46,7 +46,7 @@ export class Client {
             if (previousHandler) {
               previousHandler(error, isFatal);
             }
-          }, new HandledState('error', true, 'exception_handler'));
+          }, new HandledState('error', true, 'unhandledException'));
         } else if (previousHandler) {
           previousHandler(error, isFatal);
         }
@@ -60,7 +60,7 @@ export class Client {
     tracking.enable({
       allRejections: true,
       onUnhandled: function(id, error) {
-        client.notify(error, null, false, null, new HandledState('error', true, 'promise_rejection'));
+        client.notify(error, null, false, null, new HandledState('error', true, 'unhandledPromiseRejection'));
       },
       onHandled: function() {}
     });
@@ -229,17 +229,16 @@ export class Configuration {
 }
 
 export class StandardDelivery {
-
   constructor(endpoint) {
-    this.endpoint = endpoint || 'http://10.0.2.2:9999'; // FIXME
+    this.endpoint = endpoint || 'https://notify.bugsnag.com';
   }
 }
 
 class HandledState {
-  constructor(originalSeverity, unhandled, severityType) {
+  constructor(originalSeverity, unhandled, severityReason) {
     this.originalSeverity = originalSeverity;
     this.unhandled = unhandled;
-    this.severityType = severityType;
+    this.severityReason = severityReason;
   }
 }
 
@@ -259,7 +258,7 @@ export class Report {
     this.user = {};
 
     if (!_handledState) {
-      _handledState = new HandledState('warning', false, null);
+      _handledState = new HandledState('warning', false, 'handledException');
     }
 
     this.severity = _handledState.originalSeverity;
@@ -278,12 +277,9 @@ export class Report {
   }
 
   toJSON = () => {
-    var severityObj = null;
-    if (this._handledState.severityType) {
-      severityObj = {
-        "type": this._handledState.severityType
-      };
-    }
+    const defaultSeverity = this._handledState.originalSeverity === this.severity;
+    const severityType = defaultSeverity ?
+     this._handledState.severityReason : 'userCallbackSetSeverity';
 
     return {
       apiKey: this.apiKey,
@@ -295,9 +291,11 @@ export class Report {
       severity: this.severity,
       stacktrace: this.stacktrace,
       user: this.user,
-      defaultSeverity: this._handledState.originalSeverity === this.severity,
+      defaultSeverity: defaultSeverity,
       unhandled: this._handledState.unhandled,
-      severityReason: severityObj
+      severityReason: {
+        "type": severityType
+      }
     }
   }
 }
