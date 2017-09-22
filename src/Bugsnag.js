@@ -104,7 +104,7 @@ export class Client {
     }
 
     const payload = report.toJSON();
-    if (blocking) {
+    if (blocking && NativeClient.notifyBlocking) {
       NativeClient.notifyBlocking(payload, blocking, postSendCallback);
     } else {
       NativeClient.notify(payload);
