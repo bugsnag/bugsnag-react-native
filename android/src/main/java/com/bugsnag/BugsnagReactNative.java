@@ -114,15 +114,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                                                         errorMessage,
                                                         rawStacktrace);
 
-
       DiagnosticsCallback handler = new DiagnosticsCallback(libraryVersion,
                                                             bugsnagAndroidVersion,
                                                             payload);
-      if (blocking) {
-        Bugsnag.getClient().notifyBlocking(exc, handler);
-      } else {
-        Bugsnag.notify(exc, handler);
-      }
+
+      Bugsnag.getClient().internalClientNotify(exc, payload.toHashMap(), blocking, handler);
+
       if (callback != null)
         callback.invoke();
   }
