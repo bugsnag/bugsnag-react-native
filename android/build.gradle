@@ -1,9 +1,5 @@
 apply plugin: 'com.android.library'
 
-repositories {
-    maven { url "https://jitpack.io" } // TODO update in final release!
-}
-
 android {
     buildToolsVersion '23.0.1'
     compileSdkVersion 23
@@ -17,7 +13,7 @@ android {
 }
 
 dependencies {
-    compile 'com.github.bugsnag:bugsnag-android:767d7bd' // TODO update in final release!
+    compile 'com.github.bugsnag:bugsnag-android:track-handled-unhandled-SNAPSHOT' // TODO update in final release!
 //    compile 'com.bugsnag:bugsnag-android:4.0.0'
     compile 'com.facebook.react:react-native:0.20.1'
 }

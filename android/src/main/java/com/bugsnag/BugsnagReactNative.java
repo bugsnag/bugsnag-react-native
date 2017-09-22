@@ -3,6 +3,7 @@ package com.bugsnag;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -118,7 +119,10 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                                                             bugsnagAndroidVersion,
                                                             payload);
 
-      Bugsnag.getClient().internalClientNotify(exc, payload.toHashMap(), blocking, handler);
+      Map<String, Object> map = new HashMap<>();
+      map.put("severity", payload.getString("severity"));
+      map.put("severityReason", payload.getString("severity"));
+      Bugsnag.internalClientNotify(exc, map, blocking, handler);
 
       if (callback != null)
         callback.invoke();
