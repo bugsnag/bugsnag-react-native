@@ -293,9 +293,7 @@ export class Report {
       user: this.user,
       defaultSeverity: defaultSeverity,
       unhandled: this._handledState.unhandled,
-      severityReason: {
-        "type": severityType
-      }
+      severityReason: severityType
     }
   }
 }

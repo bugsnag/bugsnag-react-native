@@ -131,9 +131,7 @@ test('notify(): calls the correct native notify/notifyBlocking method', () => {
       errorMessage: 'boom!',
       severity: 'warning',
       unhandled: false,
-      severityReason: {
-        type: 'handledException'
-      }
+      severityReason: 'handledException'
     })
   )
 
@@ -146,9 +144,7 @@ test('notify(): calls the correct native notify/notifyBlocking method', () => {
       errorMessage: 'nb boom!',
       severity: 'warning',
       unhandled: false,
-      severityReason: {
-        type: 'handledException'
-      }
+      severityReason: 'handledException'
     }),
     true,
     undefined
@@ -181,9 +177,7 @@ test('notify(): supplying unhandled state as param changes payload', () => {
     expect.objectContaining({
       severity: 'warning',
       unhandled: false,
-      severityReason: {
-        type: "handledException",
-      }
+      severityReason: "handledException"
     }),
     true,
     null
@@ -198,9 +192,7 @@ test('notify(): supplying unhandled state as param changes payload', () => {
   expect(mockNotifyBlocking).toHaveBeenCalledWith(
     expect.objectContaining({
       severity: 'info',
-      severityReason: {
-        type: "userCallbackSetSeverity",
-      }
+      severityReason: "userCallbackSetSeverity"
     }),
     true,
     null

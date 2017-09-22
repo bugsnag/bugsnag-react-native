@@ -120,9 +120,15 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                                                             payload);
 
       Map<String, Object> map = new HashMap<>();
-      map.put("severity", payload.getString("severity"));
-      map.put("severityReason", payload.getString("severity"));
+      String severity = payload.getString("severity");
+      String severityReason = payload.getString("severityReason");
+      map.put("severity", severity);
+      map.put("severityReason", severityReason);
+
+      logger.info("Notifying native client, severity = " + severity +
+              ", severityReason = " + severityReason);
       Bugsnag.internalClientNotify(exc, map, blocking, handler);
+      logger.info("Notified native client");
 
       if (callback != null)
         callback.invoke();
