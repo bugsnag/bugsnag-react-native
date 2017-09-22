@@ -323,7 +323,6 @@ class DiagnosticsCallback implements Callback {
                                                 libraryVersion,
                                                 bugsnagAndroidVersion));
 
-        report.getError().setSeverity(severity);
         if (groupingHash != null && groupingHash.length() > 0)
             report.getError().setGroupingHash(groupingHash);
         if (context != null && context.length() > 0)
