@@ -24,8 +24,6 @@
 // THE SOFTWARE.
 //
 
-#import "KSCrashReportWriter.h"
-
 #import "BugsnagBreadcrumb.h"
 #import "BugsnagConfiguration.h"
 #import "BugsnagMetaData.h"

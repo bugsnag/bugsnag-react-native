@@ -25,6 +25,8 @@
 //
 
 #import "BugsnagMetaData.h"
+#import "BugsnagLogger.h"
+#import "BSGSerialization.h"
 
 @interface BugsnagMetaData ()
 @property (atomic, strong) NSMutableDictionary *dictionary;
@@ -77,14 +79,20 @@
     }
 }
 
-- (void) addAttribute:(NSString*)attributeName withValue:(id)value toTabWithName:(NSString*)tabName {
+- (void)addAttribute:(NSString*)attributeName withValue:(id)value toTabWithName:(NSString*)tabName {
     @synchronized(self) {
         if(value) {
-            [[self getTab:tabName] setObject:value forKey:attributeName];
+            id cleanedValue = BSGSanitizeObject(value);
+            if (cleanedValue) {
+                [[self getTab:tabName] setObject:cleanedValue forKey:attributeName];
+            } else {
+                Class klass = [value class];
+                bsg_log_err(@"Failed to add metadata: Value of class %@ is not JSON serializable", klass);
+            }
         } else {
             [[self getTab:tabName] removeObjectForKey:attributeName];
         }
-        [self.delegate metaDataChanged: self];
+        [self.delegate metaDataChanged:self];
     }
 }
 

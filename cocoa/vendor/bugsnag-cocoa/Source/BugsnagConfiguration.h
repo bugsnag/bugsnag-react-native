@@ -125,7 +125,7 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
  *  Optional handler invoked when a crash or fatal signal occurs
  */
 @property(nonatomic) void (*_Nullable onCrashHandler)
-    (const BSGKSCrashReportWriter *_Nonnull writer);
+    (const BSGCrashReportWriter *_Nonnull writer);
 /**
  *  YES if uncaught exceptions should be reported automatically
  */

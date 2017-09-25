@@ -26,14 +26,12 @@
 
 #import "Bugsnag.h"
 #import "BugsnagBreadcrumb.h"
-#import "BugsnagConfiguration.h"
 #import "BugsnagCrashReport.h"
 #import "BugsnagNotifier.h"
 #import "BugsnagSink.h"
 #import "BugsnagLogger.h"
-#import "KSCrashAdvanced.h"
 
-static BugsnagNotifier* g_bugsnag_notifier = NULL;
+static BugsnagNotifier* bsg_g_bugsnag_notifier = NULL;
 
 @interface Bugsnag ()
 + (BugsnagNotifier*)notifier;
@@ -53,8 +51,8 @@ static BugsnagNotifier* g_bugsnag_notifier = NULL;
 }
 
 + (void)startBugsnagWithConfiguration:(BugsnagConfiguration*) configuration {
-    g_bugsnag_notifier = [[BugsnagNotifier alloc] initWithConfiguration:configuration];
-    [g_bugsnag_notifier start];
+    bsg_g_bugsnag_notifier = [[BugsnagNotifier alloc] initWithConfiguration:configuration];
+    [bsg_g_bugsnag_notifier start];
 }
 
 + (BugsnagConfiguration*)configuration {
@@ -69,7 +67,7 @@ static BugsnagNotifier* g_bugsnag_notifier = NULL;
 }
 
 + (BugsnagNotifier*)notifier {
-    return g_bugsnag_notifier;
+    return bsg_g_bugsnag_notifier;
 }
 
 + (void) notify:(NSException *)exception {
@@ -118,6 +116,7 @@ static BugsnagNotifier* g_bugsnag_notifier = NULL;
       withData:(NSDictionary*)metaData
     atSeverity:(NSString*)severity {
     [[self notifier] notifyException:exception
+                          atSeverity:BSGParseSeverity(severity)
                                block:^(BugsnagCrashReport * _Nonnull report) {
         report.depth = 1;
         report.metaData = [metaData BSG_mergedInto:

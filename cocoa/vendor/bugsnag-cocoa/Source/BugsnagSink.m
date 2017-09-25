@@ -24,7 +24,6 @@
 // THE SOFTWARE.
 //
 
-#import "KSCrash.h"
 #import "BugsnagSink.h"
 #import "BugsnagNotifier.h"
 #import "Bugsnag.h"
@@ -38,37 +37,16 @@
 + (BugsnagNotifier*)notifier;
 @end
 
-@interface BugsnagSink ()
-@property (nonatomic, strong) NSOperationQueue *sendQueue;
-@end
-
-@interface BSGDelayOperation : NSOperation
-@end
-
-@interface BSGDeliveryOperation : NSOperation
-@end
-
 @implementation BugsnagSink
 
-- (instancetype)init {
+- (instancetype)initWithApiClient:(BugsnagErrorReportApiClient *)apiClient {
     if (self = [super init]) {
-        _sendQueue = [[NSOperationQueue alloc] init];
-        _sendQueue.maxConcurrentOperationCount = 1;
-        _sendQueue.qualityOfService = NSQualityOfServiceUtility;
-        _sendQueue.name = @"Bugsnag Delivery Queue";
+        self.apiClient = apiClient;
     }
     return self;
 }
 
-- (void)sendPendingReports {
-    [self.sendQueue cancelAllOperations];
-    BSGDelayOperation *delay = [BSGDelayOperation new];
-    BSGDeliveryOperation *deliver = [BSGDeliveryOperation new];
-    [deliver addDependency:delay];
-    [self.sendQueue addOperations:@[delay, deliver] waitUntilFinished:NO];
-}
-
-// Entry point called by KSCrash when a report needs to be sent. Handles report filtering based on the configuration
+// Entry point called by BSG_KSCrash when a report needs to be sent. Handles report filtering based on the configuration
 // options for `notifyReleaseStages`.
 // Removes all reports not meeting at least one of the following conditions:
 // - the report-specific config specifies the `notifyReleaseStages` property and it contains the current stage
@@ -76,7 +54,7 @@
 // - the report-specific `notifyReleaseStages` property is unset and the global `notifyReleaseStages` property
 //   and it contains the current stage
 - (void)filterReports:(NSArray*) reports
-         onCompletion:(KSCrashReportFilterCompletion) onCompletion {
+         onCompletion:(BSG_KSCrashReportFilterCompletion) onCompletion {
     NSMutableArray *bugsnagReports = [NSMutableArray new];
     BugsnagConfiguration *configuration = [Bugsnag configuration];
     for (NSDictionary* report in reports) {
@@ -93,10 +71,10 @@
             [bugsnagReports addObject:bugsnagReport];
         }
     }
-    
+
     if (bugsnagReports.count == 0) {
         if (onCompletion) {
-            onCompletion(reports, YES, nil);
+            onCompletion(bugsnagReports, YES, nil);
         }
         return;
     }
@@ -121,16 +99,17 @@
         return;
     }
 
-    [self sendReports:bugsnagReports
+    [self.apiClient sendReports:bugsnagReports
               payload:reportData
                 toURL:configuration.notifyURL
          onCompletion:onCompletion];
 }
 
+
 - (void)sendReports:(NSArray <BugsnagCrashReport *>*)reports
             payload:(NSDictionary *)reportData
               toURL:(NSURL *)url
-       onCompletion:(KSCrashReportFilterCompletion) onCompletion {
+       onCompletion:(BSG_KSCrashReportFilterCompletion) onCompletion {
     @try {
         NSError *error = nil;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:reportData
@@ -147,7 +126,7 @@
                                                                cachePolicy: NSURLRequestReloadIgnoringLocalCacheData
                                                            timeoutInterval: 15];
         request.HTTPMethod = @"POST";
-
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 
         if ([NSURLSession class]) {
             NSURLSession *session = [Bugsnag configuration].session;
@@ -186,46 +165,16 @@
     NSMutableDictionary* data = [[NSMutableDictionary alloc] init];
     BSGDictSetSafeObject(data, [Bugsnag configuration].apiKey, @"apiKey");
     BSGDictSetSafeObject(data, [Bugsnag notifier].details, @"notifier");
-    
+
     NSMutableArray* formatted = [[NSMutableArray alloc] initWithCapacity:[reports count]];
-    
+
     for (BugsnagCrashReport* report in reports) {
         BSGArrayAddSafeObject(formatted, [report serializableValueWithTopLevelData:data]);
     }
 
     BSGDictSetSafeObject(data, formatted, @"events");
-    
+
     return data;
-}
-
-@end
-
-@implementation BSGDelayOperation
-const NSTimeInterval BSG_SEND_DELAY_SECS = 1;
-
-- (void)main {
-    [NSThread sleepForTimeInterval:BSG_SEND_DELAY_SECS];
-}
-
-@end
-
-@implementation BSGDeliveryOperation
-
--(void)main {
-    @autoreleasepool {
-        @try {
-            [[KSCrash sharedInstance] sendAllReportsWithCompletion:^(NSArray *filteredReports, BOOL completed, NSError *error) {
-                if (error) {
-                    bsg_log_warn(@"Failed to send reports: %@", error);
-                } else if (filteredReports.count > 0) {
-                    bsg_log_info(@"Reports sent.");
-                }
-            }];
-        }
-        @catch (NSException* e) {
-            bsg_log_err(@"Could not send report: %@", e);
-        }
-    }
 }
 
 @end
