@@ -6,3 +6,4 @@ local.properties
 .idea
 *.DS_STORE
 xcuserdata
+coverage
