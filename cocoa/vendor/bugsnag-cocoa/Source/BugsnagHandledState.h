@@ -15,7 +15,8 @@ typedef NS_ENUM(NSUInteger, SeverityReasonType) {
     HandledError,
     HandledException,
     UserSpecifiedSeverity,
-    UserCallbackSetSeverity
+    UserCallbackSetSeverity,
+    PromiseRejection
 };
 
 @interface BugsnagHandledState : NSObject
@@ -29,6 +30,7 @@ typedef NS_ENUM(NSUInteger, SeverityReasonType) {
 @property (nonatomic, readonly) NSString *attrKey;
 
 + (NSString *)stringFromSeverityReason:(SeverityReasonType)severityReason;
++ (SeverityReasonType)severityReasonFromString:(NSString *)string;
 
 + (instancetype)handledStateWithSeverityReason:(SeverityReasonType)severityReason;
 

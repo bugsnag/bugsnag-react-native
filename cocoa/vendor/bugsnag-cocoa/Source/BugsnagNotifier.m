@@ -341,6 +341,31 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
            block:block];
 }
 
+- (void)internalClientNotify:(NSException *_Nonnull)exception
+                    withData:(NSDictionary *_Nullable)metaData
+                       block:(BugsnagNotifyBlock _Nullable)block {
+    
+    NSString *severity = [metaData objectForKey:@"severity"];
+    NSString *severityReason = [metaData objectForKey:@"severityReason"];
+    
+    if (!severity || !severityReason) {
+        [NSException raise:@"InvalidNotifyArguments"
+                    format:@"A severity and severityReason must be supplied"];
+    }
+    
+    SeverityReasonType severityReasonType = [BugsnagHandledState severityReasonFromString:severityReason];
+    
+    BugsnagHandledState *state =
+    [BugsnagHandledState handledStateWithSeverityReason:severityReasonType
+                                               severity:BSGParseSeverity(severity)
+                                              attrValue:nil];
+    
+    [self notify:exception.name ?: NSStringFromClass([exception class])
+         message:exception.reason
+    handledState:state
+           block:block];
+}
+
 - (void)notify:(NSString *)exceptionName
        message:(NSString *)message
   handledState:(BugsnagHandledState *)handledState

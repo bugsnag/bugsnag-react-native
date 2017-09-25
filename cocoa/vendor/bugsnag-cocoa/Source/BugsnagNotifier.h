@@ -66,6 +66,17 @@
                   block:(BugsnagNotifyBlock _Nullable)block;
 
 /**
+ *  Notify Bugsnag of an exception. Only intended for React Native/Unity use.
+ *
+ *  @param exception the exception
+ *  @param metaData  the metadata
+ *  @param block     Configuration block for adding additional report information
+ */
+- (void)internalClientNotify:(NSException *_Nonnull)exception
+                    withData:(NSDictionary *_Nullable)metaData
+                       block:(BugsnagNotifyBlock _Nullable)block;
+
+/**
  *  Notify Bugsnag of an error
  *
  *  @param error the error

@@ -17,6 +17,7 @@ static NSString *const kAttrKey = @"attrKey";
 
 static NSString *const kUnhandledException = @"unhandledException";
 static NSString *const kSignal = @"signal";
+static NSString *const kPromiseRejection = @"promiseRejection";
 static NSString *const kHandledError = @"handledError";
 static NSString *const kHandledException = @"handledException";
 static NSString *const kUserSpecifiedSeverity = @"userSpecifiedSeverity";
@@ -37,6 +38,10 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
     
     switch (severityReason) {
         case UnhandledException:
+            severity = BSGSeverityError;
+            unhandled = YES;
+            break;
+        case PromiseRejection:
             severity = BSGSeverityError;
             unhandled = YES;
             break;
@@ -78,10 +83,6 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
                 _attrValue = attrValue;
                 _attrKey = @"signalType";
                 break;
-            case HandledError:
-                _attrValue = attrValue;
-                _attrKey = @"errorType";
-                break;
             default:
                 break;
         }
@@ -120,6 +121,8 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
             return kUserSpecifiedSeverity;
         case UserCallbackSetSeverity:
             return kUserCallbackSetSeverity;
+        case PromiseRejection:
+            return kPromiseRejection;
         default:
             [NSException raise:@"UnknownSeverityReason"
                         format:@"Severity reason not supported"];
@@ -139,6 +142,8 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
         return UserSpecifiedSeverity;
     } else if ([kUserCallbackSetSeverity isEqualToString:string]) {
         return UserCallbackSetSeverity;
+    } else if ([kPromiseRejection isEqualToString:string]) {
+        return PromiseRejection;
     } else {
         [NSException raise:@"UnknownSeverityReason"
                     format:@"Severity reason not supported"];
