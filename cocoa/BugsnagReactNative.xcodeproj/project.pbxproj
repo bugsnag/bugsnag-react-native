@@ -7,19 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A0F9E631DC3DE1700BC83B2 /* libBugsnagLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A0F9E621DC3DE0E00BC83B2 /* libBugsnagLib.a */; };
 		8AD256171D6DE5F600C7D842 /* BugsnagReactNative.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */; };
 		8AD256191D6DE5F600C7D842 /* BugsnagReactNative.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		8A0F9E611DC3DE0E00BC83B2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8A0F9E401DC3DD9300BC83B2;
-			remoteInfo = BugsnagLib;
-		};
 		8A5ACBF81DC11D6D00879C6D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */;
@@ -33,34 +25,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 8A2C8F221C6BBD2300846019;
 			remoteInfo = Tests;
-		};
-		8A5ACC031DC11D7600879C6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CB6D132617EB749A00BC2C04;
-			remoteInfo = KSCrashLib;
-		};
-		8A5ACC051DC11D7600879C6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CB6D133317EB749A00BC2C04;
-			remoteInfo = KSCrashTests;
-		};
-		8A5ACC071DC11D7600879C6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03DE7B6A1C84DEF700F789BA;
-			remoteInfo = KSCrash;
-		};
-		8A5ACC091DC11D7600879C6D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EDF2BF211CCF15AD004BADF4;
-			remoteInfo = KSCrash_static;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -79,7 +43,6 @@
 
 /* Begin PBXFileReference section */
 		8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Bugsnag.xcodeproj; path = "vendor/bugsnag-cocoa/iOS/Bugsnag.xcodeproj"; sourceTree = "<group>"; };
-		8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "KSCrash-iOS.xcodeproj"; path = "vendor/kscrash/iOS/KSCrash-iOS.xcodeproj"; sourceTree = "<group>"; };
 		8AD256131D6DE5F600C7D842 /* libBugsnagReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBugsnagReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AD256161D6DE5F600C7D842 /* BugsnagReactNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BugsnagReactNative.h; sourceTree = SOURCE_ROOT; };
 		8AD256181D6DE5F600C7D842 /* BugsnagReactNative.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BugsnagReactNative.m; sourceTree = SOURCE_ROOT; };
@@ -90,13 +53,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A0F9E631DC3DE1700BC83B2 /* libBugsnagLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8A5ACBF41DC11D6D00879C6D /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				8A5ACBF91DC11D6D00879C6D /* Bugsnag.framework */,
+				8A5ACBFB1DC11D6D00879C6D /* Tests.xctest */,
+			);
+			name = Generated;
+			sourceTree = "<group>";
+		};
+		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8AD2560A1D6DE5F600C7D842 = {
 			isa = PBXGroup;
 			children = (
@@ -115,13 +93,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8AB63CFA1D918BEF0002381B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		8AD256151D6DE5F600C7D842 /* BugsnagReactNative */ = {
 			isa = PBXGroup;
 			children = (
@@ -134,31 +105,9 @@
 		8AF662D91D929B7800ABD39A /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */,
 				8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */,
 			);
 			name = Libraries;
-			sourceTree = "<group>";
-		};
-		8A5ACBF41DC11D6D00879C6D /* Generated */ = {
-			isa = PBXGroup;
-			children = (
-				8A5ACBF91DC11D6D00879C6D /* Bugsnag.framework */,
-				8A5ACBFB1DC11D6D00879C6D /* Tests.xctest */,
-				8A0F9E621DC3DE0E00BC83B2 /* libBugsnagLib.a */,
-			);
-			name = Generated;
-			sourceTree = "<group>";
-		};
-		8A5ACBFD1DC11D7600879C6D /* Generated */ = {
-			isa = PBXGroup;
-			children = (
-				8A5ACC041DC11D7600879C6D /* libKSCrashLib.a */,
-				8A5ACC061DC11D7600879C6D /* KSCrashTests.xctest */,
-				8A5ACC081DC11D7600879C6D /* KSCrash.framework */,
-				8A5ACC0A1DC11D7600879C6D /* KSCrash.framework */,
-			);
-			name = Generated;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,7 +136,7 @@
 		8AD2560B1D6DE5F600C7D842 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Bugsnag, Inc.";
 				TargetAttributes = {
 					8AD256121D6DE5F600C7D842 = {
@@ -207,12 +156,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 8A5ACBF41DC11D6D00879C6D /* Products */;
+					ProductGroup = 8A5ACBF41DC11D6D00879C6D /* Generated */;
 					ProjectRef = 8A5ACBF31DC11D6D00879C6D /* Bugsnag.xcodeproj */;
-				},
-				{
-					ProductGroup = 8A5ACBFD1DC11D7600879C6D /* Products */;
-					ProjectRef = 8A5ACBFC1DC11D7600879C6D /* KSCrash-iOS.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -223,13 +168,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		8A0F9E621DC3DE0E00BC83B2 /* libBugsnagLib.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libBugsnagLib.a;
-			remoteRef = 8A0F9E611DC3DE0E00BC83B2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		8A5ACBF91DC11D6D00879C6D /* Bugsnag.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -242,34 +180,6 @@
 			fileType = wrapper.cfbundle;
 			path = Tests.xctest;
 			remoteRef = 8A5ACBFA1DC11D6D00879C6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8A5ACC041DC11D7600879C6D /* libKSCrashLib.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libKSCrashLib.a;
-			remoteRef = 8A5ACC031DC11D7600879C6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8A5ACC061DC11D7600879C6D /* KSCrashTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = KSCrashTests.xctest;
-			remoteRef = 8A5ACC051DC11D7600879C6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8A5ACC081DC11D7600879C6D /* KSCrash.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = KSCrash.framework;
-			remoteRef = 8A5ACC071DC11D7600879C6D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8A5ACC0A1DC11D7600879C6D /* KSCrash.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = KSCrash.framework;
-			remoteRef = 8A5ACC091DC11D7600879C6D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -295,13 +205,21 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -340,13 +258,21 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

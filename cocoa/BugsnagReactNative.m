@@ -141,7 +141,10 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
                               exceptionWithName:[RCTConvert NSString:options[@"errorClass"]]
                               reason:[RCTConvert NSString:options[@"errorMessage"]]
                               userInfo:nil];
-    [Bugsnag notify:exception block:^(BugsnagCrashReport *report) {
+    
+    [Bugsnag internalClientNotify:exception
+                         withData:options
+                            block:^(BugsnagCrashReport *report) {
         NSArray* stackframes = nil;
         if (options[@"stacktrace"]) {
             stackframes = BSGParseJavaScriptStacktrace([RCTConvert NSString:options[@"stacktrace"]],
@@ -152,8 +155,6 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
             report.context = [RCTConvert NSString:options[@"context"]];
         if (options[@"groupingHash"])
             report.groupingHash = [RCTConvert NSString:options[@"groupingHash"]];
-        if (options[@"severity"])
-            report.severity = BSGParseSeverity([RCTConvert NSString:options[@"severity"]]);
         if (options[@"metadata"]) {
             NSDictionary *metadata = BSGConvertTypedNSDictionary(options[@"metadata"]);
             NSMutableDictionary *targetMetadata = [report.metaData mutableCopy];

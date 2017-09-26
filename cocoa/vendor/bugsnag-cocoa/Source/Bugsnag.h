@@ -140,6 +140,8 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
                     withData:(NSDictionary *_Nullable)metaData
                        block:(BugsnagNotifyBlock _Nullable)block;
 
++ (void)foo;
+
 /** Add custom data to send to Bugsnag with every exception. If value is nil,
  *  delete the current value for attributeName
  *

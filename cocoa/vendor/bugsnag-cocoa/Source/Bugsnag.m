@@ -128,9 +128,13 @@ static BugsnagNotifier* bsg_g_bugsnag_notifier = NULL;
 + (void)internalClientNotify:(NSException *_Nonnull)exception
                     withData:(NSDictionary *_Nullable)metaData
                        block:(BugsnagNotifyBlock _Nullable)block {
-    [self.notifier internalClientNotify:exception
-                               withData:metaData
-                                  block:block];
+//    [self.notifier internalClientNotify:exception
+//                               withData:metaData
+//                                  block:block];
+}
+
++ (void)foo {
+    
 }
 
 + (void) addAttribute:(NSString*)attributeName withValue:(id)value toTabWithName:(NSString*)tabName {
