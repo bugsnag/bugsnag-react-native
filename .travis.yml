@@ -1,0 +1,7 @@
+sudo: false
+language: javascript
+
+install: npm install
+
+
+script: npm run test:unit:js
