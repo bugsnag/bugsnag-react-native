@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.4.0 (2017-10-02)
+* Track whether errors are handled or unhandled
+* Reduce build warning count
+
 ## 2.3.2 (2017-08-18)
 
 ### Bug fixes
