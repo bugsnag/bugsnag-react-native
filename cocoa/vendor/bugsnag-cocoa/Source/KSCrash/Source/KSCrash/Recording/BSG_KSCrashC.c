@@ -290,3 +290,19 @@ void bsg_kscrash_reportUserException(const char* name,
                                       stackTrace,
                                       terminateProgram);
 }
+
+void bsg_kscrash_setSuspendThreadsForUserReported(bool suspendThreadsForUserReported) {
+    crashContext()->crash.suspendThreadsForUserReported = suspendThreadsForUserReported;
+}
+
+void bsg_kscrash_setWriteBinaryImagesForUserReported(bool writeBinaryImagesForUserReported) {
+    crashContext()->crash.writeBinaryImagesForUserReported = writeBinaryImagesForUserReported;
+}
+
+void bsg_kscrash_setReportWhenDebuggerIsAttached(bool reportWhenDebuggerIsAttached) {
+    crashContext()->crash.reportWhenDebuggerIsAttached = reportWhenDebuggerIsAttached;
+}
+
+void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled) {
+    crashContext()->crash.threadTracingEnabled = threadTracingEnabled;
+}

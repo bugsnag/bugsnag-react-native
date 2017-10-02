@@ -107,6 +107,10 @@
 @synthesize catchZombies = _catchZombies;
 @synthesize doNotIntrospectClasses = _doNotIntrospectClasses;
 @synthesize maxStoredReports = _maxStoredReports;
+@synthesize suspendThreadsForUserReported = _suspendThreadsForUserReported;
+@synthesize reportWhenDebuggerIsAttached = _reportWhenDebuggerIsAttached;
+@synthesize threadTracingEnabled = _threadTracingEnabled;
+@synthesize writeBinaryImagesForUserReported = _writeBinaryImagesForUserReported;
 
 
 // ============================================================================
@@ -180,6 +184,11 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
         self.introspectMemory = YES;
         self.catchZombies = NO;
         self.maxStoredReports = 5;
+        
+        self.suspendThreadsForUserReported = YES;
+        self.reportWhenDebuggerIsAttached = NO;
+        self.threadTracingEnabled = YES;
+        self.writeBinaryImagesForUserReported = YES;
     }
     return self;
 
@@ -259,6 +268,27 @@ failed:
     _catchZombies = catchZombies;
     bsg_kscrash_setCatchZombies(catchZombies);
 }
+
+- (void)setSuspendThreadsForUserReported:(BOOL) suspendThreadsForUserReported {
+    _suspendThreadsForUserReported = suspendThreadsForUserReported;
+    bsg_kscrash_setSuspendThreadsForUserReported(suspendThreadsForUserReported);
+}
+
+- (void)setReportWhenDebuggerIsAttached:(BOOL)reportWhenDebuggerIsAttached {
+    _reportWhenDebuggerIsAttached = reportWhenDebuggerIsAttached;
+    bsg_kscrash_setReportWhenDebuggerIsAttached(reportWhenDebuggerIsAttached);
+}
+
+- (void)setThreadTracingEnabled:(BOOL)threadTracingEnabled {
+    _threadTracingEnabled = threadTracingEnabled;
+    bsg_kscrash_setThreadTracingEnabled(threadTracingEnabled);
+}
+
+- (void)setWriteBinaryImagesForUserReported:(BOOL)writeBinaryImagesForUserReported {
+    _writeBinaryImagesForUserReported = writeBinaryImagesForUserReported;
+    bsg_kscrash_setWriteBinaryImagesForUserReported(writeBinaryImagesForUserReported);
+}
+
 
 - (void) setDoNotIntrospectClasses:(NSArray *)doNotIntrospectClasses
 {

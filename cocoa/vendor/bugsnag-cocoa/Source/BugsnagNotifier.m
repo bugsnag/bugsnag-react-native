@@ -42,7 +42,7 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.10.1";
+NSString *const NOTIFIER_VERSION = @"5.12.0";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSTabConfig = @"config";
@@ -50,6 +50,8 @@ NSString *const BSAttributeSeverity = @"severity";
 NSString *const BSAttributeDepth = @"depth";
 NSString *const BSAttributeBreadcrumbs = @"breadcrumbs";
 NSString *const BSEventLowMemoryWarning = @"lowMemoryWarning";
+
+static NSInteger const BSGNotifierStackFrameCount = 5;
 
 struct bugsnag_data_t {
     // Contains the state of the event (handled/unhandled)
@@ -251,7 +253,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 
     [self setupConnectivityListener];
     [self updateAutomaticBreadcrumbDetectionSettings];
-    
+
 #if TARGET_OS_TV
   [self.details setValue:@"tvOS Bugsnag Notifier" forKey:@"name"];
 #elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
@@ -316,15 +318,17 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                                         @"domain": error.domain,
                                         @"reason": error.localizedFailureReason?: @"" };
                report.metaData = metadata;
-               if (block)
+
+               if (block) {
                    block(report);
+               }
            }];
 }
 
 - (void)notifyException:(NSException *)exception
              atSeverity:(BSGSeverity)severity
                    block:(void (^)(BugsnagCrashReport *))block {
-    
+
     BugsnagHandledState *state = [BugsnagHandledState handledStateWithSeverityReason:UserSpecifiedSeverity severity:severity attrValue:nil];
     [self notify:exception.name ?: NSStringFromClass([exception class])
          message:exception.reason
@@ -344,52 +348,64 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 - (void)internalClientNotify:(NSException *_Nonnull)exception
                     withData:(NSDictionary *_Nullable)metaData
                        block:(BugsnagNotifyBlock _Nullable)block {
-    
+
     NSString *severity = [metaData objectForKey:@"severity"];
     NSString *severityReason = [metaData objectForKey:@"severityReason"];
-    
-    if (!severity || !severityReason) {
-        [NSException raise:@"InvalidNotifyArguments"
-                    format:@"A severity and severityReason must be supplied"];
-    }
-    
+    NSParameterAssert(severity.length > 0);
+    NSParameterAssert(severityReason.length > 0);
+
     SeverityReasonType severityReasonType = [BugsnagHandledState severityReasonFromString:severityReason];
-    
+
     BugsnagHandledState *state =
     [BugsnagHandledState handledStateWithSeverityReason:severityReasonType
                                                severity:BSGParseSeverity(severity)
                                               attrValue:nil];
-    
+
     [self notify:exception.name ?: NSStringFromClass([exception class])
          message:exception.reason
     handledState:state
-           block:block];
+           block:^(BugsnagCrashReport * _Nonnull report) {
+               if (block) {
+                   block(report);
+               }
+           }];
 }
 
 - (void)notify:(NSString *)exceptionName
        message:(NSString *)message
-  handledState:(BugsnagHandledState *)handledState
+  handledState:(BugsnagHandledState *_Nonnull)handledState
          block:(void (^)(BugsnagCrashReport *))block {
-    
-    BugsnagHandledState *state = [BugsnagHandledState handledStateWithSeverityReason:HandledException];
+
     BugsnagCrashReport *report = [[BugsnagCrashReport alloc] initWithErrorName:exceptionName
                                                                   errorMessage:message
                                                                  configuration:self.configuration
                                                                       metaData:[self.configuration.metaData toDictionary]
-                                                                      handledState:state];
+                                                                      handledState:handledState];
     if (block) {
         block(report);
     }
 
     // TODO need to serialise unhandled here!!
-    
+
     [self.metaDataLock lock];
     BSSerializeJSONDictionary([report.handledState toJson], &bsg_g_bugsnag_data.handledState);
     BSSerializeJSONDictionary(report.metaData, &bsg_g_bugsnag_data.metaDataJSON);
     BSSerializeJSONDictionary(report.overrides, &bsg_g_bugsnag_data.userOverridesJSON);
-    
+
     [self.state addAttribute:BSAttributeSeverity withValue:BSGFormatSeverity(report.severity) toTabWithName:BSTabCrash];
-    [self.state addAttribute:BSAttributeDepth withValue:@(report.depth + 3) toTabWithName:BSTabCrash];
+
+    //    We discard 5 stack frames (including this one) by default,
+    //    and sum that with the number specified by report.depth:
+    //
+    //    0 bsg_kscrashsentry_reportUserException
+    //    1 bsg_kscrash_reportUserException
+    //    2 -[BSG_KSCrash reportUserException:reason:language:lineOfCode:stackTrace:terminateProgram:]
+    //    3 -[BugsnagCrashSentry reportUserException:reason:]
+    //    4 -[BugsnagNotifier notify:message:block:]
+
+    NSNumber *depth = @(BSGNotifierStackFrameCount + report.depth);
+    [self.state addAttribute:BSAttributeDepth withValue:depth toTabWithName:BSTabCrash];
+
     NSString *reportName = report.errorClass ?: NSStringFromClass([NSException class]);
     NSString *reportMessage = report.errorMessage ?: @"";
 

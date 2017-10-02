@@ -106,7 +106,7 @@ static const BSG_KSSignalInfo bsg_g_fatalSignalData[] =
     SIGNAL_INFO_NOCODES(SIGPIPE),
     SIGNAL_INFO(SIGSEGV, bsg_g_sigSegVCodes),
     SIGNAL_INFO_NOCODES(SIGSYS),
-    SIGNAL_INFO(SIGTERM, bsg_g_sigTrapCodes),
+    SIGNAL_INFO(SIGTRAP, bsg_g_sigTrapCodes),
 };
 static const int bsg_g_fatalSignalsCount = sizeof(bsg_g_fatalSignalData) / sizeof(*bsg_g_fatalSignalData);
 

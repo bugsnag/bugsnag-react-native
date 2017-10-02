@@ -65,8 +65,10 @@ void bsg_kscrashsentry_reportUserException(const char* name,
     {
         bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
 
-        BSG_KSLOG_DEBUG("Suspending all threads");
-        bsg_kscrashsentry_suspendThreads();
+        if (bsg_g_context->suspendThreadsForUserReported) {
+            BSG_KSLOG_DEBUG("Suspending all threads");
+            bsg_kscrashsentry_suspendThreads();
+        }
 
         BSG_KSLOG_DEBUG("Fetching call stack.");
         int callstackCount = 100;

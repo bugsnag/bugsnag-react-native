@@ -255,7 +255,7 @@ int bsg_ksjsonendStringElement(BSG_KSJSONEncodeContext* context);
  *
  * @param value The element's value.
  *
- * @param lengththe length of the data.
+ * @param length the length of the data.
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
@@ -345,7 +345,7 @@ int bsg_ksjsonbeginArray(BSG_KSJSONEncodeContext* context,
  *
  * @param context The JSON context.
  *
- * @param The name of the next element (only needed if parent is a dictionary).
+ * @param name The name of the next element (only needed if parent is a dictionary).
  */
 int bsg_ksjsonbeginElement(BSG_KSJSONEncodeContext* const context,
                         const char* const name);

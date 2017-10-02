@@ -102,12 +102,15 @@ static bool bsg_g_threads_are_running = true;
 
 BSG_KSCrashType bsg_kscrashsentry_installWithContext(BSG_KSCrash_SentryContext* context,
                                              BSG_KSCrashType crashTypes,
-                                             void (*onCrash)(void))
-{
-    if(bsg_ksmachisBeingTraced())
-    {
-        BSG_KSLOGBASIC_WARN("KSCrash: App is running in a debugger. Only user reported events will be handled.");
-        crashTypes = BSG_KSCrashTypeUserReported;
+                                             void (*onCrash)(void)) {
+    if (bsg_ksmachisBeingTraced()) {
+        if (context->reportWhenDebuggerIsAttached) {
+            BSG_KSLOG_WARN("KSCrash: App is running in a debugger. Crash handling is enabled via configuration.");
+            BSG_KSLOG_INFO("Installing handlers with context %p, crash types 0x%x.", context, crashTypes);
+        } else {
+            BSG_KSLOG_WARN("KSCrash: App is running in a debugger. Only user reported events will be handled.");
+            crashTypes = BSG_KSCrashTypeUserReported;
+        }
     }
     else
     {
@@ -222,8 +225,18 @@ void bsg_kscrashsentry_resumeThreads(void)
 void bsg_kscrashsentry_clearContext(BSG_KSCrash_SentryContext* context)
 {
     void (*onCrash)(void) = context->onCrash;
+    bool threadTracingEnabled = context->threadTracingEnabled;
+    bool reportWhenDebuggerIsAttached = context->reportWhenDebuggerIsAttached;
+    bool suspendThreadsForUserReported = context->suspendThreadsForUserReported;
+    bool writeBinaryImagesForUserReported = context->writeBinaryImagesForUserReported;
+    
     memset(context, 0, sizeof(*context));
     context->onCrash = onCrash;
+    
+    context->threadTracingEnabled = threadTracingEnabled;
+    context->reportWhenDebuggerIsAttached = reportWhenDebuggerIsAttached;
+    context->suspendThreadsForUserReported = suspendThreadsForUserReported;
+    context->writeBinaryImagesForUserReported = writeBinaryImagesForUserReported;
 }
 
 void bsg_kscrashsentry_beginHandlingCrash(BSG_KSCrash_SentryContext* context)

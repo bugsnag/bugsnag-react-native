@@ -37,10 +37,6 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
     BOOL unhandled = NO;
     
     switch (severityReason) {
-        case UnhandledException:
-            severity = BSGSeverityError;
-            unhandled = YES;
-            break;
         case PromiseRejection:
             severity = BSGSeverityError;
             unhandled = YES;
@@ -57,9 +53,12 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
             break;
         case UserSpecifiedSeverity:
             break;
+
+        case UnhandledException:
         default:
-            [NSException raise:@"UnknownSeverityReason"
-                        format:@"Severity reason not supported"];
+            severity = BSGSeverityError;
+            unhandled = YES;
+            break;
     }
     
     return [[BugsnagHandledState alloc] initWithSeverityReason:severityReason
@@ -77,14 +76,10 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
         _currentSeverity = severity;
         _originalSeverity = severity;
         _unhandled = unhandled;
-        
-        switch (severityReason) {
-            case Signal:
-                _attrValue = attrValue;
-                _attrKey = @"signalType";
-                break;
-            default:
-                break;
+
+        if (severityReason == Signal) {
+            _attrValue = attrValue;
+            _attrKey = @"signalType";
         }
     }
     return self;
@@ -109,23 +104,22 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 
 + (NSString *)stringFromSeverityReason:(SeverityReasonType)severityReason {
     switch (severityReason) {
-        case UnhandledException:
-            return kUnhandledException;
         case Signal:
             return kSignal;
         case HandledError:
             return kHandledError;
         case HandledException:
             return kHandledException;
-        case UserSpecifiedSeverity:
-            return kUserSpecifiedSeverity;
         case UserCallbackSetSeverity:
             return kUserCallbackSetSeverity;
         case PromiseRejection:
             return kPromiseRejection;
+        case UserSpecifiedSeverity:
+            return kUserSpecifiedSeverity;
+        case UnhandledException:
         default:
-            [NSException raise:@"UnknownSeverityReason"
-                        format:@"Severity reason not supported"];
+            return kUnhandledException;
+
     }
 }
 
@@ -145,8 +139,6 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
     } else if ([kPromiseRejection isEqualToString:string]) {
         return PromiseRejection;
     } else {
-        [NSException raise:@"UnknownSeverityReason"
-                    format:@"Severity reason not supported"];
         return UnhandledException;
     }
 }

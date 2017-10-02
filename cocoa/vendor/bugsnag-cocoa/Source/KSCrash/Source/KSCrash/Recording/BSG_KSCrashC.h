@@ -195,6 +195,26 @@ void bsg_kscrash_reportUserException(const char* name,
                                  const char* lineOfCode,
                                  const char* stackTrace,
                                  bool terminateProgram);
+    
+
+/** If YES, user reported exceptions will suspend all threads during report generation.
+ * All threads will be suspended while generating a crash report for a user
+ * reported exception.
+ *
+ * Default: YES
+ */
+void bsg_kscrash_setSuspendThreadsForUserReported(bool suspendThreadsForUserReported);
+   
+/** If YES, user reported exceptions even if a debugger is attached
+ *
+ * Default: NO
+ */
+void bsg_kscrash_setReportWhenDebuggerIsAttached(bool reportWhenDebuggerIsAttached);
+    
+void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled);
+
+void bsg_kscrash_setWriteBinaryImagesForUserReported(bool writeBinaryImagesForUserReported);
+    
 
 #ifdef __cplusplus
 }

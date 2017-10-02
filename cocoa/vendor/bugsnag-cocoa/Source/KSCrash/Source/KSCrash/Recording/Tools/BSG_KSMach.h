@@ -88,7 +88,7 @@ const char* bsg_ksmachexceptionName(exception_type_t exceptionType);
 
 /** Get the name of a mach kernel return code.
  *
- * @param code The return code.
+ * @param returnCode The return code.
  *
  * @return The code's name or NULL if not found.
  */
@@ -280,7 +280,7 @@ bool bsg_ksmachgetThreadQueueName(thread_t thread, char* buffer, size_t bufLengt
  *
  * @return The current thread ID.
  */
-thread_t bsg_ksmachthread_self();
+    thread_t bsg_ksmachthread_self(void);
 
 /** Get a mach thread's corresponding posix thread.
  *

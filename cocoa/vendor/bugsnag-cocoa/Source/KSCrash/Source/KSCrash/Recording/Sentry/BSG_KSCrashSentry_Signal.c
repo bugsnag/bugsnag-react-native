@@ -75,7 +75,7 @@ static BSG_KSCrash_SentryContext* bsg_g_context;
  * Once we're done, re-raise the signal and let the default handlers deal with
  * it.
  *
- * @param signal The signal that was raised.
+ * @param sigNum The signal that was raised.
  *
  * @param signalInfo Information about the signal.
  *

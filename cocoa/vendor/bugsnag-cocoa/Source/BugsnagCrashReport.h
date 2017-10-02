@@ -132,7 +132,7 @@ NSString *_Nonnull BSGFormatSeverity(BSGSeverity severity);
 /**
  *  The class of the error generating the report
  */
-@property (nonatomic, readwrite, copy, nullable) NSString *errorClass;
+@property (nonatomic, readwrite, copy, nonnull) NSString *errorClass;
 /**
  *  The message of or reason for the error generating the report
  */
