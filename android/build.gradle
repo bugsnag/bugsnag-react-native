@@ -7,13 +7,12 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 2
-        versionName '2.3.2'
+        versionCode 3
+        versionName '2.4.0'
     }
 }
 
 dependencies {
-    compile 'com.github.bugsnag:bugsnag-android:track-handled-unhandled-SNAPSHOT' // TODO update in final release!
-//    compile 'com.bugsnag:bugsnag-android:4.0.0'
+    compile 'com.bugsnag:bugsnag-android:4.1.0'
     compile 'com.facebook.react:react-native:0.20.1'
 }
