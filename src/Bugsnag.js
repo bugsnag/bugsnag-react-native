@@ -4,6 +4,7 @@ const NativeClient = NativeModules.BugsnagReactNative;
 
 const BREADCRUMB_MAX_LENGTH = 30;
 
+
 /**
  * A Bugsnag monitoring and reporting client
  */
@@ -41,11 +42,11 @@ export class Client {
 
       ErrorUtils.setGlobalHandler((error, isFatal) => {
         if (this.config.autoNotify && this.config.shouldNotify()) {
-          this.notify(error, report => {report.severity = 'error'}, !!NativeClient.notifyBlocking, (queued) => {
+          this.notify(error, null, !!NativeClient.notifyBlocking, (queued) => {
             if (previousHandler) {
               previousHandler(error, isFatal);
             }
-          });
+          }, new HandledState('error', true, 'unhandledException'));
         } else if (previousHandler) {
           previousHandler(error, isFatal);
         }
@@ -58,7 +59,9 @@ export class Client {
           client = this;
     tracking.enable({
       allRejections: true,
-      onUnhandled: function(id, error) { client.notify(error); },
+      onUnhandled: function(id, error) {
+        client.notify(error, null, false, null, new HandledState('error', true, 'unhandledPromiseRejection'));
+      },
       onHandled: function() {}
     });
   }
@@ -73,7 +76,7 @@ export class Client {
    *                            request asynchronously
    * @param postSendCallback    Callback invoked after request is queued
    */
-  notify = async (error, beforeSendCallback, blocking, postSendCallback) => {
+  notify = async (error, beforeSendCallback, blocking, postSendCallback, _handledState) => {
     if (!(error instanceof Error)) {
       console.warn('Bugsnag could not notify: error must be of type Error');
       if (postSendCallback)
@@ -86,7 +89,7 @@ export class Client {
       return;
     }
 
-    const report = new Report(this.config.apiKey, error);
+    const report = new Report(this.config.apiKey, error, _handledState);
     report.addMetadata('app', 'codeBundleId', this.config.codeBundleId);
 
     for (callback of this.config.beforeSendCallbacks) {
@@ -100,10 +103,11 @@ export class Client {
       beforeSendCallback(report);
     }
 
-    if (blocking) {
-      NativeClient.notifyBlocking(report.toJSON(), blocking, postSendCallback);
+    const payload = report.toJSON();
+    if (blocking && NativeClient.notifyBlocking) {
+      NativeClient.notifyBlocking(payload, blocking, postSendCallback);
     } else {
-      NativeClient.notify(report.toJSON());
+      NativeClient.notify(payload);
       if (postSendCallback)
         postSendCallback(true);
     }
@@ -225,9 +229,16 @@ export class Configuration {
 }
 
 export class StandardDelivery {
-
   constructor(endpoint) {
     this.endpoint = endpoint || 'https://notify.bugsnag.com';
+  }
+}
+
+class HandledState {
+  constructor(originalSeverity, unhandled, severityReason) {
+    this.originalSeverity = originalSeverity;
+    this.unhandled = unhandled;
+    this.severityReason = severityReason;
   }
 }
 
@@ -236,16 +247,22 @@ export class StandardDelivery {
  */
 export class Report {
 
-  constructor(apiKey, error) {
+  constructor(apiKey, error, _handledState) {
     this.apiKey = apiKey;
     this.errorClass = error.constructor.name;
     this.errorMessage = error.message;
     this.context = undefined;
     this.groupingHash = undefined;
     this.metadata = {};
-    this.severity = 'warning';
     this.stacktrace = error.stack;
     this.user = {};
+
+    if (!_handledState) {
+      _handledState = new HandledState('warning', false, 'handledException');
+    }
+
+    this.severity = _handledState.originalSeverity;
+    this._handledState = _handledState;
   }
 
   /**
@@ -260,6 +277,10 @@ export class Report {
   }
 
   toJSON = () => {
+    const defaultSeverity = this._handledState.originalSeverity === this.severity;
+    const severityType = defaultSeverity ?
+     this._handledState.severityReason : 'userCallbackSetSeverity';
+
     return {
       apiKey: this.apiKey,
       context: this.context,
@@ -269,7 +290,10 @@ export class Report {
       metadata: typedMap(this.metadata),
       severity: this.severity,
       stacktrace: this.stacktrace,
-      user: this.user
+      user: this.user,
+      defaultSeverity: defaultSeverity,
+      unhandled: this._handledState.unhandled,
+      severityReason: severityType
     }
   }
 }

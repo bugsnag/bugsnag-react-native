@@ -100,8 +100,7 @@ typedef void(^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
 - (void)addBreadcrumb:(NSString *_Nonnull)breadcrumbMessage;
 
 /**
- *  Store a new breadcrumb configured via block. Must be called from the main
- *  thread
+ *  Store a new breadcrumb configured via block.
  *
  *  @param block configuration block
  */

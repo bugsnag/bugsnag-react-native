@@ -132,6 +132,14 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
     atSeverity:(NSString *_Nullable)severity
     __deprecated_msg("Use notify:block: instead and add the metadata and severity to the report directly.");
 
+/**
+ * Intended for use by other clients (React Native/Unity). Calling this method directly from
+ * iOS is not supported.
+ */
++ (void)internalClientNotify:(NSException *_Nonnull)exception
+                    withData:(NSDictionary *_Nullable)metaData
+                       block:(BugsnagNotifyBlock _Nullable)block;
+
 /** Add custom data to send to Bugsnag with every exception. If value is nil,
  *  delete the current value for attributeName
  *
@@ -192,5 +200,11 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
 + (void)clearBreadcrumbs;
 
 + (NSDateFormatter *_Nonnull)payloadDateFormatter;
+
++ (void)setSuspendThreadsForUserReported:(BOOL)suspendThreadsForUserReported;
++ (void)setReportWhenDebuggerIsAttached:(BOOL)reportWhenDebuggerIsAttached;
++ (void)setThreadTracingEnabled:(BOOL)threadTracingEnabled;
++ (void)setWriteBinaryImagesForUserReported:(BOOL)writeBinaryImagesForUserReported;
+
 
 @end

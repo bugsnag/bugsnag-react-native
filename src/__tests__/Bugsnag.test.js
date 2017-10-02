@@ -50,7 +50,12 @@ test('handleUncaughtErrors(): error handler calls notify(…) correctly', () => 
 
   c.notify = jest.fn()
   handler(new Error('boom!'), false)
-  expect(c.notify).toHaveBeenCalledWith(expect.any(Error), expect.any(Function), false, expect.any(Function))
+  
+  expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, false, expect.any(Function), {
+    originalSeverity: "error",
+    severityReason: "unhandledException",
+    unhandled: true
+  })
 })
 
 test('handlePromiseRejections(): error handler calls notify(…) correctly', () => {
@@ -72,7 +77,12 @@ test('handlePromiseRejections(): error handler calls notify(…) correctly', () 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
-        expect(c.notify).toHaveBeenCalledWith(expect.any(Error))
+
+        expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, false, null, {
+          originalSeverity: "error",
+          severityReason: "unhandledPromiseRejection",
+          unhandled: true
+        })
       } catch (e) {
         reject(e)
       }
@@ -117,15 +127,77 @@ test('notify(): calls the correct native notify/notifyBlocking method', () => {
   // non-blocking
   c.notify(new Error('boom!'))
   expect(mockNotify).toHaveBeenCalledWith(
-    expect.objectContaining({ apiKey: 'API_KEY', errorClass: 'Error', errorMessage: 'boom!', severity: 'warning' })
+    expect.objectContaining({
+      apiKey: 'API_KEY',
+      errorClass: 'Error',
+      errorMessage: 'boom!',
+      severity: 'warning',
+      unhandled: false,
+      severityReason: 'handledException'
+    })
   )
 
   // blocking
   c.notify(new Error('nb boom!'), null, true)
   expect(mockNotifyBlocking).toHaveBeenCalledWith(
-    expect.objectContaining({ apiKey: 'API_KEY', errorClass: 'Error', errorMessage: 'nb boom!', severity: 'warning' }),
+    expect.objectContaining({
+      apiKey: 'API_KEY',
+      errorClass: 'Error',
+      errorMessage: 'nb boom!',
+      severity: 'warning',
+      unhandled: false,
+      severityReason: 'handledException'
+    }),
     true,
     undefined
+  )
+})
+
+test('notify(): supplying unhandled state as param changes payload', () => {
+  const mockNotify = jest.fn()
+  const mockNotifyBlocking = jest.fn()
+  jest.mock('react-native', () => ({
+    NativeModules: {
+      BugsnagReactNative: {
+        startWithOptions: jest.fn(),
+        notify: mockNotify,
+        notifyBlocking: mockNotifyBlocking
+      }
+    }
+  }), { virtual: true })
+
+  const { Client } = require('../Bugsnag')
+  const c = new Client('API_KEY')
+
+  // send unhandled state
+  c.notify(new Error('nb boom!'), null, true, null, {
+    originalSeverity: 'warning',
+    unhandled: false,
+    severityReason: "handledException",
+  })
+  expect(mockNotifyBlocking).toHaveBeenCalledWith(
+    expect.objectContaining({
+      severity: 'warning',
+      unhandled: false,
+      severityReason: "handledException"
+    }),
+    true,
+    null
+  )
+
+  // mutate severity
+  c.notify(new Error('Mutate Severity'), report => {report.severity = 'info'}, true, null, {
+    originalSeverity: 'warning',
+    unhandled: false,
+    severityReason: "handledException",
+  })
+  expect(mockNotifyBlocking).toHaveBeenCalledWith(
+    expect.objectContaining({
+      severity: 'info',
+      severityReason: "userCallbackSetSeverity"
+    }),
+    true,
+    null
   )
 })
 

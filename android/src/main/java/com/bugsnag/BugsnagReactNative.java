@@ -3,6 +3,7 @@ package com.bugsnag;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -114,15 +115,21 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                                                         errorMessage,
                                                         rawStacktrace);
 
-
       DiagnosticsCallback handler = new DiagnosticsCallback(libraryVersion,
                                                             bugsnagAndroidVersion,
                                                             payload);
-      if (blocking) {
-        Bugsnag.getClient().notifyBlocking(exc, handler);
-      } else {
-        Bugsnag.notify(exc, handler);
-      }
+
+      Map<String, Object> map = new HashMap<>();
+      String severity = payload.getString("severity");
+      String severityReason = payload.getString("severityReason");
+      map.put("severity", severity);
+      map.put("severityReason", severityReason);
+
+      logger.info("Notifying native client, severity = " + severity +
+              ", severityReason = " + severityReason);
+      Bugsnag.internalClientNotify(exc, map, blocking, handler);
+      logger.info("Notified native client");
+
       if (callback != null)
         callback.invoke();
   }
@@ -316,7 +323,6 @@ class DiagnosticsCallback implements Callback {
                                                 libraryVersion,
                                                 bugsnagAndroidVersion));
 
-        report.getError().setSeverity(severity);
         if (groupingHash != null && groupingHash.length() > 0)
             report.getError().setGroupingHash(groupingHash);
         if (context != null && context.length() > 0)

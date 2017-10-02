@@ -1058,8 +1058,8 @@ bser@^2.0.0:
   dependencies:
     node-int64 "^0.4.0"
 
-"bugsnag-react-native@file:../../.":
-  version "2.3.1"
+"bugsnag-react-native@file:../..":
+  version "2.3.2"
   dependencies:
     promise "^7"
 

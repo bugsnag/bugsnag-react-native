@@ -54,7 +54,7 @@ NSString *BSGBreadcrumbTypeValue(BSGBreadcrumbType type) {
 @interface BugsnagBreadcrumbs()
 
 @property (nonatomic,readwrite,strong) NSMutableArray* breadcrumbs;
-@property (nonatomic,readonly,strong) NSLock* lock;
+@property (nonatomic,readonly,strong) dispatch_queue_t readWriteQueue;
 @end
 
 @interface BugsnagBreadcrumb ()
@@ -95,8 +95,9 @@ NSString *BSGBreadcrumbTypeValue(BSGBreadcrumbType type) {
 
 + (instancetype)breadcrumbWithBlock:(BSGBreadcrumbConfiguration)block {
     BugsnagBreadcrumb *crumb = [self new];
-    if (block)
+    if (block) {
         block(crumb);
+    }
     if ([crumb isValid]) {
         return crumb;
     }
@@ -113,7 +114,7 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
     if (self = [super init]) {
         _breadcrumbs = [NSMutableArray new];
         _capacity = BreadcrumbsDefaultCapacity;
-        _lock = [NSLock new];
+        _readWriteQueue = dispatch_queue_create("com.bugsnag.BreadcrumbRead", DISPATCH_QUEUE_CONCURRENT);
     }
     return self;
 }
@@ -131,9 +132,9 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
     BugsnagBreadcrumb* crumb = [BugsnagBreadcrumb breadcrumbWithBlock:block];
     if (crumb) {
         [self resizeToFitCapacity:self.capacity - 1];
-        [self.lock lock];
-        [self.breadcrumbs addObject:crumb];
-        [self.lock unlock];
+        dispatch_barrier_sync(self.readWriteQueue, ^{
+            [self.breadcrumbs addObject:crumb];
+        });
     }
 }
 
@@ -148,9 +149,9 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
 }
 
 - (void)clearBreadcrumbs {
-    [self.lock lock];
-    [self.breadcrumbs removeAllObjects];
-    [self.lock unlock];
+    dispatch_barrier_sync(self.readWriteQueue, ^{
+        [self.breadcrumbs removeAllObjects];
+    });
 }
 
 - (NSUInteger)count {
@@ -159,9 +160,10 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
 
 - (BugsnagBreadcrumb *)objectAtIndexedSubscript:(NSUInteger)index {
     if (index < [self count]) {
-        [self.lock lock];
-        BugsnagBreadcrumb *crumb = self.breadcrumbs[index];
-        [self.lock unlock];
+        __block BugsnagBreadcrumb *crumb = nil;
+        dispatch_sync(self.readWriteQueue, ^{
+            crumb = self.breadcrumbs[index];
+        });
         return crumb;
     }
     return nil;
@@ -171,35 +173,37 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
     if ([self count] == 0) {
         return nil;
     }
-    NSMutableArray* contents = [[NSMutableArray alloc] initWithCapacity:[self count]];
-    [self.lock lock];
-    for (BugsnagBreadcrumb* crumb in self.breadcrumbs) {
-        NSDictionary *objectValue = [crumb objectValue];
-        NSError *error = nil;
-        @try {
-            NSData* data = [NSJSONSerialization dataWithJSONObject:objectValue options:0 error:&error];
-            if (data.length <= BSGBreadcrumbMaxByteSize)
-                [contents addObject:objectValue];
-            else
-                bsg_log_warn(@"Dropping breadcrumb (%@) exceeding %lu byte size limit", crumb.name, (unsigned long)BSGBreadcrumbMaxByteSize);
-        } @catch (NSException *exception) {
-            bsg_log_err(@"Unable to serialize breadcrumb: %@", error);
+    __block NSMutableArray* contents = [[NSMutableArray alloc] initWithCapacity:[self count]];
+    dispatch_sync(self.readWriteQueue, ^{
+        for (BugsnagBreadcrumb* crumb in self.breadcrumbs) {
+            NSDictionary *objectValue = [crumb objectValue];
+            NSError *error = nil;
+            @try {
+                if (![NSJSONSerialization isValidJSONObject:objectValue]) {
+                    bsg_log_err(@"Unable to serialize breadcrumb: Not a valid JSON object");
+                    continue;
+                }
+                NSData* data = [NSJSONSerialization dataWithJSONObject:objectValue options:0 error:&error];
+                if (data.length <= BSGBreadcrumbMaxByteSize)
+                    [contents addObject:objectValue];
+                else
+                    bsg_log_warn(@"Dropping breadcrumb (%@) exceeding %lu byte size limit", crumb.name, (unsigned long)BSGBreadcrumbMaxByteSize);
+            } @catch (NSException *exception) {
+                bsg_log_err(@"Unable to serialize breadcrumb: %@", error);
+            }
         }
-    }
-    [self.lock unlock];
+    });
     return contents;
 }
 
 - (void)resizeToFitCapacity:(NSUInteger)capacity {
     if (capacity == 0) {
         [self clearBreadcrumbs];
-        return;
+    } else if ([self count] > capacity) {
+        dispatch_barrier_sync(self.readWriteQueue, ^{
+            [self.breadcrumbs removeObjectsInRange:NSMakeRange(0, self.count - capacity)];
+        });
     }
-    [self.lock lock];
-    while ([self count] > capacity) {
-        [self.breadcrumbs removeObjectAtIndex:0];
-    }
-    [self.lock unlock];
 }
 
 @end
