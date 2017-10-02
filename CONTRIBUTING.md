@@ -39,11 +39,13 @@ to run the example projects.
 
 ## Releasing
 
-### Preflight testing
+## Release Checklist
+Please follow the testing instructions in [the platforms release checklist](https://github.com/bugsnag/platforms-release-checklist/blob/master/README.md), and any additional steps directly below.
 
 * Ensure the example app sends the correct error for each type on iOS and
   Android
 * Archive the iOS app and validate the bundle
+* Generate a signed APK for Android
 
 ### Making a new release
 
