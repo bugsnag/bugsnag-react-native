@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 2.4.1 (2017-10-03)
+* Link Native Cocoa as a static library
+
 ## 2.4.0 (2017-10-02)
 * Track whether errors are handled or unhandled
 * Reduce build warning count
