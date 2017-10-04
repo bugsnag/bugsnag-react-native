@@ -157,13 +157,13 @@ static const char* bsg_g_blockBaseClassName = "NSBlock";
 //======================================================================
 
 #if SUPPORT_TAGGED_POINTERS
-bool isTaggedPointer(const void* pointer) {return (((uintptr_t)pointer) & TAG_MASK) != 0; }
-uintptr_t getTaggedSlot(const void* pointer) { return (((uintptr_t)pointer) >> TAG_SLOT_SHIFT) & TAG_SLOT_MASK; }
-uintptr_t getTaggedPayload(const void* pointer) { return (((uintptr_t)pointer) << TAG_PAYLOAD_LSHIFT) >> TAG_PAYLOAD_RSHIFT; }
+bool bsg_isTaggedPointer(const void* pointer) {return (((uintptr_t)pointer) & TAG_MASK) != 0; }
+uintptr_t bsg_getTaggedSlot(const void* pointer) { return (((uintptr_t)pointer) >> TAG_SLOT_SHIFT) & TAG_SLOT_MASK; }
+uintptr_t bsg_getTaggedPayload(const void* pointer) { return (((uintptr_t)pointer) << TAG_PAYLOAD_LSHIFT) >> TAG_PAYLOAD_RSHIFT; }
 #else
-bool isTaggedPointer(__unused const void* pointer) { return false; }
-uintptr_t getTaggedSlot(__unused const void* pointer) { return 0; }
-uintptr_t getTaggedPayload(const void* pointer) { return (uintptr_t)pointer; }
+bool bsg_isTaggedPointer(__unused const void* pointer) { return false; }
+uintptr_t bsg_getTaggedSlot(__unused const void* pointer) { return 0; }
+uintptr_t bsg_getTaggedPayload(const void* pointer) { return (uintptr_t)pointer; }
 #endif
 
 /** Get class data for a tagged pointer.
@@ -173,15 +173,15 @@ uintptr_t getTaggedPayload(const void* pointer) { return (uintptr_t)pointer; }
  */
 static const ClassData* getClassDataFromTaggedPointer(const void* const object)
 {
-    uintptr_t slot = getTaggedSlot(object);
+    uintptr_t slot = bsg_getTaggedSlot(object);
     return &bsg_g_taggedClassData[slot];
 }
 
 static bool isValidTaggedPointer(const void* object)
 {
-    if(isTaggedPointer(object))
+    if(bsg_isTaggedPointer(object))
     {
-        if(getTaggedSlot(object) <= bsg_g_taggedClassDataCount)
+        if(bsg_getTaggedSlot(object) <= bsg_g_taggedClassDataCount)
         {
             const ClassData* classData = getClassDataFromTaggedPointer(object);
             return classData->type != BSG_KSObjCClassTypeUnknown;
@@ -190,7 +190,7 @@ static bool isValidTaggedPointer(const void* object)
     return false;
 }
 
-const void* decodeIsaPointer(const void* const isaPointer)
+const void* bsg_decodeIsaPointer(const void* const isaPointer)
 {
 #if ISA_TAG_MASK
     uintptr_t isa = (uintptr_t)isaPointer;
@@ -204,7 +204,7 @@ const void* decodeIsaPointer(const void* const isaPointer)
 
 static inline bool isValidObject(const void* object)
 {
-    if(isTaggedPointer(object))
+    if(bsg_isTaggedPointer(object))
     {
         return isValidTaggedPointer(object);
     }
@@ -217,21 +217,21 @@ static inline bool hasValidISAPointer(const void* object)
 {
     // Note: Assuming that this isn't a tagged pointer!
     const struct class_t* ptr = object;
-    const void* isaPtr = decodeIsaPointer(ptr->isa);
+    const void* isaPtr = bsg_decodeIsaPointer(ptr->isa);
     struct class_t data;
     return bsg_ksmachcopyMem(isaPtr, &data, sizeof(data)) == KERN_SUCCESS;
 }
 
-const void* getIsaPointer(const void* const objectOrClassPtr)
+const void* bsg_getIsaPointer(const void* const objectOrClassPtr)
 {
     // This is wrong. Should not get class data here.
-//    if(ksobjc_isTaggedPointer(objectOrClassPtr))
+//    if(ksobjc_bsg_isTaggedPointer(objectOrClassPtr))
 //    {
 //        return getClassDataFromTaggedPointer(objectOrClassPtr)->class;
 //    }
     
     const struct class_t* ptr = objectOrClassPtr;
-    return decodeIsaPointer(ptr->isa);
+    return bsg_decodeIsaPointer(ptr->isa);
 }
 
 static inline struct class_rw_t* getClassRW(const struct class_t* const class)
@@ -272,9 +272,9 @@ static inline const char* getClassName(const void* classPtr)
  * @param object The object to query.
  * @return true if the tagged pointer is an NSNumber.
  */
-static bool isTaggedPointerNSNumber(const void* const object)
+static bool bsg_isTaggedPointerNSNumber(const void* const object)
 {
-    return getTaggedSlot(object) == OBJC_TAG_NSNumber;
+    return bsg_getTaggedSlot(object) == OBJC_TAG_NSNumber;
 }
 
 /** Check if a tagged pointer is a string.
@@ -282,9 +282,9 @@ static bool isTaggedPointerNSNumber(const void* const object)
  * @param object The object to query.
  * @return true if the tagged pointer is an NSString.
  */
-static bool isTaggedPointerNSString(const void* const object)
+static bool bsg_isTaggedPointerNSString(const void* const object)
 {
-    return getTaggedSlot(object) == OBJC_TAG_NSString;
+    return bsg_getTaggedSlot(object) == OBJC_TAG_NSString;
 }
 
 /** Check if a tagged pointer is a date.
@@ -292,9 +292,9 @@ static bool isTaggedPointerNSString(const void* const object)
  * @param object The object to query.
  * @return true if the tagged pointer is an NSDate.
  */
-static bool isTaggedPointerNSDate(const void* const object)
+static bool bsg_isTaggedPointerNSDate(const void* const object)
 {
-    return getTaggedSlot(object) == OBJC_TAG_NSDate;
+    return bsg_getTaggedSlot(object) == OBJC_TAG_NSDate;
 }
 
 /** Extract an integer from a tagged NSNumber.
@@ -317,7 +317,7 @@ static int64_t extractTaggedNSNumber(const void* const object)
 
 static size_t getTaggedNSStringLength(const void* const object)
 {
-    uintptr_t payload = getTaggedPayload(object);
+    uintptr_t payload = bsg_getTaggedPayload(object);
     return payload & 0xf;
 }
 
@@ -325,7 +325,7 @@ static size_t extractTaggedNSString(const void* const object, char* buffer, size
 {
     size_t length = getTaggedNSStringLength(object);
     size_t copyLength = ((length + 1) > bufferLength) ? (bufferLength - 1) : length;
-    uintptr_t payload = getTaggedPayload(object);
+    uintptr_t payload = bsg_getTaggedPayload(object);
     uintptr_t value = payload >> 4;
     static char* alphabet = "eilotrm.apdnsIc ufkMShjTRxgC4013bDNvwyUL2O856P-B79AFKEWV_zGJ/HYX";
     if(length <=7)
@@ -368,7 +368,7 @@ static size_t extractTaggedNSString(const void* const object, char* buffer, size
  */
 static CFAbsoluteTime extractTaggedNSDate(const void* const object)
 {
-    uintptr_t payload = getTaggedPayload(object);
+    uintptr_t payload = bsg_getTaggedPayload(object);
     // Payload is a 60-bit float. Fortunately we can just cast across from
     // an integer pointer after shifting out the upper 4 bits.
     payload <<= 4;
@@ -415,12 +415,12 @@ static ClassData* getClassData(const void* class)
 
 static inline const ClassData* getClassDataFromObject(const void* object)
 {
-    if(isTaggedPointer(object))
+    if(bsg_isTaggedPointer(object))
     {
         return getClassDataFromTaggedPointer(object);
     }
     const struct class_t* obj = object;
-    return getClassData(getIsaPointer(obj));
+    return getClassData(bsg_getIsaPointer(obj));
 }
 
 static size_t stringPrintf(char* buffer,
@@ -622,7 +622,7 @@ static bool containsValidClassName(const void* const classPtr)
 
 const void* bsg_ksobjc_isaPointer(const void* const objectOrClassPtr)
 {
-    return getIsaPointer(objectOrClassPtr);
+    return bsg_getIsaPointer(objectOrClassPtr);
 }
 
 const void* bsg_ksobjc_superClass(const void* const classPtr)
@@ -647,7 +647,7 @@ const char* bsg_ksobjc_className(const void* classPtr)
 
 const char* bsg_ksobjc_objectClassName(const void* objectPtr)
 {
-    if(isTaggedPointer(objectPtr))
+    if(bsg_isTaggedPointer(objectPtr))
     {
         if(isValidTaggedPointer(objectPtr))
         {
@@ -656,7 +656,7 @@ const char* bsg_ksobjc_objectClassName(const void* objectPtr)
         }
         return NULL;
     }
-    const void* isaPtr = getIsaPointer(objectPtr);
+    const void* isaPtr = bsg_getIsaPointer(objectPtr);
     return getClassName(isaPtr);
 }
 
@@ -788,16 +788,16 @@ bool bsg_ksobjc_ivarNamed(const void* const classPtr, const char* name, BSG_KSOb
 
 bool bsg_ksobjc_ivarValue(const void* const objectPtr, size_t ivarIndex, void* dst)
 {
-    if(isTaggedPointer(objectPtr))
+    if(bsg_isTaggedPointer(objectPtr))
     {
         // Naively assume they want "value".
-        if(isTaggedPointerNSDate(objectPtr))
+        if(bsg_isTaggedPointerNSDate(objectPtr))
         {
             CFTimeInterval value = extractTaggedNSDate(objectPtr);
             memcpy(dst, &value, sizeof(value));
             return true;
         }
-        if(isTaggedPointerNSNumber(objectPtr))
+        if(bsg_isTaggedPointerNSNumber(objectPtr))
         {
             // TODO: Correct to assume 64-bit signed int? What does the actual ivar say?
             int64_t value = extractTaggedNSNumber(objectPtr);
@@ -807,7 +807,7 @@ bool bsg_ksobjc_ivarValue(const void* const objectPtr, size_t ivarIndex, void* d
         return false;
     }
 
-    const void* const classPtr = getIsaPointer(objectPtr);
+    const void* const classPtr = bsg_getIsaPointer(objectPtr);
     const struct ivar_list_t* ivars = getClassRO(classPtr)->ivars;
     if(ivarIndex >= ivars->count)
     {
@@ -826,7 +826,7 @@ bool bsg_ksobjc_ivarValue(const void* const objectPtr, size_t ivarIndex, void* d
 
 uintptr_t bsg_ksobjc_taggedPointerPayload(const void* taggedObjectPtr)
 {
-    return getTaggedPayload(taggedObjectPtr);
+    return bsg_getTaggedPayload(taggedObjectPtr);
 }
 
 static inline bool isBlockClass(const void* class)
@@ -851,7 +851,7 @@ BSG_KSObjCType bsg_ksobjc_objectType(const void* objectOrClassPtr)
         return BSG_KSObjCTypeUnknown;
     }
 
-    if(isTaggedPointer(objectOrClassPtr))
+    if(bsg_isTaggedPointer(objectOrClassPtr))
     {
         return BSG_KSObjCTypeObject;
     }
@@ -866,7 +866,7 @@ BSG_KSObjCType bsg_ksobjc_objectType(const void* objectOrClassPtr)
         return BSG_KSObjCTypeUnknown;
     }
 
-    const struct class_t* isa = getIsaPointer(objectOrClassPtr);
+    const struct class_t* isa = bsg_getIsaPointer(objectOrClassPtr);
 
     if(!containsValidROData(isa))
     {
@@ -919,7 +919,7 @@ static size_t objectDescription(const void* object,
                              char* buffer,
                              size_t bufferLength)
 {
-    const void* class = getIsaPointer(object);
+    const void* class = bsg_getIsaPointer(object);
     const char* name = getClassName(class);
     uintptr_t objPointer = (uintptr_t)object;
     const char* fmt = sizeof(uintptr_t) == sizeof(uint32_t) ? "<%s: 0x%08x>" : "<%s: 0x%016x>";
@@ -1011,7 +1011,7 @@ static bool stringIsValid(const void* const stringPtr)
 
 size_t bsg_ksobjc_stringLength(const void* const stringPtr)
 {
-    if(isTaggedPointer(stringPtr) && isTaggedPointerNSString(stringPtr))
+    if(bsg_isTaggedPointer(stringPtr) && bsg_isTaggedPointerNSString(stringPtr))
     {
         return getTaggedNSStringLength(stringPtr);
     }
@@ -1164,7 +1164,7 @@ size_t bsg_ksobjc_i_copy8BitString(const void* const src, void* const dst, size_
 
 size_t bsg_ksobjc_copyStringContents(const void* stringPtr, char* dst, size_t maxByteCount)
 {
-    if(isTaggedPointer(stringPtr) && isTaggedPointerNSString(stringPtr))
+    if(bsg_isTaggedPointer(stringPtr) && bsg_isTaggedPointerNSString(stringPtr))
     {
         return extractTaggedNSString(stringPtr, dst, maxByteCount);
     }
@@ -1195,7 +1195,7 @@ static size_t stringDescription(const void* object, char* buffer, size_t bufferL
 
 static bool taggedStringIsValid(const void* const object)
 {
-    return isValidTaggedPointer(object) && isTaggedPointerNSString(object);
+    return isValidTaggedPointer(object) && bsg_isTaggedPointerNSString(object);
 }
 
 static size_t taggedStringDescription(const void* object, char* buffer, __unused size_t bufferLength)
@@ -1272,7 +1272,7 @@ static size_t dateDescription(const void* object, char* buffer, size_t bufferLen
 
 static bool taggedDateIsValid(const void* const datePtr)
 {
-    return isValidTaggedPointer(datePtr) && isTaggedPointerNSDate(datePtr);
+    return isValidTaggedPointer(datePtr) && bsg_isTaggedPointerNSDate(datePtr);
 }
 
 static size_t taggedDateDescription(const void* object, char* buffer, size_t bufferLength)
@@ -1374,7 +1374,7 @@ static size_t numberDescription(const void* object, char* buffer, size_t bufferL
 
 static bool taggedNumberIsValid(const void* const object)
 {
-    return isValidTaggedPointer(object) && isTaggedPointerNSNumber(object);
+    return isValidTaggedPointer(object) && bsg_isTaggedPointerNSNumber(object);
 }
 
 static size_t taggedNumberDescription(const void* object, char* buffer, size_t bufferLength)
@@ -1658,9 +1658,9 @@ void* bsg_ksobjc_i_objectReferencedByString(const char* string)
     return NULL;
 }
 
-bool bsg_ksobjc_isTaggedPointer(const void* const pointer)
+bool bsg_ksobjc_bsg_isTaggedPointer(const void* const pointer)
 {
-    return isTaggedPointer(pointer);
+    return bsg_isTaggedPointer(pointer);
 }
 
 bool bsg_ksobjc_isValidTaggedPointer(const void* const pointer)

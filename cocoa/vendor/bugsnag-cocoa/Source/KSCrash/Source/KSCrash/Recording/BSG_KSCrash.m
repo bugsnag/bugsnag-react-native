@@ -493,7 +493,7 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
 
 - (BOOL) redirectConsoleLogsToFile:(NSString*) fullPath overwrite:(BOOL) overwrite
 {
-    if(kslog_setLogFilename([fullPath UTF8String], overwrite))
+    if(bsg_kslog_setLogFilename([fullPath UTF8String], overwrite))
     {
         self.logFilePath = fullPath;
         return YES;

@@ -17,7 +17,7 @@ static NSString *const kAttrKey = @"attrKey";
 
 static NSString *const kUnhandledException = @"unhandledException";
 static NSString *const kSignal = @"signal";
-static NSString *const kPromiseRejection = @"promiseRejection";
+static NSString *const kPromiseRejection = @"unhandledPromiseRejection";
 static NSString *const kHandledError = @"handledError";
 static NSString *const kLogGenerated = @"log";
 static NSString *const kHandledException = @"handledException";

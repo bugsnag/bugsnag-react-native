@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 2.4.2 (2017-10-04)
+* Fix duplicate symbols in KSCrash when Sentry library included in project
+
 ## 2.4.1 (2017-10-03)
 * Link Native Cocoa as a static library
 
