@@ -39,7 +39,18 @@ to run the example projects.
 
 ## Releasing
 
-## Release Checklist
+### Upgrading the vendored libraries
+
+To upgrade bugsnag-cocoa, prepare an updated version of bugsnag-cocoa, then copy
+the Source and iOS directories. Assuming bugsnag-cocoa is located in the same
+directory as bugsnag-react-native:
+
+```
+cp -r ../bugsnag-cocoa/Source/* cocoa/vendor/bugsnag-cocoa/Source
+cp -r ../bugsnag-cocoa/iOS/* cocoa/vendor/bugsnag-cocoa/iOS
+```
+
+### Release Checklist
 Please follow the testing instructions in [the platforms release checklist](https://github.com/bugsnag/platforms-release-checklist/blob/master/README.md), and any additional steps directly below.
 
 * Ensure the example app sends the correct error for each type on iOS and
