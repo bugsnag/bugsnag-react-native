@@ -351,6 +351,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 
     NSString *severity = [metaData objectForKey:@"severity"];
     NSString *severityReason = [metaData objectForKey:@"severityReason"];
+    NSString *logLevel = [metaData objectForKey:@"logLevel"];
     NSParameterAssert(severity.length > 0);
     NSParameterAssert(severityReason.length > 0);
 
@@ -359,7 +360,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     BugsnagHandledState *state =
     [BugsnagHandledState handledStateWithSeverityReason:severityReasonType
                                                severity:BSGParseSeverity(severity)
-                                              attrValue:nil];
+                                              attrValue:logLevel];
 
     [self notify:exception.name ?: NSStringFromClass([exception class])
          message:exception.reason

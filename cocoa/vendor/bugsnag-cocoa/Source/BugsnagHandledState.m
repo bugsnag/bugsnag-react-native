@@ -19,6 +19,7 @@ static NSString *const kUnhandledException = @"unhandledException";
 static NSString *const kSignal = @"signal";
 static NSString *const kPromiseRejection = @"promiseRejection";
 static NSString *const kHandledError = @"handledError";
+static NSString *const kLogGenerated = @"log";
 static NSString *const kHandledException = @"handledException";
 static NSString *const kUserSpecifiedSeverity = @"userSpecifiedSeverity";
 static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
@@ -35,7 +36,7 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
                                       severity:(BSGSeverity)severity
                                      attrValue:(NSString *)attrValue {
     BOOL unhandled = NO;
-    
+
     switch (severityReason) {
         case PromiseRejection:
             severity = BSGSeverityError;
@@ -51,16 +52,16 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
         case HandledException:
             severity = BSGSeverityWarning;
             break;
+        case LogMessage:
         case UserSpecifiedSeverity:
+        case UserCallbackSetSeverity:
             break;
-
         case UnhandledException:
-        default:
             severity = BSGSeverityError;
             unhandled = YES;
             break;
     }
-    
+
     return [[BugsnagHandledState alloc] initWithSeverityReason:severityReason
                                                       severity:severity
                                                      unhandled:unhandled
@@ -80,6 +81,9 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
         if (severityReason == Signal) {
             _attrValue = attrValue;
             _attrKey = @"signalType";
+        } else if (severityReason == LogMessage) {
+            _attrValue = attrValue;
+            _attrKey = @"level";
         }
     }
     return self;
@@ -116,8 +120,9 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
             return kPromiseRejection;
         case UserSpecifiedSeverity:
             return kUserSpecifiedSeverity;
+        case LogMessage:
+            return kLogGenerated;
         case UnhandledException:
-        default:
             return kUnhandledException;
 
     }
@@ -128,6 +133,8 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
         return UnhandledException;
     } else if ([kSignal isEqualToString:string]) {
         return Signal;
+    } else if ([kLogGenerated isEqualToString:string]) {
+        return LogMessage;
     } else if ([kHandledError isEqualToString:string]) {
         return HandledError;
     } else if ([kHandledException isEqualToString:string]) {
