@@ -83,7 +83,7 @@ void bsg_ksobjc_init(void);
  * @param pointer The pointer to check.
  * @return true if it's a tagged pointer.
  */
-bool bsg_ksobjc_isTaggedPointer(const void* const pointer);
+bool bsg_ksobjc_bsg_isTaggedPointer(const void* const pointer);
 
 /** Check if a pointer is a valid tagged pointer.
  *

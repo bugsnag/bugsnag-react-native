@@ -157,7 +157,7 @@ static inline void setLogFD(int fd)
     bsg_g_fd = fd;
 }
 
-bool kslog_setLogFilename(const char* filename, bool overwrite)
+bool bsg_kslog_setLogFilename(const char* filename, bool overwrite)
 {
     if(filename == NULL)
     {
@@ -226,7 +226,7 @@ static inline void flushLog(void)
     fflush(g_file);
 }
 
-bool kslog_setLogFilename(const char* filename, bool overwrite)
+bool bsg_kslog_setLogFilename(const char* filename, bool overwrite)
 {
     if(filename == NULL)
     {
@@ -252,7 +252,7 @@ bool kslog_setLogFilename(const char* filename, bool overwrite)
 #pragma mark - C -
 // ===========================================================================
 
-void i_kslog_logCBasic(const char* const fmt, ...)
+void bsg_i_kslog_logCBasic(const char* const fmt, ...)
 {
     va_list args;
     va_start(args,fmt);
@@ -262,7 +262,7 @@ void i_kslog_logCBasic(const char* const fmt, ...)
     flushLog();
 }
 
-void i_kslog_logC(const char* const level,
+void bsg_i_kslog_logC(const char* const level,
                   const char* const file,
                   const int line,
                   const char* const function,
@@ -282,7 +282,7 @@ void i_kslog_logC(const char* const level,
 #pragma mark - Objective-C -
 // ===========================================================================
 
-void i_kslog_logObjCBasic(NSString* fmt, ...)
+void bsg_i_kslog_logObjCBasic(NSString* fmt, ...)
 {
     if(fmt == nil)
     {
@@ -301,7 +301,7 @@ void i_kslog_logObjCBasic(NSString* fmt, ...)
     CFRelease(entry);
 }
 
-void i_kslog_logObjC(const char* const level,
+void bsg_i_kslog_logObjC(const char* const level,
                      const char* const file,
                      const int line,
                      const char* const function,
@@ -309,7 +309,7 @@ void i_kslog_logObjC(const char* const level,
 {
     if(fmt == nil)
     {
-        i_kslog_logObjCBasic(@"%s: %s (%u): %s: (null)",
+        bsg_i_kslog_logObjCBasic(@"%s: %s (%u): %s: (null)",
                              level, lastPathEntry(file), line, function);
     }
     else
@@ -319,7 +319,7 @@ void i_kslog_logObjC(const char* const level,
         CFStringRef entry = CFStringCreateWithFormatAndArguments(NULL, NULL, (__bridge CFStringRef)fmt, args);
         va_end(args);
 
-        i_kslog_logObjCBasic(@"%s: %s (%u): %s: %@",
+        bsg_i_kslog_logObjCBasic(@"%s: %s (%u): %s: %@",
                              level, lastPathEntry(file), line, function, (__bridge id)entry);
 
         CFRelease(entry);

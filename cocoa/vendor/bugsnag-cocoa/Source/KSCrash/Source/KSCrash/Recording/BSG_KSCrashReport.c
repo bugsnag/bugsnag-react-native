@@ -868,7 +868,7 @@ void bsg_kscrw_i_writeUnknownObjectContents(const BSG_KSCrashReportWriter* const
     
     writer->beginObject(writer, key);
     {
-        if(bsg_ksobjc_isTaggedPointer(object))
+        if(bsg_ksobjc_bsg_isTaggedPointer(object))
         {
             writer->addIntegerElement(writer, "tagged_payload", (long long)bsg_ksobjc_taggedPointerPayload(object));
         }
@@ -1074,7 +1074,7 @@ bool bsg_kscrw_i_isValidPointer(const uintptr_t address)
         return false;
     }
 
-    if(bsg_ksobjc_isTaggedPointer((const void*)address))
+    if(bsg_ksobjc_bsg_isTaggedPointer((const void*)address))
     {
         if(!bsg_ksobjc_isValidTaggedPointer((const void*)address))
         {
