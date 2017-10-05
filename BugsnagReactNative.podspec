@@ -19,9 +19,7 @@ Pod::Spec.new do |s|
   s.dependency 'React'
 
   s.source_files = 'cocoa/BugsnagReactNative.{h,m}',
-                   'cocoa/vendor/bugsnag-cocoa/Source/*.{h,m,mm,cpp,c}',
-                   'cocoa/vendor/kscrash/Source/KSCrash/**/*.{h,m,mm,cpp,c}',
-                   'cocoa/vendor/kscrash/Source/Framework/**/*.{h,m,mm,cpp,c}',
+                   'cocoa/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}',
 
   s.public_header_files = 'cocoa/**/{Bugsnag,BugsnagReactNative,BugsnagMetaData,BugsnagConfiguration,BugsnagBreadcrumb,BugsnagCrashReport,BSGKSCrashReportWriter}.h'
 
