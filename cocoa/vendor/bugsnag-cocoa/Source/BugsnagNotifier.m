@@ -42,7 +42,7 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.12.1";
+NSString *const NOTIFIER_VERSION = @"5.12.0";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSTabConfig = @"config";
@@ -351,7 +351,6 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 
     NSString *severity = [metaData objectForKey:@"severity"];
     NSString *severityReason = [metaData objectForKey:@"severityReason"];
-    NSString *logLevel = [metaData objectForKey:@"logLevel"];
     NSParameterAssert(severity.length > 0);
     NSParameterAssert(severityReason.length > 0);
 
@@ -360,7 +359,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     BugsnagHandledState *state =
     [BugsnagHandledState handledStateWithSeverityReason:severityReasonType
                                                severity:BSGParseSeverity(severity)
-                                              attrValue:logLevel];
+                                              attrValue:nil];
 
     [self notify:exception.name ?: NSStringFromClass([exception class])
          message:exception.reason
