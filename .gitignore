@@ -1,9 +1,10 @@
 node_modules
 example*/ios/Pods
-lib
+/lib
 *.bundle
 local.properties
 .idea
 *.DS_STORE
 xcuserdata
 coverage
+/android/build
