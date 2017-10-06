@@ -50,7 +50,7 @@ test('handleUncaughtErrors(): error handler calls notify(…) correctly', () => 
 
   c.notify = jest.fn()
   handler(new Error('boom!'), false)
-  
+
   expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, false, expect.any(Function), {
     originalSeverity: "error",
     severityReason: "unhandledException",
@@ -271,4 +271,45 @@ test('leaveBreadcrumb(): calls the native leaveBreadcrumb method correctly', () 
     metadata: {}
   })
   mockLeaveBreadcrumb.mockClear()
+})
+
+test('{enable|disable}ConsoleBreadCrumbs(): wraps/unwraps console methods and calls leaveBreadcrumb appropriately', () => {
+  const mockLeaveBreadcrumb = jest.fn()
+  jest.mock('react-native', () => ({
+    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn(), leaveBreadcrumb: mockLeaveBreadcrumb } }
+  }), { virtual: true })
+
+  const { Client, Configuration } = require('../Bugsnag')
+  const config = new Configuration('API_KEY')
+  const c = new Client(config)
+
+  console.log('don’t mind me cluttering up the test output!')
+  expect(mockLeaveBreadcrumb).toHaveBeenCalledTimes(0)
+
+  c.enableConsoleBreadcrumbs()
+  console.log('and me ;)')
+  expect(mockLeaveBreadcrumb).toHaveBeenCalledTimes(1)
+
+  c.disableConsoleBreadCrumbs()
+  console.log('me also')
+  expect(mockLeaveBreadcrumb).toHaveBeenCalledTimes(1)
+})
+
+test('config.consoleBreadcrumbsEnabled=true: causes console breadcrumbs to be enabled', () => {
+  const mockLeaveBreadcrumb = jest.fn()
+  jest.mock('react-native', () => ({
+    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn(), leaveBreadcrumb: mockLeaveBreadcrumb } }
+  }), { virtual: true })
+
+  const { Client, Configuration } = require('../Bugsnag')
+  const config = new Configuration('API_KEY')
+  config.consoleBreadcrumbsEnabled = true
+  const c = new Client(config)
+
+  console.warn('check 1, 2')
+  expect(mockLeaveBreadcrumb).toHaveBeenCalledTimes(1)
+
+  // because global side effects, ensure console wrapping is
+  // switched off for the next test ¯\_(ツ)_/¯
+  c.disableConsoleBreadCrumbs()
 })

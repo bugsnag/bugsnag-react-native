@@ -3,6 +3,9 @@ import { NativeModules } from 'react-native';
 const NativeClient = NativeModules.BugsnagReactNative;
 
 const BREADCRUMB_MAX_LENGTH = 30;
+const CONSOLE_LOG_METHODS = [ 'log', 'debug', 'info', 'warn', 'error' ].filter(method =>
+  typeof console[method] === 'function'
+);
 
 
 /**
@@ -27,6 +30,8 @@ export class Client {
       this.handleUncaughtErrors();
       if (this.config.handlePromiseRejections)
         this.handlePromiseRejections();
+      if (this.config.consoleBreadcrumbsEnabled)
+        this.enableConsoleBreadcrumbs();
     } else {
       throw new Error('Bugsnag: No native client found. Is BugsnagReactNative installed in your native code project?');
     }
@@ -158,7 +163,48 @@ export class Client {
       metadata: typedMap(breadcrumbMetaData)
     });
   }
+
+  /**
+   * Wraps all console log functions with a function that will leave a breadcrumb for
+   * each call, while continuing to call through to the original.
+   *
+   *   !!! Warning !!!
+   *   This will cause all log messages to originate from Bugsnag, rather than the
+   *   actual callsite of the log function in your source code.
+   */
+  enableConsoleBreadcrumbs = () => {
+    CONSOLE_LOG_METHODS.forEach(method => {
+      const originalFn = console[method];
+      console[method] = (...args) => {
+        this.leaveBreadcrumb('Console', {
+          type: 'log',
+          severity: /^group/.test(method) ? 'log' : method,
+          message: args
+            .map(arg => {
+              // do the best/simplest stringification of each argument
+              let stringified = arg.toString()
+              // unless it stringifies to [object Object], use the toString() value
+              if (stringified !== '[object Object]') return stringified
+              // otherwise attempt to JSON stringify (with indents/spaces)
+              try { stringified = JSON.stringify(arg, null, 2) } catch (e) {}
+              // any errors, fallback to [object Object]
+              return stringified
+            })
+            .join('\n')
+        });
+        console[method]._restore = () => { console[method] = originalFn }
+        originalFn.apply(console, args);
+      }
+    });
+  }
+
+  disableConsoleBreadCrumbs = () => {
+    CONSOLE_LOG_METHODS.forEach(method => {
+      if (typeof console[method]._restore === 'function') console[method]._restore()
+    })
+  }
 }
+
 
 /**
  * Configuration options for a Bugsnag client
@@ -177,6 +223,7 @@ export class Configuration {
     this.codeBundleId = undefined;
     this.autoNotify = true;
     this.handlePromiseRejections = !__DEV__; // prefer banner in dev mode
+    this.consoleBreadcrumbsEnabled = false;
   }
 
   /**
