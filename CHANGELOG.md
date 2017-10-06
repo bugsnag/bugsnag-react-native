@@ -1,6 +1,20 @@
 Changelog
 =========
 
+## 2.5.0 (2017-10-09)
+
+### Enhancements
+
+* Add configuration option to enable capturing console log messages as
+  breadcrumbs
+  [#159](https://github.com/bugsnag/bugsnag-react-native/pull/159)
+  [Ben Gourley](https://github.com/bengourley)
+
+### Bug fixes
+
+* [android] Reuse previously configured Bugsnag native client if available
+  [#156](https://github.com/bugsnag/bugsnag-react-native/pull/156)
+
 ## 2.4.2 (2017-10-04)
 * Fix duplicate symbols in KSCrash when Sentry library included in project
 
