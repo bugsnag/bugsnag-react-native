@@ -66,13 +66,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void startWithOptions(ReadableMap options) {
-      libraryVersion = options.getString("version");
-      Client client = null;
+      String apiKey = null;
       if (options.hasKey("apiKey")) {
-          client = Bugsnag.init(this.reactContext, options.getString("apiKey"));
-      } else {
-          client = Bugsnag.init(this.reactContext);
+          apiKey = options.getString("apiKey");
       }
+      Client client = getClient(apiKey);
+      libraryVersion = options.getString("version");
       bugsnagAndroidVersion = client.getClass().getPackage().getSpecificationVersion();
       configureRuntimeOptions(client, options);
 
@@ -173,6 +172,20 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         }
     }
     return output;
+  }
+
+  private Client getClient(String apiKey) {
+      Client client = null;
+      try {
+          client = Bugsnag.getClient();
+      } catch (IllegalStateException exception) {
+          if (apiKey != null) {
+              client = Bugsnag.init(this.reactContext, apiKey);
+          } else {
+              client = Bugsnag.init(this.reactContext);
+          }
+      }
+      return client;
   }
 
   private BreadcrumbType parseBreadcrumbType(String value) {
