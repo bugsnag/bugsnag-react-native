@@ -323,7 +323,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../../react-native/React/**",
-					"$(SRCROOT)/vendor/bugsnag-cocoa/Source/",
+					"$(SRCROOT)/vendor/bugsnag-cocoa/Source/**",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -340,7 +340,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../../react-native/React/**",
-					"$(SRCROOT)/vendor/bugsnag-cocoa/Source/",
+					"$(SRCROOT)/vendor/bugsnag-cocoa/Source/**",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",

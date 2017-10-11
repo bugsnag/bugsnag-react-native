@@ -1,4 +1,5 @@
 #import "Bugsnag.h"
+#import "BSG_KSCrashC.h"
 #import "BugsnagReactNative.h"
 #import <React/RCTConvert.h>
 
@@ -212,6 +213,7 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     config.apiKey = apiKey;
     config.releaseStage = releaseStage;
     config.notifyReleaseStages = notifyReleaseStages;
+    config.autoNotify = [RCTConvert BOOL:@"autoNotify"];
     [config addBeforeSendBlock:^bool(NSDictionary *_Nonnull rawEventData,
                                      BugsnagCrashReport *_Nonnull report) {
         return !([report.errorClass hasPrefix:@"RCTFatalException"]
@@ -230,7 +232,9 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
                             withValue:codeBundleId
                         toTabWithName:@"app"];
     }
-    if (![Bugsnag bugsnagStarted]) {
+    if ([Bugsnag bugsnagStarted] && !config.autoNotify) {
+        bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeUserReported);
+    } else if (![Bugsnag bugsnagStarted]) {
         [Bugsnag startBugsnagWithConfiguration:config];
     }
     [self setNotifierDetails:[RCTConvert NSString:options[@"version"]]];
