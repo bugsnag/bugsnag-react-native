@@ -1,7 +1,8 @@
 import bugsnag from 'lib/bugsnag';
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { FormLabel, FormInput, Button } from 'react-native-elements'
+import PropTypes from 'prop-types'
 
 const styles = StyleSheet.create({
   container: { alignSelf: 'stretch', flex: 1, backgroundColor: '#fff',
