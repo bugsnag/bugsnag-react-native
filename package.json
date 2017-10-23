@@ -34,5 +34,8 @@
     "babel-jest": "^21.0.2",
     "babel-preset-react-native": "^1.9.1",
     "jest": "^21.1.0"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.0"
   }
 }
