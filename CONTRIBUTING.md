@@ -60,8 +60,7 @@ Please follow the testing instructions in [the platforms release checklist](http
 
 ### Making a new release
 
-1. Update the version number in package.json, android/build.gradle, and the
-   README documentation badge.
+1. Update the version number by running `make VERSION=[number] bump`
 2. Update the changelog with new features and fixes
 3. Commit the changes and tag in the format `v[version]`. Push.
 4. Publish the package to npm using `npm publish`.

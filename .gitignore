@@ -8,3 +8,5 @@ local.properties
 xcuserdata
 coverage
 /android/build
+*.iml
+Pods/
