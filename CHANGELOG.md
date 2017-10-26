@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 2.5.1 (2017-10-26)
+
+* Replace PropTypes from React with prop-types package
+* Adds example project which uses react native via cocoapods
+
 ## 2.5.0 (2017-10-09)
 
 ### Enhancements
