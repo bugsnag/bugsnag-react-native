@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.5.3 (2017-11-02)
+
+* Updates native libraries to include latest fixes
+
 ## 2.5.2 (2017-11-02)
 
 * Support setting `autoNotify` to disable native crash reporting
