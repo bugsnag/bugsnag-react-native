@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.5.2 (2017-11-02)
+
+* Support setting `autoNotify` to disable native crash reporting
+
 ## 2.5.1 (2017-10-26)
 
 * Replace PropTypes from React with prop-types package
