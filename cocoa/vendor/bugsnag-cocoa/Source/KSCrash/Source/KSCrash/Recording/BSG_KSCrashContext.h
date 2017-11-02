@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Contextual information about a crash.
  */
-
 
 #ifndef HDR_BSG_KSCrashContext_h
 #define HDR_BSG_KSCrashContext_h
@@ -36,43 +34,41 @@
 extern "C" {
 #endif
 
-
-#include "BSG_KSCrashSentry.h"
 #include "BSG_KSCrashReportWriter.h"
+#include "BSG_KSCrashSentry.h"
 #include "BSG_KSCrashState.h"
 
 #include <signal.h>
 #include <stdbool.h>
 
-typedef struct
-{
+typedef struct {
     /** If YES, introspect memory contents during a crash.
-     * Any Objective-C objects or C strings near the stack pointer or referenced by
-     * cpu registers or exceptions will be recorded in the crash report, along with
-     * their contents.
+     * Any Objective-C objects or C strings near the stack pointer or referenced
+     * by cpu registers or exceptions will be recorded in the crash report,
+     * along with their contents.
      */
     bool enabled;
-    
+
     /** List of classes that should never be introspected.
-     * Whenever a class in this list is encountered, only the class name will be recorded.
+     * Whenever a class in this list is encountered, only the class name will be
+     * recorded.
      */
-    const char** restrictedClasses;
+    const char **restrictedClasses;
     size_t restrictedClassesCount;
 } BSG_KSCrash_IntrospectionRules;
 
-typedef struct
-{
+typedef struct {
     /** A unique identifier (UUID). */
-    const char* crashID;
+    const char *crashID;
 
     /** Name of this process. */
-    const char* processName;
+    const char *processName;
 
     /** System information in JSON format (to be written to the report). */
-    const char* systemInfoJSON;
+    const char *systemInfoJSON;
 
     /** User information in JSON format (to be written to the report). */
-    const char* userInfoJSON;
+    const char *userInfoJSON;
 
     /** When writing the crash report, print a stack trace to STDOUT as well. */
     bool printTraceToStdout;
@@ -88,7 +84,7 @@ typedef struct
 
     /** Rules for introspecting Objective-C objects. */
     BSG_KSCrash_IntrospectionRules introspectionRules;
-    
+
     /** Callback allowing the application the opportunity to add extra data to
      * the report file. Application MUST NOT call async-unsafe methods!
      */
@@ -97,13 +93,11 @@ typedef struct
 
 /** Contextual data used by the crash report writer.
  */
-typedef struct
-{
+typedef struct {
     BSG_KSCrash_Configuration config;
     BSG_KSCrash_State state;
     BSG_KSCrash_SentryContext crash;
 } BSG_KSCrash_Context;
-
 
 #ifdef __cplusplus
 }

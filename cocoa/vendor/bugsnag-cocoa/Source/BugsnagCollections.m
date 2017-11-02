@@ -23,22 +23,22 @@
 
 void BSGDictSetSafeObject(NSMutableDictionary *dict, id object,
                           id<NSCopying> key) {
-  dict[key] = object ?: [NSNull null];
+    dict[key] = object ?: [NSNull null];
 }
 
 void BSGArrayAddSafeObject(NSMutableArray *array, id object) {
-  [array addObject:object ?: [NSNull null]];
+    [array addObject:object ?: [NSNull null]];
 }
 
 void BSGDictInsertIfNotNil(NSMutableDictionary *dict, id object,
                            id<NSCopying> key) {
-  if (object && key) {
-    dict[key] = object;
-  }
+    if (object && key) {
+        dict[key] = object;
+    }
 }
 
 void BSGArrayInsertIfNotNil(NSMutableArray *array, id object) {
-  if (object) {
-    [array addObject:object];
-  }
+    if (object) {
+        [array addObject:object];
+    }
 }

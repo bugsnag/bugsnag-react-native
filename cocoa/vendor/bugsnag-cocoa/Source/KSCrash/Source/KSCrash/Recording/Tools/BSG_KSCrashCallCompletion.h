@@ -33,7 +33,6 @@
  * @param completed The parameter to send as "completed".
  * @param error The parameter to send as "error".
  */
-void bsg_kscrash_i_callCompletion(BSG_KSCrashReportFilterCompletion onCompletion,
-                              NSArray* filteredReports,
-                              BOOL completed,
-                              NSError* error);
+void bsg_kscrash_i_callCompletion(
+    BSG_KSCrashReportFilterCompletion onCompletion, NSArray *filteredReports,
+    BOOL completed, NSError *error);

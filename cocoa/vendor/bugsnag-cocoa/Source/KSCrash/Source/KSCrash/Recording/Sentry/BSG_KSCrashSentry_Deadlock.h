@@ -27,7 +27,6 @@
 /* Catches deadlocks in threads and queues.
  */
 
-
 #ifndef HDR_BSG_KSCrashSentry_Deadlock_h
 #define HDR_BSG_KSCrashSentry_Deadlock_h
 
@@ -35,9 +34,7 @@
 extern "C" {
 #endif
 
-
 #include "BSG_KSCrashSentry.h"
-
 
 /** Install the deadlock handler.
  *
@@ -45,7 +42,8 @@ extern "C" {
  *
  * @return true if installation was succesful.
  */
-bool bsg_kscrashsentry_installDeadlockHandler(BSG_KSCrash_SentryContext* context);
+bool bsg_kscrashsentry_installDeadlockHandler(
+    BSG_KSCrash_SentryContext *context);
 
 /** Uninstall our custome NSException handler.
  */
@@ -57,7 +55,6 @@ void bsg_kscrashsentry_uninstallDeadlockHandler(void);
  * @param value The number of seconds between checks (0 = disabled).
  */
 void bsg_kscrashsentry_setDeadlockHandlerWatchdogInterval(double value);
-
 
 #ifdef __cplusplus
 }

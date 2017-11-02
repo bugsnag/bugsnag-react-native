@@ -22,9 +22,7 @@
 // THE SOFTWARE.
 //
 
-
 #import <Foundation/Foundation.h>
-
 
 /**
  * Tool for converting to/from RFC3339 compliant date strings.
@@ -37,7 +35,7 @@
  *
  * @return The RFC3339 date string.
  */
-+ (NSString*) stringFromDate:(NSDate*) date;
++ (NSString *)stringFromDate:(NSDate *)date;
 
 /** Convert an RFC3339 string representation to a date.
  *
@@ -45,7 +43,7 @@
  *
  * @return The date.
  */
-+ (NSDate*) dateFromString:(NSString*) string;
++ (NSDate *)dateFromString:(NSString *)string;
 
 /** Convert a UNIX timestamp to an RFC3339 string representation.
  *
@@ -53,7 +51,7 @@
  *
  * @return The RFC3339 date string.
  */
-+ (NSString*) stringFromUNIXTimestamp:(unsigned long long) timestamp;
++ (NSString *)stringFromUNIXTimestamp:(unsigned long long)timestamp;
 
 /** Convert an RFC3339 string representation to a UNIX timestamp.
  *
@@ -61,6 +59,6 @@
  *
  * @return The timestamp.
  */
-+ (unsigned long long) UNIXTimestampFromString:(NSString*) string;
++ (unsigned long long)UNIXTimestampFromString:(NSString *)string;
 
 @end

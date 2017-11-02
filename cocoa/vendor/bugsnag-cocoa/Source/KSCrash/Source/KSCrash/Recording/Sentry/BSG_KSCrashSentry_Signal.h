@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Catches fatal unix signals.
  */
-
 
 #ifndef HDR_BSG_KSCrashSentry_Signal_h
 #define HDR_BSG_KSCrashSentry_Signal_h
@@ -36,9 +34,7 @@
 extern "C" {
 #endif
 
-
 #include "BSG_KSCrashSentry.h"
-
 
 /** Install our custom signal handler.
  *
@@ -46,12 +42,11 @@ extern "C" {
  *
  * @return true if installation was succesful.
  */
-bool bsg_kscrashsentry_installSignalHandler(BSG_KSCrash_SentryContext* context);
+bool bsg_kscrashsentry_installSignalHandler(BSG_KSCrash_SentryContext *context);
 
 /** Uninstall our custom signal handlers and restore the previous ones.
  */
 void bsg_kscrashsentry_uninstallSignalHandler(void);
-
 
 #ifdef __cplusplus
 }

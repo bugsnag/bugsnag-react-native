@@ -24,11 +24,9 @@
 // THE SOFTWARE.
 //
 
-
 /* Manages persistent state information useful for crash reporting such as
  * number of sessions, session length, etc.
  */
-
 
 #ifndef HDR_BSG_KSCrashState_h
 #define HDR_BSG_KSCrashState_h
@@ -37,13 +35,10 @@
 extern "C" {
 #endif
 
-
 #include <stdbool.h>
 #include <stdint.h>
 
-
-typedef struct
-{
+typedef struct {
     // Saved data
 
     /** Total active time elapsed since the last crash. */
@@ -90,7 +85,6 @@ typedef struct
 
 } BSG_KSCrash_State;
 
-
 /** Initialize the state monitor.
  *
  * @param stateFilePath Where to store on-disk representation of state.
@@ -99,7 +93,7 @@ typedef struct
  *
  * @return true if initialization was successful.
  */
-bool bsg_kscrashstate_init(const char* stateFilePath, BSG_KSCrash_State* state);
+bool bsg_kscrashstate_init(const char *stateFilePath, BSG_KSCrash_State *state);
 
 /** Notify the crash reporter of the application active state.
  *
@@ -124,8 +118,7 @@ void bsg_kscrashstate_notifyAppCrash(void);
 
 /** Read-only access into the current state.
  */
-const BSG_KSCrash_State* const bsg_kscrashstate_currentState(void);
-
+const BSG_KSCrash_State *const bsg_kscrashstate_currentState(void);
 
 #ifdef __cplusplus
 }

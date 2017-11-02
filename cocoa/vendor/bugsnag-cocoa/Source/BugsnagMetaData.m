@@ -25,39 +25,39 @@
 //
 
 #import "BugsnagMetaData.h"
-#import "BugsnagLogger.h"
 #import "BSGSerialization.h"
+#import "BugsnagLogger.h"
 
 @interface BugsnagMetaData ()
-@property (atomic, strong) NSMutableDictionary *dictionary;
+@property(atomic, strong) NSMutableDictionary *dictionary;
 @end
 
 @implementation BugsnagMetaData
 
-- (id) init {
+- (id)init {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     return [self initWithDictionary:dict];
 }
 
-- (id) initWithDictionary:(NSMutableDictionary*)dict {
-    if(self = [super init]) {
+- (id)initWithDictionary:(NSMutableDictionary *)dict {
+    if (self = [super init]) {
         self.dictionary = dict;
     }
-    [self.delegate metaDataChanged: self];
+    [self.delegate metaDataChanged:self];
     return self;
 }
 
-- (id) mutableCopyWithZone:(NSZone *)zone {
+- (id)mutableCopyWithZone:(NSZone *)zone {
     @synchronized(self) {
         NSMutableDictionary *dict = [self.dictionary mutableCopy];
         return [[BugsnagMetaData alloc] initWithDictionary:dict];
     }
 }
 
-- (NSMutableDictionary *) getTab:(NSString*)tabName {
+- (NSMutableDictionary *)getTab:(NSString *)tabName {
     @synchronized(self) {
         NSMutableDictionary *tab = [self.dictionary objectForKey:tabName];
-        if(!tab) {
+        if (!tab) {
             tab = [NSMutableDictionary dictionary];
             [self.dictionary setObject:tab forKey:tabName];
         }
@@ -65,35 +65,40 @@
     }
 }
 
-- (void) clearTab:(NSString*)tabName {
+- (void)clearTab:(NSString *)tabName {
     @synchronized(self) {
         [self.dictionary removeObjectForKey:tabName];
     }
-    
-    [self.delegate metaDataChanged: self];
+
+    [self.delegate metaDataChanged:self];
 }
 
-- (NSDictionary*) toDictionary {
+- (NSDictionary *)toDictionary {
     @synchronized(self) {
         return [NSDictionary dictionaryWithDictionary:self.dictionary];
     }
 }
 
-- (void)addAttribute:(NSString*)attributeName withValue:(id)value toTabWithName:(NSString*)tabName {
+- (void)addAttribute:(NSString *)attributeName
+           withValue:(id)value
+       toTabWithName:(NSString *)tabName {
     @synchronized(self) {
-        if(value) {
+        if (value) {
             id cleanedValue = BSGSanitizeObject(value);
             if (cleanedValue) {
-                [[self getTab:tabName] setObject:cleanedValue forKey:attributeName];
+                [[self getTab:tabName] setObject:cleanedValue
+                                          forKey:attributeName];
             } else {
                 Class klass = [value class];
-                bsg_log_err(@"Failed to add metadata: Value of class %@ is not JSON serializable", klass);
+                bsg_log_err(@"Failed to add metadata: Value of class %@ is not "
+                            @"JSON serializable",
+                            klass);
             }
         } else {
             [[self getTab:tabName] removeObjectForKey:attributeName];
         }
-        [self.delegate metaDataChanged:self];
     }
+    [self.delegate metaDataChanged:self];
 }
 
 @end

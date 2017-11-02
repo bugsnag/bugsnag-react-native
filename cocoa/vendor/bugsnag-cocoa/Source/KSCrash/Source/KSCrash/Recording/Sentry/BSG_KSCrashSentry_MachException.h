@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Catches mach exceptions.
  */
-
 
 #ifndef HDR_BSG_KSCrashSentry_MachException_h
 #define HDR_BSG_KSCrashSentry_MachException_h
@@ -39,19 +37,17 @@ extern "C" {
 #include "BSG_KSCrashSentry.h"
 #include <stdbool.h>
 
-
 /** Install our custom mach exception handler.
  *
  * @param context Contextual information for the crash handler.
  *
  * @return true if installation was succesful.
  */
-bool bsg_kscrashsentry_installMachHandler(BSG_KSCrash_SentryContext* context);
+bool bsg_kscrashsentry_installMachHandler(BSG_KSCrash_SentryContext *context);
 
 /** Uninstall our custom mach exception handler.
  */
 void bsg_kscrashsentry_uninstallMachHandler(void);
-
 
 #ifdef __cplusplus
 }

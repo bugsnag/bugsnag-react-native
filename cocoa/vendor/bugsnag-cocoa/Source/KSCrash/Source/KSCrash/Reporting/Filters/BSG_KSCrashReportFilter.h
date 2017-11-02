@@ -24,9 +24,7 @@
 // THE SOFTWARE.
 //
 
-
 #import "BSG_KSCrashReportFilterCompletion.h"
-
 
 /**
  * A filter receives a set of reports, possibly transforms them, and then
@@ -39,11 +37,10 @@
  * @param reports The reports to process.
  * @param onCompletion Block to call when processing is complete.
  */
-- (void) filterReports:(NSArray*) reports
-          onCompletion:(BSG_KSCrashReportFilterCompletion) onCompletion;
+- (void)filterReports:(NSArray *)reports
+         onCompletion:(BSG_KSCrashReportFilterCompletion)onCompletion;
 
 @end
-
 
 /**
  * Very basic filter that passes through reports untouched.
@@ -51,16 +48,16 @@
  * Input: Anything.
  * Output: Same as input (passthrough).
  */
-@interface BSG_KSCrashReportFilterPassthrough : NSObject <BSG_KSCrashReportFilter>
+@interface BSG_KSCrashReportFilterPassthrough
+    : NSObject <BSG_KSCrashReportFilter>
 
-+ (BSG_KSCrashReportFilterPassthrough*) filter;
++ (BSG_KSCrashReportFilterPassthrough *)filter;
 
 @end
 
-
 /**
- * Passes reports to a series of subfilters, then stores the results of those operations
- * as keyed values in final master reports.
+ * Passes reports to a series of subfilters, then stores the results of those
+ * operations as keyed values in final master reports.
  *
  * Input: Anything
  * Output: NSDictionary
@@ -70,21 +67,21 @@
 /** Constructor.
  *
  * @param firstFilter The first filter, followed by key, filter, key, ...
- *                    Each "filter" can be id<BSG_KSCrashReportFilter> or an NSArray
- *                    of filters (which gets wrapped in a pipeline filter).
+ *                    Each "filter" can be id<BSG_KSCrashReportFilter> or an
+ * NSArray of filters (which gets wrapped in a pipeline filter).
  */
-+ (BSG_KSCrashReportFilterCombine*) filterWithFiltersAndKeys:(id) firstFilter, ... NS_REQUIRES_NIL_TERMINATION;
++ (BSG_KSCrashReportFilterCombine *)filterWithFiltersAndKeys:
+    (id)firstFilter, ... NS_REQUIRES_NIL_TERMINATION;
 
 /** Initializer.
  *
  * @param firstFilter The first filter, followed by key, filter, key, ...
- *                    Each "filter" can be id<BSG_KSCrashReportFilter> or an NSArray
- *                    of filters (which gets wrapped in a pipeline filter).
+ *                    Each "filter" can be id<BSG_KSCrashReportFilter> or an
+ * NSArray of filters (which gets wrapped in a pipeline filter).
  */
-- (id) initWithFiltersAndKeys:(id)firstFilter, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initWithFiltersAndKeys:(id)firstFilter, ... NS_REQUIRES_NIL_TERMINATION;
 
 @end
-
 
 /**
  * A pipeline of filters. Reports get passed through each subfilter in order.
@@ -95,29 +92,30 @@
 @interface BSG_KSCrashReportFilterPipeline : NSObject <BSG_KSCrashReportFilter>
 
 /** The filters in this pipeline. */
-@property(nonatomic,readonly,retain) NSArray* filters;
+@property(nonatomic, readonly, retain) NSArray *filters;
 
 /** Constructor.
  *
  * @param firstFilter The first filter, followed by filter, filter, ...
  */
-+ (BSG_KSCrashReportFilterPipeline*) filterWithFilters:(id) firstFilter, ... NS_REQUIRES_NIL_TERMINATION;
++ (BSG_KSCrashReportFilterPipeline *)filterWithFilters:
+    (id)firstFilter, ... NS_REQUIRES_NIL_TERMINATION;
 
 /** Initializer.
  *
  * @param firstFilter The first filter, followed by filter, filter, ...
  */
-- (id) initWithFilters:(id) firstFilter, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initWithFilters:(id)firstFilter, ... NS_REQUIRES_NIL_TERMINATION;
 
-- (void) addFilter:(id<BSG_KSCrashReportFilter>) filter;
+- (void)addFilter:(id<BSG_KSCrashReportFilter>)filter;
 
 @end
-
 
 /**
  * Extracts data associated with a key from each report.
  */
-@interface BSG_KSCrashReportFilterObjectForKey : NSObject <BSG_KSCrashReportFilter>
+@interface BSG_KSCrashReportFilterObjectForKey
+    : NSObject <BSG_KSCrashReportFilter>
 
 /** Constructor.
  *
@@ -126,8 +124,8 @@
  * @param allowNotFound If NO, filtering will stop with an error if the key
  *                      was not found in a report.
  */
-+ (BSG_KSCrashReportFilterObjectForKey*) filterWithKey:(id) key
-                                     allowNotFound:(BOOL) allowNotFound;
++ (BSG_KSCrashReportFilterObjectForKey *)filterWithKey:(id)key
+                                         allowNotFound:(BOOL)allowNotFound;
 
 /** Initializer.
  *
@@ -136,40 +134,44 @@
  * @param allowNotFound If NO, filtering will stop with an error if the key
  *                      was not found in a report.
  */
-- (id) initWithKey:(id) key
-     allowNotFound:(BOOL) allowNotFound;
+- (id)initWithKey:(id)key allowNotFound:(BOOL)allowNotFound;
 
 @end
 
-
 /**
- * Takes values by key from the report and concatenates their string representations.
+ * Takes values by key from the report and concatenates their string
+ * representations.
  *
  * Input: NSDictionary
  * Output: NSString
  */
-@interface BSG_KSCrashReportFilterConcatenate : NSObject <BSG_KSCrashReportFilter>
+@interface BSG_KSCrashReportFilterConcatenate
+    : NSObject <BSG_KSCrashReportFilter>
 
 /** Constructor.
  *
- * @param separatorFmt Formatting text to use when separating the values. You may include
- *                     %@ in the formatting text to include the key name as well.
+ * @param separatorFmt Formatting text to use when separating the values. You
+ * may include
+ *                     %@ in the formatting text to include the key name as
+ * well.
  * @param firstKey Series of keys to extract from the source report.
  */
-+ (BSG_KSCrashReportFilterConcatenate*) filterWithSeparatorFmt:(NSString*) separatorFmt
-                                                      keys:(id) firstKey, ... NS_REQUIRES_NIL_TERMINATION;
++ (BSG_KSCrashReportFilterConcatenate *)
+filterWithSeparatorFmt:(NSString *)separatorFmt
+                  keys:(id)firstKey, ... NS_REQUIRES_NIL_TERMINATION;
 
 /** Constructor.
  *
- * @param separatorFmt Formatting text to use when separating the values. You may include
- *                     %@ in the formatting text to include the key name as well.
+ * @param separatorFmt Formatting text to use when separating the values. You
+ * may include
+ *                     %@ in the formatting text to include the key name as
+ * well.
  * @param firstKey Series of keys to extract from the source report.
  */
-- (id) initWithSeparatorFmt:(NSString*) separatorFmt
-                       keys:(id) firstKey, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initWithSeparatorFmt:(NSString *)separatorFmt
+                      keys:(id)firstKey, ... NS_REQUIRES_NIL_TERMINATION;
 
 @end
-
 
 /**
  * Fetches subsets of data from the source reports. All other data is discarded.
@@ -183,12 +185,13 @@
  *
  * @param firstKeyPath Series of key paths to search in the source reports.
  */
-+ (BSG_KSCrashReportFilterSubset*) filterWithKeys:(id) firstKeyPath, ... NS_REQUIRES_NIL_TERMINATION;
++ (BSG_KSCrashReportFilterSubset *)filterWithKeys:
+    (id)firstKeyPath, ... NS_REQUIRES_NIL_TERMINATION;
 
 /** Initializer.
  *
  * @param firstKeyPath Series of key paths to search in the source reports.
  */
-- (id) initWithKeys:(id) firstKeyPath, ... NS_REQUIRES_NIL_TERMINATION;
+- (id)initWithKeys:(id)firstKeyPath, ... NS_REQUIRES_NIL_TERMINATION;
 
 @end

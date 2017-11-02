@@ -33,9 +33,10 @@ typedef void (^ConnectivityChange)(BSGConnectivity *connectivity);
 
 @interface BSGConnectivity : NSObject
 
-@property (nonatomic, copy) ConnectivityChange connectivityChangeBlock;
+@property(nonatomic, copy) ConnectivityChange connectivityChangeBlock;
 
-- (instancetype)initWithURL:(NSURL *)url changeBlock:(ConnectivityChange)changeBlock;
+- (instancetype)initWithURL:(NSURL *)url
+                changeBlock:(ConnectivityChange)changeBlock;
 - (void)startWatchingConnectivity;
 - (void)stopWatchingConnectivity;
 

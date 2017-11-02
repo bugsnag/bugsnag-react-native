@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /** Keeps watch for crashes and informs via callback when on occurs.
  */
-
 
 #ifndef HDR_BSG_KSCrashSentry_h
 #define HDR_BSG_KSCrashSentry_h
@@ -36,7 +34,6 @@
 extern "C" {
 #endif
 
-
 #include "BSG_KSArchSpecific.h"
 #include "BSG_KSCrashType.h"
 
@@ -44,30 +41,27 @@ extern "C" {
 #include <signal.h>
 #include <stdbool.h>
 
-
-typedef enum
-{
+typedef enum {
     BSG_KSCrashReservedThreadTypeMachPrimary,
     BSG_KSCrashReservedThreadTypeMachSecondary,
     BSG_KSCrashReservedThreadTypeCount
 } BSG_KSCrashReservedTheadType;
 
-typedef struct BSG_KSCrash_SentryContext
-{
+typedef struct BSG_KSCrash_SentryContext {
     // Caller defined values. Caller must fill these out prior to installation.
 
     /** Called by the crash handler when a crash is detected. */
     void (*onCrash)(void);
-    
+
     /** If true, will suspend threads for user reported exceptions. */
     bool suspendThreadsForUserReported;
-    
+
     /** If true, will send reports even if debugger is attached. */
     bool reportWhenDebuggerIsAttached;
-    
+
     /** If true, will trace threads and report binary images. */
     bool threadTracingEnabled;
-    
+
     /** If true, will record binary images. */
     bool writeBinaryImagesForUserReported;
 
@@ -101,16 +95,15 @@ typedef struct BSG_KSCrash_SentryContext
     BSG_KSCrashType crashType;
 
     /** Short description of why the crash occurred. */
-    const char* crashReason;
+    const char *crashReason;
 
     /** The stack trace. */
-    uintptr_t* stackTrace;
+    uintptr_t *stackTrace;
 
     /** Length of the stack trace. */
     int stackTraceLength;
 
-    struct
-    {
+    struct {
         /** The mach exception type. */
         int type;
 
@@ -121,46 +114,41 @@ typedef struct BSG_KSCrash_SentryContext
         int64_t subcode;
     } mach;
 
-    struct
-    {
+    struct {
         /** The exception name. */
-        const char* name;
+        const char *name;
 
     } NSException;
 
-    struct
-    {
+    struct {
         /** The exception name. */
-        const char* name;
+        const char *name;
 
     } CPPException;
-    
-    struct
-    {
+
+    struct {
         /** User context information. */
-        const void* userContext;
+        const void *userContext;
 
         /** Signal information. */
-        const siginfo_t* signalInfo;
+        const siginfo_t *signalInfo;
     } signal;
 
-    struct
-    {
+    struct {
         /** The exception name. */
-        const char* name;
+        const char *name;
 
         /** The language the exception occured in. */
-        const char* language;
-        
+        const char *language;
+
         /** The line of code where the exception occurred. Can be NULL. */
-        const char* lineOfCode;
+        const char *lineOfCode;
 
         /** The user-supplied JSON encoded stack trace. */
-        const char* customStackTrace;
+        const char *customStackTrace;
     } userException;
 
 } BSG_KSCrash_SentryContext;
-
 
 /** Install crash sentry.
  *
@@ -172,16 +160,16 @@ typedef struct BSG_KSCrash_SentryContext
  *
  * @return which crash handlers were installed successfully.
  */
-BSG_KSCrashType bsg_kscrashsentry_installWithContext(BSG_KSCrash_SentryContext* context,
-                                             BSG_KSCrashType crashTypes,
-                                             void (*onCrash)(void));
+BSG_KSCrashType
+bsg_kscrashsentry_installWithContext(BSG_KSCrash_SentryContext *context,
+                                     BSG_KSCrashType crashTypes,
+                                     void (*onCrash)(void));
 
 /** Uninstall crash sentry.
  *
  * @param crashTypes The crash types to install handlers for.
  */
 void bsg_kscrashsentry_uninstall(BSG_KSCrashType crashTypes);
-
 
 #ifdef __cplusplus
 }

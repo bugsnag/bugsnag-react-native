@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 //
 
-
 #ifndef HDR_BSG_KSSystemCapabilities_h
 #define HDR_BSG_KSSystemCapabilities_h
 
@@ -31,7 +30,8 @@
 #define BSG_KSCRASH_HOST_IOS TARGET_OS_IOS
 #define BSG_KSCRASH_HOST_TVOS TARGET_OS_TV
 #define BSG_KSCRASH_HOST_WATCH TARGET_OS_WATCH
-#define BSG_KSCRASH_HOST_OSX (TARGET_OS_MAC && !(TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH))
+#define BSG_KSCRASH_HOST_OSX                                                   \
+    (TARGET_OS_MAC && !(TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH))
 
 #if BSG_KSCRASH_HOST_IOS || BSG_KSCRASH_HOST_TVOS
 #define BSG_KSCRASH_HAS_UIKIT 1
@@ -74,6 +74,5 @@
 #else
 #define BSG_KSCRASH_HAS_MACH 0
 #endif
-
 
 #endif // HDR_KSSystemCapabilities_h

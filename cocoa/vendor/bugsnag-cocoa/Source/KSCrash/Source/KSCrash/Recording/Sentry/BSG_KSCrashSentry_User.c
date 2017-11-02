@@ -32,37 +32,30 @@
 #include <execinfo.h>
 #include <stdlib.h>
 
-
 /** Context to fill with crash information. */
-static BSG_KSCrash_SentryContext* bsg_g_context;
+static BSG_KSCrash_SentryContext *bsg_g_context;
 
-
-bool bsg_kscrashsentry_installUserExceptionHandler(BSG_KSCrash_SentryContext* const context)
-{
+bool bsg_kscrashsentry_installUserExceptionHandler(
+    BSG_KSCrash_SentryContext *const context) {
     BSG_KSLOG_DEBUG("Installing user exception handler.");
     bsg_g_context = context;
     return true;
 }
 
-void bsg_kscrashsentry_uninstallUserExceptionHandler(void)
-{
+void bsg_kscrashsentry_uninstallUserExceptionHandler(void) {
     BSG_KSLOG_DEBUG("Uninstalling user exception handler.");
     bsg_g_context = NULL;
 }
 
-void bsg_kscrashsentry_reportUserException(const char* name,
-                                       const char* reason,
-                                       const char* language,
-                                       const char* lineOfCode,
-                                       const char* stackTrace,
-                                       bool terminateProgram)
-{
-    if(bsg_g_context == NULL)
-    {
-        BSG_KSLOG_WARN("User-reported exception sentry is not installed. Exception has not been recorded.");
-    }
-    else
-    {
+void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
+                                           const char *language,
+                                           const char *lineOfCode,
+                                           const char *stackTrace,
+                                           bool terminateProgram) {
+    if (bsg_g_context == NULL) {
+        BSG_KSLOG_WARN("User-reported exception sentry is not installed. "
+                       "Exception has not been recorded.");
+    } else {
         bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
 
         if (bsg_g_context->suspendThreadsForUserReported) {
@@ -73,10 +66,10 @@ void bsg_kscrashsentry_reportUserException(const char* name,
         BSG_KSLOG_DEBUG("Fetching call stack.");
         int callstackCount = 100;
         uintptr_t callstack[callstackCount];
-        callstackCount = backtrace((void**)callstack, callstackCount);
-        if(callstackCount <= 0)
-        {
-            BSG_KSLOG_ERROR("backtrace() returned call stack length of %d", callstackCount);
+        callstackCount = backtrace((void **)callstack, callstackCount);
+        if (callstackCount <= 0) {
+            BSG_KSLOG_ERROR("backtrace() returned call stack length of %d",
+                            callstackCount);
             callstackCount = 0;
         }
 
@@ -95,14 +88,11 @@ void bsg_kscrashsentry_reportUserException(const char* name,
         BSG_KSLOG_DEBUG("Calling main crash handler.");
         bsg_g_context->onCrash();
 
-        if(terminateProgram)
-        {
+        if (terminateProgram) {
             bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);
             bsg_kscrashsentry_resumeThreads();
             abort();
-        }
-        else
-        {
+        } else {
             bsg_kscrashsentry_clearContext(bsg_g_context);
             bsg_kscrashsentry_resumeThreads();
         }

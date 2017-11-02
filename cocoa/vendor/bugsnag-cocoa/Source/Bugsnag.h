@@ -113,7 +113,8 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
  */
 + (void)notify:(NSException *_Nonnull)exception
       withData:(NSDictionary *_Nullable)metaData
-    __deprecated_msg("Use notify:block: instead and add the metadata to the report directly.");
+    __deprecated_msg("Use notify:block: instead and add the metadata to the "
+                     "report directly.");
 
 /** Send a custom or caught exception to Bugsnag.
  *
@@ -130,11 +131,12 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
 + (void)notify:(NSException *_Nonnull)exception
       withData:(NSDictionary *_Nullable)metaData
     atSeverity:(NSString *_Nullable)severity
-    __deprecated_msg("Use notify:block: instead and add the metadata and severity to the report directly.");
+    __deprecated_msg("Use notify:block: instead and add the metadata and "
+                     "severity to the report directly.");
 
 /**
- * Intended for use by other clients (React Native/Unity). Calling this method directly from
- * iOS is not supported.
+ * Intended for use by other clients (React Native/Unity). Calling this method
+ * directly from iOS is not supported.
  */
 + (void)internalClientNotify:(NSException *_Nonnull)exception
                     withData:(NSDictionary *_Nullable)metaData
@@ -175,7 +177,8 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
  *
  *  @param block configuration block
  */
-+ (void)leaveBreadcrumbWithBlock:(void(^ _Nonnull)(BugsnagBreadcrumb *_Nonnull))block;
++ (void)leaveBreadcrumbWithBlock:
+    (void (^_Nonnull)(BugsnagBreadcrumb *_Nonnull))block;
 
 /**
  *  Leave a "breadcrumb" log message each time a notification with a provided
@@ -204,7 +207,7 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
 + (void)setSuspendThreadsForUserReported:(BOOL)suspendThreadsForUserReported;
 + (void)setReportWhenDebuggerIsAttached:(BOOL)reportWhenDebuggerIsAttached;
 + (void)setThreadTracingEnabled:(BOOL)threadTracingEnabled;
-+ (void)setWriteBinaryImagesForUserReported:(BOOL)writeBinaryImagesForUserReported;
-
++ (void)setWriteBinaryImagesForUserReported:
+    (BOOL)writeBinaryImagesForUserReported;
 
 @end

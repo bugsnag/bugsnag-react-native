@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Utility functions for querying the mach kernel.
  */
-
 
 #ifndef HDR_BSG_KSMach_h
 #define HDR_BSG_KSMach_h
@@ -36,14 +34,12 @@
 extern "C" {
 #endif
 
-
 #include "BSG_KSArchSpecific.h"
 
 #include <mach/mach.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <sys/ucontext.h>
-
 
 // ============================================================================
 #pragma mark - Initialization -
@@ -54,7 +50,6 @@ extern "C" {
  * initialization before use.
  */
 void bsg_ksmach_init(void);
-
 
 // ============================================================================
 #pragma mark - General Information -
@@ -76,7 +71,7 @@ uint64_t bsg_ksmachusableMemory(void);
  *
  * @return The current architecture.
  */
-const char* bsg_ksmachcurrentCPUArch(void);
+const char *bsg_ksmachcurrentCPUArch(void);
 
 /** Get the name of a mach exception.
  *
@@ -84,7 +79,7 @@ const char* bsg_ksmachcurrentCPUArch(void);
  *
  * @return The exception's name or NULL if not found.
  */
-const char* bsg_ksmachexceptionName(exception_type_t exceptionType);
+const char *bsg_ksmachexceptionName(exception_type_t exceptionType);
 
 /** Get the name of a mach kernel return code.
  *
@@ -92,8 +87,7 @@ const char* bsg_ksmachexceptionName(exception_type_t exceptionType);
  *
  * @return The code's name or NULL if not found.
  */
-const char* bsg_ksmachkernelReturnCodeName(kern_return_t returnCode);
-
+const char *bsg_ksmachkernelReturnCodeName(kern_return_t returnCode);
 
 // ============================================================================
 #pragma mark - Thread State Info -
@@ -111,10 +105,9 @@ const char* bsg_ksmachkernelReturnCodeName(kern_return_t returnCode);
  *
  * @return true if state fetching was successful.
  */
-bool bsg_ksmachfillState(thread_t thread,
-                      thread_state_t state,
-                      thread_state_flavor_t flavor,
-                      mach_msg_type_number_t stateCount);
+bool bsg_ksmachfillState(thread_t thread, thread_state_t state,
+                         thread_state_flavor_t flavor,
+                         mach_msg_type_number_t stateCount);
 
 /** Get the frame pointer for a machine context.
  * The frame pointer marks the top of the call stack.
@@ -123,7 +116,7 @@ bool bsg_ksmachfillState(thread_t thread,
  *
  * @return The context's frame pointer.
  */
-uintptr_t bsg_ksmachframePointer(const BSG_STRUCT_MCONTEXT_L* machineContext);
+uintptr_t bsg_ksmachframePointer(const BSG_STRUCT_MCONTEXT_L *machineContext);
 
 /** Get the current stack pointer for a machine context.
  *
@@ -131,7 +124,7 @@ uintptr_t bsg_ksmachframePointer(const BSG_STRUCT_MCONTEXT_L* machineContext);
  *
  * @return The context's stack pointer.
  */
-uintptr_t bsg_ksmachstackPointer(const BSG_STRUCT_MCONTEXT_L* machineContext);
+uintptr_t bsg_ksmachstackPointer(const BSG_STRUCT_MCONTEXT_L *machineContext);
 
 /** Get the address of the instruction about to be, or being executed by a
  * machine context.
@@ -140,7 +133,8 @@ uintptr_t bsg_ksmachstackPointer(const BSG_STRUCT_MCONTEXT_L* machineContext);
  *
  * @return The context's next instruction address.
  */
-uintptr_t bsg_ksmachinstructionAddress(const BSG_STRUCT_MCONTEXT_L* machineContext);
+uintptr_t
+bsg_ksmachinstructionAddress(const BSG_STRUCT_MCONTEXT_L *machineContext);
 
 /** Get the address stored in the link register (arm only). This may
  * contain the first return address of the stack.
@@ -149,7 +143,7 @@ uintptr_t bsg_ksmachinstructionAddress(const BSG_STRUCT_MCONTEXT_L* machineConte
  *
  * @return The link register value.
  */
-uintptr_t bsg_ksmachlinkRegister(const BSG_STRUCT_MCONTEXT_L* machineContext);
+uintptr_t bsg_ksmachlinkRegister(const BSG_STRUCT_MCONTEXT_L *machineContext);
 
 /** Get the address whose access caused the last fault.
  *
@@ -157,7 +151,7 @@ uintptr_t bsg_ksmachlinkRegister(const BSG_STRUCT_MCONTEXT_L* machineContext);
  *
  * @return The faulting address.
  */
-uintptr_t bsg_ksmachfaultAddress(const BSG_STRUCT_MCONTEXT_L* machineContext);
+uintptr_t bsg_ksmachfaultAddress(const BSG_STRUCT_MCONTEXT_L *machineContext);
 
 /** Get a thread's thread state and place it in a machine context.
  *
@@ -167,7 +161,8 @@ uintptr_t bsg_ksmachfaultAddress(const BSG_STRUCT_MCONTEXT_L* machineContext);
  *
  * @return true if successful.
  */
-bool bsg_ksmachthreadState(thread_t thread, BSG_STRUCT_MCONTEXT_L* machineContext);
+bool bsg_ksmachthreadState(thread_t thread,
+                           BSG_STRUCT_MCONTEXT_L *machineContext);
 
 /** Get a thread's floating point state and place it in a machine context.
  *
@@ -177,7 +172,8 @@ bool bsg_ksmachthreadState(thread_t thread, BSG_STRUCT_MCONTEXT_L* machineContex
  *
  * @return true if successful.
  */
-bool bsg_ksmachfloatState(thread_t thread, BSG_STRUCT_MCONTEXT_L* machineContext);
+bool bsg_ksmachfloatState(thread_t thread,
+                          BSG_STRUCT_MCONTEXT_L *machineContext);
 
 /** Get a thread's exception state and place it in a machine context.
  *
@@ -187,7 +183,8 @@ bool bsg_ksmachfloatState(thread_t thread, BSG_STRUCT_MCONTEXT_L* machineContext
  *
  * @return true if successful.
  */
-bool bsg_ksmachexceptionState(thread_t thread, BSG_STRUCT_MCONTEXT_L* machineContext);
+bool bsg_ksmachexceptionState(thread_t thread,
+                              BSG_STRUCT_MCONTEXT_L *machineContext);
 
 /** Get the number of normal (not floating point or exception) registers the
  *  currently running CPU has.
@@ -202,7 +199,7 @@ int bsg_ksmachnumRegisters(void);
  *
  * @return The register's name or NULL if not found.
  */
-const char* bsg_ksmachregisterName(int regNumber);
+const char *bsg_ksmachregisterName(int regNumber);
 
 /** Get the value stored in a normal register.
  *
@@ -210,8 +207,8 @@ const char* bsg_ksmachregisterName(int regNumber);
  *
  * @return The register's current value.
  */
-uint64_t bsg_ksmachregisterValue(const BSG_STRUCT_MCONTEXT_L* machineContext,
-                              int regNumber);
+uint64_t bsg_ksmachregisterValue(const BSG_STRUCT_MCONTEXT_L *machineContext,
+                                 int regNumber);
 
 /** Get the number of exception registers the currently running CPU has.
  *
@@ -225,7 +222,7 @@ int bsg_ksmachnumExceptionRegisters(void);
  *
  * @return The register's name or NULL if not found.
  */
-const char* bsg_ksmachexceptionRegisterName(int regNumber);
+const char *bsg_ksmachexceptionRegisterName(int regNumber);
 
 /** Get the value stored in an exception register.
  *
@@ -233,8 +230,9 @@ const char* bsg_ksmachexceptionRegisterName(int regNumber);
  *
  * @return The register's current value.
  */
-uint64_t bsg_ksmachexceptionRegisterValue(const BSG_STRUCT_MCONTEXT_L* machineContext,
-                                       int regNumber);
+uint64_t
+bsg_ksmachexceptionRegisterValue(const BSG_STRUCT_MCONTEXT_L *machineContext,
+                                 int regNumber);
 
 /** Get the direction in which the stack grows on the current architecture.
  *
@@ -253,7 +251,8 @@ int bsg_ksmachstackGrowDirection(void);
  *
  * @return true if a name was found.
  */
-bool bsg_ksmachgetThreadName(const thread_t thread, char* const buffer, size_t bufLength);
+bool bsg_ksmachgetThreadName(const thread_t thread, char *const buffer,
+                             size_t bufLength);
 
 /** Get the name of a thread's dispatch queue. Internally, a queue name will
  * never be more than 64 characters long.
@@ -266,8 +265,8 @@ bool bsg_ksmachgetThreadName(const thread_t thread, char* const buffer, size_t b
  *
  * @return true if a name or label was found.
  */
-bool bsg_ksmachgetThreadQueueName(thread_t thread, char* buffer, size_t bufLength);
-
+bool bsg_ksmachgetThreadQueueName(thread_t thread, char *buffer,
+                                  size_t bufLength);
 
 // ============================================================================
 #pragma mark - Utility -
@@ -280,7 +279,7 @@ bool bsg_ksmachgetThreadQueueName(thread_t thread, char* buffer, size_t bufLengt
  *
  * @return The current thread ID.
  */
-    thread_t bsg_ksmachthread_self(void);
+thread_t bsg_ksmachthread_self(void);
 
 /** Get a mach thread's corresponding posix thread.
  *
@@ -312,7 +311,8 @@ bool bsg_ksmachsuspendAllThreads(void);
  *
  * @return true if thread suspention was at least partially successful.
  */
-bool bsg_ksmachsuspendAllThreadsExcept(thread_t* exceptThreads, int exceptThreadsCount);
+bool bsg_ksmachsuspendAllThreadsExcept(thread_t *exceptThreads,
+                                       int exceptThreadsCount);
 
 /** Resume all threads except for the current one.
  *
@@ -328,7 +328,8 @@ bool bsg_ksmachresumeAllThreads(void);
  *
  * @return true if thread resumption was at least partially successful.
  */
-bool bsg_ksmachresumeAllThreadsExcept(thread_t* exceptThreads, int exceptThreadsCount);
+bool bsg_ksmachresumeAllThreadsExcept(thread_t *exceptThreads,
+                                      int exceptThreadsCount);
 
 /** Copy memory safely. If the memory is not accessible, returns false
  * rather than crashing.
@@ -341,7 +342,7 @@ bool bsg_ksmachresumeAllThreadsExcept(thread_t* exceptThreads, int exceptThreads
  *
  * @return KERN_SUCCESS or an error code.
  */
-kern_return_t bsg_ksmachcopyMem(const void* src, void* dst, size_t numBytes);
+kern_return_t bsg_ksmachcopyMem(const void *src, void *dst, size_t numBytes);
 
 /** Copies up to numBytes of data from src to dest, stopping if memory
  * becomes inaccessible.
@@ -354,7 +355,8 @@ kern_return_t bsg_ksmachcopyMem(const void* src, void* dst, size_t numBytes);
  *
  * @return The number of bytes actually copied.
  */
-size_t bsg_ksmachcopyMaxPossibleMem(const void* src, void* dst, size_t numBytes);
+size_t bsg_ksmachcopyMaxPossibleMem(const void *src, void *dst,
+                                    size_t numBytes);
 
 /** Get the difference in seconds between two timestamps fetched via
  * mach_absolute_time().

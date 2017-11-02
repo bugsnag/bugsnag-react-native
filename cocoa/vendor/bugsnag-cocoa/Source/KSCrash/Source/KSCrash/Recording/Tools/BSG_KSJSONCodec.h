@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Reads and writes JSON encoded data.
  */
-
 
 #ifndef HDR_BSG_KSJSONCodec_h
 #define HDR_BSG_KSJSONCodec_h
@@ -36,9 +34,8 @@
 extern "C" {
 #endif
 
-    
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <sys/types.h>
 
 /* Tells the encoder to automatically determine the length of a field value.
@@ -46,29 +43,28 @@ extern "C" {
  */
 #define BSG_KSJSON_SIZE_AUTOMATIC ((size_t)~0)
 
-enum
-{
+enum {
     /** Encoding or decoding: Everything completed without error */
-   BSG_KSJSON_OK = 0,
+    BSG_KSJSON_OK = 0,
 
     /** Encoding or decoding: Encountered an unexpected or invalid character */
-   BSG_KSJSON_ERROR_INVALID_CHARACTER = 1,
+    BSG_KSJSON_ERROR_INVALID_CHARACTER = 1,
 
     /** Encoding: addJSONData could not handle the data.
      * This code is not used by the decoder, but is meant to be returned by
      * the addJSONData callback method if it couldn't handle the data.
      */
-   BSG_KSJSON_ERROR_CANNOT_ADD_DATA = 2,
+    BSG_KSJSON_ERROR_CANNOT_ADD_DATA = 2,
 
     /** Decoding: Source data appears to be truncated. */
-   BSG_KSJSON_ERROR_INCOMPLETE = 3,
+    BSG_KSJSON_ERROR_INCOMPLETE = 3,
 
     /** Decoding: Parsing failed due to bad data structure/type/contents.
      * This code is not used by the decoder, but is meant to be returned
      * by the user callback methods if the decoded data is incorrect for
      * semantic or structural reasons.
      */
-   BSG_KSJSON_ERROR_INVALID_DATA = 4,
+    BSG_KSJSON_ERROR_INVALID_DATA = 4,
 };
 
 /** Get a description for an error code.
@@ -77,8 +73,7 @@ enum
  *
  * @return A string describing the error.
  */
-const char* bsg_ksjsonstringForError(const int error);
-
+const char *bsg_ksjsonstringForError(const int error);
 
 // ============================================================================
 // Encode
@@ -95,17 +90,15 @@ const char* bsg_ksjsonstringForError(const int error);
  * @return BSG_KSJSON_OK if the data was handled.
  *         otherwise BSG_KSJSON_ERROR_CANNOT_ADD_DATA.
  */
-typedef int (*BSG_KSJSONAddDataFunc)(const char* data,
-size_t length,
-void* userData);
+typedef int (*BSG_KSJSONAddDataFunc)(const char *data, size_t length,
+                                     void *userData);
 
-typedef struct
-{
+typedef struct {
     /** Function to call to add more encoded JSON data. */
-   BSG_KSJSONAddDataFunc addJSONData;
+    BSG_KSJSONAddDataFunc addJSONData;
 
     /** User-specified data */
-    void* userData;
+    void *userData;
 
     /** How many containers deep we are. */
     int containerLevel;
@@ -120,7 +113,6 @@ typedef struct
 
 } BSG_KSJSONEncodeContext;
 
-
 /** Begin a new encoding process.
  *
  * @param context The encoding context.
@@ -131,16 +123,14 @@ typedef struct
  *
  * @param userData User-specified data which gets passed to addJSONData.
  */
-void bsg_ksjsonbeginEncode(BSG_KSJSONEncodeContext* context,
-                        bool prettyPrint,
-                       BSG_KSJSONAddDataFunc addJSONData,
-                        void* userData);
+void bsg_ksjsonbeginEncode(BSG_KSJSONEncodeContext *context, bool prettyPrint,
+                           BSG_KSJSONAddDataFunc addJSONData, void *userData);
 
 /** End the encoding process, ending any remaining open containers.
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonendEncode(BSG_KSJSONEncodeContext* context);
+int bsg_ksjsonendEncode(BSG_KSJSONEncodeContext *context);
 
 /** Add a boolean element.
  *
@@ -152,9 +142,8 @@ int bsg_ksjsonendEncode(BSG_KSJSONEncodeContext* context);
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonaddBooleanElement(BSG_KSJSONEncodeContext* context,
-                             const char* name,
-                             bool value);
+int bsg_ksjsonaddBooleanElement(BSG_KSJSONEncodeContext *context,
+                                const char *name, bool value);
 
 /** Add an integer element.
  *
@@ -166,9 +155,8 @@ int bsg_ksjsonaddBooleanElement(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonaddIntegerElement(BSG_KSJSONEncodeContext* context,
-                             const char* name,
-                             long long value);
+int bsg_ksjsonaddIntegerElement(BSG_KSJSONEncodeContext *context,
+                                const char *name, long long value);
 
 /** Add a floating point element.
  *
@@ -180,9 +168,8 @@ int bsg_ksjsonaddIntegerElement(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonaddFloatingPointElement(BSG_KSJSONEncodeContext* context,
-                                   const char* name,
-                                   double value);
+int bsg_ksjsonaddFloatingPointElement(BSG_KSJSONEncodeContext *context,
+                                      const char *name, double value);
 
 /** Add a null element.
  *
@@ -192,8 +179,8 @@ int bsg_ksjsonaddFloatingPointElement(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonaddNullElement(BSG_KSJSONEncodeContext* context,
-                          const char* name);
+int bsg_ksjsonaddNullElement(BSG_KSJSONEncodeContext *context,
+                             const char *name);
 
 /** Add a string element.
  *
@@ -207,10 +194,9 @@ int bsg_ksjsonaddNullElement(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonaddStringElement(BSG_KSJSONEncodeContext* context,
-                            const char* name,
-                            const char* value,
-                            size_t length);
+int bsg_ksjsonaddStringElement(BSG_KSJSONEncodeContext *context,
+                               const char *name, const char *value,
+                               size_t length);
 
 /** Start an incrementally-built string element.
  *
@@ -222,8 +208,8 @@ int bsg_ksjsonaddStringElement(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonbeginStringElement(BSG_KSJSONEncodeContext* context,
-                              const char* name);
+int bsg_ksjsonbeginStringElement(BSG_KSJSONEncodeContext *context,
+                                 const char *name);
 
 /** Add a string fragment to an incrementally-built string element.
  *
@@ -235,9 +221,8 @@ int bsg_ksjsonbeginStringElement(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonappendStringElement(BSG_KSJSONEncodeContext* context,
-                               const char* value,
-                               size_t length);
+int bsg_ksjsonappendStringElement(BSG_KSJSONEncodeContext *context,
+                                  const char *value, size_t length);
 
 /** End an incrementally-built string element.
  *
@@ -245,7 +230,7 @@ int bsg_ksjsonappendStringElement(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonendStringElement(BSG_KSJSONEncodeContext* context);
+int bsg_ksjsonendStringElement(BSG_KSJSONEncodeContext *context);
 
 /** Add a string element. The element will be converted to string-coded hex.
  *
@@ -259,10 +244,9 @@ int bsg_ksjsonendStringElement(BSG_KSJSONEncodeContext* context);
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonaddDataElement(BSG_KSJSONEncodeContext* const context,
-                          const char* name,
-                          const char* value,
-                          size_t length);
+int bsg_ksjsonaddDataElement(BSG_KSJSONEncodeContext *const context,
+                             const char *name, const char *value,
+                             size_t length);
 
 /** Start an incrementally-built data element. The element will be converted
  * to string-coded hex.
@@ -275,8 +259,8 @@ int bsg_ksjsonaddDataElement(BSG_KSJSONEncodeContext* const context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonbeginDataElement(BSG_KSJSONEncodeContext* const context,
-                            const char* const name);
+int bsg_ksjsonbeginDataElement(BSG_KSJSONEncodeContext *const context,
+                               const char *const name);
 
 /** Add a data fragment to an incrementally-built data element.
  *
@@ -288,9 +272,8 @@ int bsg_ksjsonbeginDataElement(BSG_KSJSONEncodeContext* const context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonappendDataElement(BSG_KSJSONEncodeContext* const context,
-                             const char* const value,
-                             size_t length);
+int bsg_ksjsonappendDataElement(BSG_KSJSONEncodeContext *const context,
+                                const char *const value, size_t length);
 
 /** End an incrementally-built data element.
  *
@@ -298,7 +281,7 @@ int bsg_ksjsonappendDataElement(BSG_KSJSONEncodeContext* const context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonendDataElement(BSG_KSJSONEncodeContext* const context);
+int bsg_ksjsonendDataElement(BSG_KSJSONEncodeContext *const context);
 
 /** Add a pre-formatted JSON element.
  *
@@ -312,10 +295,9 @@ int bsg_ksjsonendDataElement(BSG_KSJSONEncodeContext* const context);
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonaddJSONElement(BSG_KSJSONEncodeContext* context,
-                          const char* restrict name,
-                          const char* restrict value,
-                          size_t length);
+int bsg_ksjsonaddJSONElement(BSG_KSJSONEncodeContext *context,
+                             const char *restrict name,
+                             const char *restrict value, size_t length);
 
 /** Begin a new object container.
  *
@@ -325,8 +307,7 @@ int bsg_ksjsonaddJSONElement(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonbeginObject(BSG_KSJSONEncodeContext* context,
-                       const char* name);
+int bsg_ksjsonbeginObject(BSG_KSJSONEncodeContext *context, const char *name);
 
 /** Begin a new array container.
  *
@@ -336,8 +317,7 @@ int bsg_ksjsonbeginObject(BSG_KSJSONEncodeContext* context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonbeginArray(BSG_KSJSONEncodeContext* context,
-                      const char* name);
+int bsg_ksjsonbeginArray(BSG_KSJSONEncodeContext *context, const char *name);
 
 /** Begin a generic JSON element, adding any necessary JSON preamble text,
  *  including commas and names.
@@ -345,10 +325,11 @@ int bsg_ksjsonbeginArray(BSG_KSJSONEncodeContext* context,
  *
  * @param context The JSON context.
  *
- * @param name The name of the next element (only needed if parent is a dictionary).
+ * @param name The name of the next element (only needed if parent is a
+ * dictionary).
  */
-int bsg_ksjsonbeginElement(BSG_KSJSONEncodeContext* const context,
-                        const char* const name);
+int bsg_ksjsonbeginElement(BSG_KSJSONEncodeContext *const context,
+                           const char *const name);
 
 /** Add JSON data manually.
  * This function just passes your data directly through, even if it's malforned.
@@ -361,9 +342,8 @@ int bsg_ksjsonbeginElement(BSG_KSJSONEncodeContext* const context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonaddRawJSONData(BSG_KSJSONEncodeContext* const context,
-                          const char* const data,
-                          const size_t length);
+int bsg_ksjsonaddRawJSONData(BSG_KSJSONEncodeContext *const context,
+                             const char *const data, const size_t length);
 
 /** End the current container and return to the next higher level.
  *
@@ -371,21 +351,17 @@ int bsg_ksjsonaddRawJSONData(BSG_KSJSONEncodeContext* const context,
  *
  * @return BSG_KSJSON_OK if the process was successful.
  */
-int bsg_ksjsonendContainer(BSG_KSJSONEncodeContext* context);
-
-
+int bsg_ksjsonendContainer(BSG_KSJSONEncodeContext *context);
 
 // ============================================================================
 // Decode
 // ============================================================================
 
-
 /**
  * Callbacks called during a JSON decode process.
  * All function pointers must point to valid functions.
  */
-typedef struct BSG_KSJSONDecodeCallbacks
-{
+typedef struct BSG_KSJSONDecodeCallbacks {
     /** Called when a boolean element is decoded.
      *
      * @param name The element's name.
@@ -396,9 +372,7 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onBooleanElement)(const char* name,
-                            bool value,
-                            void* userData);
+    int (*onBooleanElement)(const char *name, bool value, void *userData);
 
     /** Called when a floating point element is decoded.
      *
@@ -410,9 +384,8 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onFloatingPointElement)(const char* name,
-                                  double value,
-                                  void* userData);
+    int (*onFloatingPointElement)(const char *name, double value,
+                                  void *userData);
 
     /** Called when an integer element is decoded.
      *
@@ -424,9 +397,7 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onIntegerElement)(const char* name,
-                            long long value,
-                            void* userData);
+    int (*onIntegerElement)(const char *name, long long value, void *userData);
 
     /** Called when a null element is decoded.
      *
@@ -436,8 +407,7 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onNullElement)(const char* name,
-                         void* userData);
+    int (*onNullElement)(const char *name, void *userData);
 
     /** Called when a string element is decoded.
      *
@@ -449,9 +419,7 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onStringElement)(const char* name,
-                           const char* value,
-                           void* userData);
+    int (*onStringElement)(const char *name, const char *value, void *userData);
 
     /** Called when a new object is encountered.
      *
@@ -461,8 +429,7 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onBeginObject)(const char* name,
-                         void* userData);
+    int (*onBeginObject)(const char *name, void *userData);
 
     /** Called when a new array is encountered.
      *
@@ -472,8 +439,7 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onBeginArray)(const char* name,
-                        void* userData);
+    int (*onBeginArray)(const char *name, void *userData);
 
     /** Called when leaving the current container and returning to the next
      * higher level container.
@@ -482,7 +448,7 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onEndContainer)(void* userData);
+    int (*onEndContainer)(void *userData);
 
     /** Called when the end of the input data is reached.
      *
@@ -490,10 +456,9 @@ typedef struct BSG_KSJSONDecodeCallbacks
      *
      * @return BSG_KSJSON_OK if decoding should continue.
      */
-    int (*onEndData)(void* userData);
+    int (*onEndData)(void *userData);
 
 } BSG_KSJSONDecodeCallbacks;
-
 
 /** Read a JSON encoded file from the specified FD.
  *
@@ -510,12 +475,9 @@ typedef struct BSG_KSJSONDecodeCallbacks
  *
  * @return BSG_KSJSON_OK if succesful. An error code otherwise.
  */
-int bsg_ksjsondecode(const char* data,
-                  size_t length,
-                 BSG_KSJSONDecodeCallbacks* callbacks,
-                  void* userData,
-                  size_t* errorOffset);
-
+int bsg_ksjsondecode(const char *data, size_t length,
+                     BSG_KSJSONDecodeCallbacks *callbacks, void *userData,
+                     size_t *errorOffset);
 
 #ifdef __cplusplus
 }

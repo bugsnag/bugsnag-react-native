@@ -3,7 +3,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 /**
  Removes any values which would be rejected by NSJSONSerialization for
  documented reasons
@@ -22,7 +21,6 @@ NSArray *_Nonnull BSGSanitizeArray(NSArray *_Nonnull input);
  */
 NSDictionary *_Nonnull BSGSanitizeDict(NSDictionary *_Nonnull input);
 
-
 /**
  Checks whether the base type would be accepted by the serialization process
 
@@ -30,7 +28,6 @@ NSDictionary *_Nonnull BSGSanitizeDict(NSDictionary *_Nonnull input);
  @return YES if the object is an Array, Dictionary, String, Number, or NSNull
  */
 BOOL BSGIsSanitizedType(id _Nullable obj);
-
 
 /**
  Cleans the object, including nested dictionary and array values
