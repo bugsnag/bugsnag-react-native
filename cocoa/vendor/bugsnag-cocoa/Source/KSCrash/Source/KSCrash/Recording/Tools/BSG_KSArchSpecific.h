@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Architecture-dependent defines.
  */
-
 
 #ifndef HDR_BSG_KSArchSpecific_h
 #define HDR_BSG_KSArchSpecific_h
@@ -36,22 +34,19 @@
 extern "C" {
 #endif
 
-
 #include <sys/_structs.h>
 
 #ifdef __LP64__
-    #define BSG_STRUCT_NLIST struct nlist_64
+#define BSG_STRUCT_NLIST struct nlist_64
 #else
-    #define BSG_STRUCT_NLIST struct nlist
+#define BSG_STRUCT_NLIST struct nlist
 #endif
-
 
 #ifdef __arm64__
-    #define BSG_STRUCT_MCONTEXT_L _STRUCT_MCONTEXT64
+#define BSG_STRUCT_MCONTEXT_L _STRUCT_MCONTEXT64
 #else
-    #define BSG_STRUCT_MCONTEXT_L _STRUCT_MCONTEXT
+#define BSG_STRUCT_MCONTEXT_L _STRUCT_MCONTEXT
 #endif
-
 
 #ifdef __cplusplus
 }

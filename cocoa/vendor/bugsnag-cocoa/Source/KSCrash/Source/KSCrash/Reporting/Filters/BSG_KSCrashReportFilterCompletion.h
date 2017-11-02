@@ -24,7 +24,6 @@
 // THE SOFTWARE.
 //
 
-
 #import <Foundation/Foundation.h>
 
 /** Callback for filter operations.
@@ -36,6 +35,6 @@
  *                  user cancelling the operation).
  * @param error Non-nil if an error occurred.
  */
-typedef void(^BSG_KSCrashReportFilterCompletion)(NSArray* filteredReports,
-                                             BOOL completed,
-                                             NSError* error);
+typedef void (^BSG_KSCrashReportFilterCompletion)(NSArray *filteredReports,
+                                                  BOOL completed,
+                                                  NSError *error);

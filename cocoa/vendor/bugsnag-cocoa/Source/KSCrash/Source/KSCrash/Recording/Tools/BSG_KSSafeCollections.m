@@ -24,40 +24,31 @@
 // THE SOFTWARE.
 //
 
-
 #import "BSG_KSSafeCollections.h"
 
-
-static inline id safeValue(id value)
-{
+static inline id safeValue(id value) {
     return value == nil ? [NSNull null] : value;
 }
 
 @implementation NSMutableArray (BSG_KSSafeCollections)
 
-- (void) bsg_ksc_addObjectIfNotNil:(id) object
-{
-    if(object != nil)
-    {
+- (void)bsg_ksc_addObjectIfNotNil:(id)object {
+    if (object != nil) {
         [self addObject:object];
     }
 }
 
-- (void) bsg_ksc_safeAddObject:(id) object
-{
+- (void)bsg_ksc_safeAddObject:(id)object {
     [self addObject:safeValue(object)];
 }
 
-- (void) bsg_ksc_insertObjectIfNotNil:(id) object atIndex:(NSUInteger) index
-{
-    if(object != nil)
-    {
+- (void)bsg_ksc_insertObjectIfNotNil:(id)object atIndex:(NSUInteger)index {
+    if (object != nil) {
         [self insertObject:object atIndex:index];
     }
 }
 
-- (void) bsg_ksc_safeInsertObject:(id) object atIndex:(NSUInteger) index
-{
+- (void)bsg_ksc_safeInsertObject:(id)object atIndex:(NSUInteger)index {
     [self insertObject:safeValue(object) atIndex:index];
 }
 
@@ -65,29 +56,23 @@ static inline id safeValue(id value)
 
 @implementation NSMutableDictionary (BSG_KSSafeCollections)
 
-- (void) bsg_ksc_setObjectIfNotNil:(id) object forKey:(id) key
-{
-    if(object != nil && key != nil)
-    {
+- (void)bsg_ksc_setObjectIfNotNil:(id)object forKey:(id)key {
+    if (object != nil && key != nil) {
         [self setObject:object forKey:key];
     }
 }
 
-- (void) bsg_ksc_safeSetObject:(id) object forKey:(id) key
-{
+- (void)bsg_ksc_safeSetObject:(id)object forKey:(id)key {
     [self setObject:safeValue(object) forKey:key];
 }
 
-- (void) bsg_ksc_setValueIfNotNil:(id) value forKey:(NSString*) key
-{
-    if(value != nil && key != nil)
-    {
+- (void)bsg_ksc_setValueIfNotNil:(id)value forKey:(NSString *)key {
+    if (value != nil && key != nil) {
         [self setValue:value forKey:key];
     }
 }
 
-- (void) bsg_ksc_safeSetValue:(id) value forKey:(NSString*) key
-{
+- (void)bsg_ksc_safeSetValue:(id)value forKey:(NSString *)key {
     [self setValue:safeValue(value) forKey:key];
 }
 

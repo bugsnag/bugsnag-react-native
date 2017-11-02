@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Catches Objective-C exceptions.
  */
-
 
 #ifndef HDR_BSG_KSCrashSentry_NSException_h
 #define HDR_BSG_KSCrashSentry_NSException_h
@@ -36,9 +34,7 @@
 extern "C" {
 #endif
 
-
 #include "BSG_KSCrashSentry.h"
-
 
 /** Install our custom NSException handler.
  *
@@ -46,12 +42,12 @@ extern "C" {
  *
  * @return true if installation was succesful.
  */
-bool bsg_kscrashsentry_installNSExceptionHandler(BSG_KSCrash_SentryContext* context);
+bool bsg_kscrashsentry_installNSExceptionHandler(
+    BSG_KSCrash_SentryContext *context);
 
 /** Uninstall our custome NSException handler.
  */
 void bsg_kscrashsentry_uninstallNSExceptionHandler(void);
-
 
 #ifdef __cplusplus
 }

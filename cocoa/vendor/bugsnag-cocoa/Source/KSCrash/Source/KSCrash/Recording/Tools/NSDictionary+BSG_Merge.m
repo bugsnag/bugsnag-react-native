@@ -24,32 +24,25 @@
 // THE SOFTWARE.
 //
 
-
 #import "NSDictionary+BSG_Merge.h"
-
 
 @implementation NSDictionary (BSG_Merge)
 
-- (NSDictionary*) mergedInto:(NSDictionary*) dest
-{
-    if([dest count] == 0)
-    {
+- (NSDictionary *)bsg_mergedInto:(NSDictionary *)dest {
+    if ([dest count] == 0) {
         return self;
     }
-    if([self count] == 0)
-    {
+    if ([self count] == 0) {
         return dest;
     }
 
-    NSMutableDictionary* dict = [dest mutableCopy];
-    for(id key in [self allKeys])
-    {
+    NSMutableDictionary *dict = [dest mutableCopy];
+    for (id key in [self allKeys]) {
         id srcEntry = [self objectForKey:key];
         id dstEntry = [dest objectForKey:key];
-        if([dstEntry isKindOfClass:[NSDictionary class]] &&
-           [srcEntry isKindOfClass:[NSDictionary class]])
-        {
-            srcEntry = [srcEntry mergedInto:dstEntry];
+        if ([dstEntry isKindOfClass:[NSDictionary class]] &&
+            [srcEntry isKindOfClass:[NSDictionary class]]) {
+            srcEntry = [srcEntry bsg_mergedInto:dstEntry];
         }
         [dict setObject:srcEntry forKey:key];
     }
@@ -57,5 +50,7 @@
 }
 @end
 
-@interface NSDictionary_BSG_Merge_O8FG4A : NSObject @end @implementation NSDictionary_BSG_Merge_O8FG4A @end
-
+@interface NSDictionary_BSG_Merge_O8FG4A : NSObject
+@end
+@implementation NSDictionary_BSG_Merge_O8FG4A
+@end

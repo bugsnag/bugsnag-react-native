@@ -24,16 +24,13 @@
 // THE SOFTWARE.
 //
 
-
 #import <Foundation/Foundation.h>
 
-#import "BSG_KSCrashReportWriter.h"
 #import "BSG_KSCrashReportFilterCompletion.h"
+#import "BSG_KSCrashReportWriter.h"
 #import "BSG_KSCrashType.h"
 
-
-typedef enum
-{
+typedef enum {
     BSG_KSCDeleteNever,
     BSG_KSCDeleteOnSucess,
     BSG_KSCDeleteAlways
@@ -52,43 +49,45 @@ typedef enum
  *
  * Default: nil
  */
-@property(nonatomic,readwrite,retain) NSDictionary* userInfo;
+@property(nonatomic, readwrite, retain) NSDictionary *userInfo;
 
 /** What to do after sending reports via sendAllReportsWithCompletion:
  *
  * - Use KSCDeleteNever if you will manually manage the reports.
- * - Use KSCDeleteAlways if you will be using an alert confirmation (otherwise it
- *   will nag the user incessantly until he selects "yes").
+ * - Use KSCDeleteAlways if you will be using an alert confirmation (otherwise
+ * it will nag the user incessantly until he selects "yes").
  * - Use KSCDeleteOnSuccess for all other situations.
  *
  * Default: KSCDeleteAlways
  */
-@property(nonatomic,readwrite,assign) BSG_KSCDeleteBehavior deleteBehaviorAfterSendAll;
+@property(nonatomic, readwrite, assign)
+    BSG_KSCDeleteBehavior deleteBehaviorAfterSendAll;
 
 /** The crash types that are being handled.
  * Note: This value may change once BSG_KSCrash is installed if some handlers
  *       fail to install.
  */
-@property(nonatomic,readwrite,assign) BSG_KSCrashType handlingCrashTypes;
+@property(nonatomic, readwrite, assign) BSG_KSCrashType handlingCrashTypes;
 
 /** Maximum time to allow the main thread to run without returning.
  * If a task occupies the main thread for longer than this interval, the
  * watchdog will consider the queue deadlocked and shut down the app and write a
  * crash report.
  *
- * Warning: Make SURE that nothing in your app that runs on the main thread takes
- * longer to complete than this value or it WILL get shut down! This includes
- * your app startup process, so you may need to push app initialization to
- * another thread, or perhaps set this to a higher value until your application
- * has been fully initialized.
+ * Warning: Make SURE that nothing in your app that runs on the main thread
+ * takes longer to complete than this value or it WILL get shut down! This
+ * includes your app startup process, so you may need to push app initialization
+ * to another thread, or perhaps set this to a higher value until your
+ * application has been fully initialized.
  *
- * WARNING: This is still causing false positives in some cases. Use at own risk!
+ * WARNING: This is still causing false positives in some cases. Use at own
+ * risk!
  *
  * 0 = Disabled.
  *
  * Default: 0
  */
-@property(nonatomic,readwrite,assign) double deadlockWatchdogInterval;
+@property(nonatomic, readwrite, assign) double deadlockWatchdogInterval;
 
 /** If YES, attempt to fetch thread names for each running thread.
  *
@@ -99,7 +98,7 @@ typedef enum
  *
  * Default: NO
  */
-@property(nonatomic,readwrite,assign) bool searchThreadNames;
+@property(nonatomic, readwrite, assign) bool searchThreadNames;
 
 /** If YES, attempt to fetch dispatch queue names for each running thread.
  *
@@ -110,7 +109,7 @@ typedef enum
  *
  * Default: NO
  */
-@property(nonatomic,readwrite,assign) bool searchQueueNames;
+@property(nonatomic, readwrite, assign) bool searchQueueNames;
 
 /** If YES, introspect memory contents during a crash.
  * Any Objective-C objects or C strings near the stack pointer or referenced by
@@ -119,27 +118,26 @@ typedef enum
  *
  * Default: YES
  */
-@property(nonatomic,readwrite,assign) bool introspectMemory;
+@property(nonatomic, readwrite, assign) bool introspectMemory;
 
 /** If YES, monitor all Objective-C/Swift deallocations and keep track of any
  * accesses after deallocation.
  *
  * Default: NO
  */
-@property(nonatomic,readwrite,assign) bool catchZombies;
+@property(nonatomic, readwrite, assign) bool catchZombies;
 
 /** List of Objective-C classes that should never be introspected.
- * Whenever a class in this list is encountered, only the class name will be recorded.
- * This can be useful for information security concerns.
+ * Whenever a class in this list is encountered, only the class name will be
+ * recorded. This can be useful for information security concerns.
  *
  * Default: nil
  */
-@property(nonatomic,readwrite,retain) NSArray* doNotIntrospectClasses;
-
+@property(nonatomic, readwrite, retain) NSArray *doNotIntrospectClasses;
 
 /** Get the singleton instance of the crash reporter.
  */
-+ (BSG_KSCrash*) sharedInstance;
++ (BSG_KSCrash *)sharedInstance;
 
 /** Install the crash reporter.
  * The reporter will record crashes, but will not send any crash reports unless
@@ -147,7 +145,7 @@ typedef enum
  *
  * @return YES if the reporter successfully installed.
  */
-- (BOOL) install;
+- (BOOL)install;
 
 /** Send any outstanding crash reports to the current sink.
  * It will only attempt to send the most recent 5 reports. All others will be
@@ -159,17 +157,18 @@ typedef enum
  *
  * @param onCompletion Called when sending is complete (nil = ignore).
  */
-- (void) sendAllReportsWithCompletion:(BSG_KSCrashReportFilterCompletion) onCompletion;
+- (void)sendAllReportsWithCompletion:
+    (BSG_KSCrashReportFilterCompletion)onCompletion;
 
 /** Delete all unsent reports.
  */
-- (void) deleteAllReports;
+- (void)deleteAllReports;
 
 /** Report a custom, user defined exception.
  * This can be useful when dealing with scripting languages.
  *
- * If terminateProgram is true, all sentries will be uninstalled and the application will
- * terminate with an abort().
+ * If terminateProgram is true, all sentries will be uninstalled and the
+ * application will terminate with an abort().
  *
  * @param name The exception name (for namespacing exception types).
  *
@@ -179,40 +178,42 @@ typedef enum
  *
  * @param lineOfCode A copy of the offending line of code (nil = ignore).
  *
- * @param stackTrace An array of frames (dictionaries or strings) representing the call stack leading to the exception (nil = ignore).
+ * @param stackTrace An array of frames (dictionaries or strings) representing
+ * the call stack leading to the exception (nil = ignore).
  *
- * @param terminateProgram If true, do not return from this function call. Terminate the program instead.
+ * @param terminateProgram If true, do not return from this function call.
+ * Terminate the program instead.
  */
-- (void) reportUserException:(NSString*) name
-                      reason:(NSString*) reason
-                    language:(NSString*) language
-                  lineOfCode:(NSString*) lineOfCode
-                  stackTrace:(NSArray*) stackTrace
-            terminateProgram:(BOOL) terminateProgram;
+- (void)reportUserException:(NSString *)name
+                     reason:(NSString *)reason
+                   language:(NSString *)language
+                 lineOfCode:(NSString *)lineOfCode
+                 stackTrace:(NSArray *)stackTrace
+           terminateProgram:(BOOL)terminateProgram;
 
-/** If YES, user reported exceptions will suspend all threads during report generation.
-  * All threads will be suspended while generating a crash report for a user
-  * reported exception.
-  *
-  * Default: YES
-  */
-@property(nonatomic,readwrite,assign) BOOL suspendThreadsForUserReported;
+/** If YES, user reported exceptions will suspend all threads during report
+ * generation. All threads will be suspended while generating a crash report for
+ * a user reported exception.
+ *
+ * Default: YES
+ */
+@property(nonatomic, readwrite, assign) BOOL suspendThreadsForUserReported;
 
 /** If YES, reports will be sent even if a debugger is attached
  *
  * Default: NO
  */
-@property(nonatomic,readwrite,assign) BOOL reportWhenDebuggerIsAttached;
+@property(nonatomic, readwrite, assign) BOOL reportWhenDebuggerIsAttached;
 
 /**
  * If YES, thread traces will be collected with each report.
  */
-@property(nonatomic,readwrite,assign) BOOL threadTracingEnabled;
+@property(nonatomic, readwrite, assign) BOOL threadTracingEnabled;
 
 /**
  * If YES, binary images will be collected for each report.
  */
-@property(nonatomic,readwrite,assign) BOOL writeBinaryImagesForUserReported;
+@property(nonatomic, readwrite, assign) BOOL writeBinaryImagesForUserReported;
 
 @end
 

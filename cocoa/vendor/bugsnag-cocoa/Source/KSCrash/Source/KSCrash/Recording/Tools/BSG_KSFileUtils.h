@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Basic file reading/writing functions.
  */
-
 
 #ifndef HDR_BSG_KSFileUtils_h
 #define HDR_BSG_KSFileUtils_h
@@ -36,11 +34,10 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdbool.h>
 #include <stdarg.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <sys/types.h>
-
 
 /** Get the last entry in a file path. Assumes UNIX style separators.
  *
@@ -48,7 +45,7 @@ extern "C" {
  *
  * @return the last entry in the path.
  */
-const char* bsg_ksfulastPathEntry(const char* path);
+const char *bsg_ksfulastPathEntry(const char *path);
 
 /** Write bytes to a file descriptor.
  *
@@ -60,7 +57,7 @@ const char* bsg_ksfulastPathEntry(const char* path);
  *
  * @return true if the operation was successful.
  */
-bool bsg_ksfuwriteBytesToFD(const int fd, const char* bytes, ssize_t length);
+bool bsg_ksfuwriteBytesToFD(const int fd, const char *bytes, ssize_t length);
 
 /**
  * Flushes the write buffer
@@ -79,7 +76,7 @@ bool bsg_ksfuflushWriteBuffer(const int fd);
  *
  * @return true if the operation was successful.
  */
-bool bsg_ksfureadBytesFromFD(const int fd, char* bytes, ssize_t length);
+bool bsg_ksfureadBytesFromFD(const int fd, char *bytes, ssize_t length);
 
 /** Read an entire file.
  *
@@ -91,7 +88,7 @@ bool bsg_ksfureadBytesFromFD(const int fd, char* bytes, ssize_t length);
  *
  * @return true if the operation was successful.
  */
-bool bsg_ksfureadEntireFile(const char* path, char** data, size_t* length);
+bool bsg_ksfureadEntireFile(const char *path, char **data, size_t *length);
 
 /** Write a string to a file.
  *
@@ -101,7 +98,7 @@ bool bsg_ksfureadEntireFile(const char* path, char** data, size_t* length);
  *
  * @return true if successful.
  */
-bool bsg_ksfuwriteStringToFD(const int fd, const char* string);
+bool bsg_ksfuwriteStringToFD(const int fd, const char *string);
 
 /** Write a formatted string to a file.
  *
@@ -111,7 +108,7 @@ bool bsg_ksfuwriteStringToFD(const int fd, const char* string);
  *
  * @return true if successful.
  */
-bool bsg_ksfuwriteFmtToFD(const int fd, const char* fmt, ...);
+bool bsg_ksfuwriteFmtToFD(const int fd, const char *fmt, ...);
 
 /** Write a formatted string to a file.
  *
@@ -123,7 +120,7 @@ bool bsg_ksfuwriteFmtToFD(const int fd, const char* fmt, ...);
  *
  * @return true if successful.
  */
-bool bsg_ksfuwriteFmtArgsToFD(const int fd, const char* fmt, va_list args);
+bool bsg_ksfuwriteFmtArgsToFD(const int fd, const char *fmt, va_list args);
 
 /** Read a single line from a file.
  *
@@ -135,8 +132,7 @@ bool bsg_ksfuwriteFmtArgsToFD(const int fd, const char* fmt, va_list args);
  *
  * @return The number of bytes read.
  */
-ssize_t bsg_ksfureadLineFromFD(const int fd, char* buffer, int maxLength);
-
+ssize_t bsg_ksfureadLineFromFD(const int fd, char *buffer, int maxLength);
 
 #ifdef __cplusplus
 }

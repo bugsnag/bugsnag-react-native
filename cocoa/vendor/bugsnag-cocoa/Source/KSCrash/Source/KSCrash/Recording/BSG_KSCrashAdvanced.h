@@ -24,13 +24,11 @@
 // THE SOFTWARE.
 //
 
-
 #import "BSG_KSCrash.h"
-#import "BSG_KSCrashReportStore.h"
 #import "BSG_KSCrashReportFilter.h"
+#import "BSG_KSCrashReportStore.h"
 
-typedef enum
-{
+typedef enum {
     BSG_KSCrashDemangleLanguageCPlusPlus = 1,
     BSG_KSCrashDemangleLanguageSwift = 2,
     BSG_KSCrashDemangleLanguageAll = ~1
@@ -44,51 +42,57 @@ typedef enum
 #pragma mark - Information -
 
 /** Total active time elapsed since the last crash. */
-@property(nonatomic,readonly,assign) NSTimeInterval activeDurationSinceLastCrash;
+@property(nonatomic, readonly, assign)
+    NSTimeInterval activeDurationSinceLastCrash;
 
 /** Total time backgrounded elapsed since the last crash. */
-@property(nonatomic,readonly,assign) NSTimeInterval backgroundDurationSinceLastCrash;
+@property(nonatomic, readonly, assign)
+    NSTimeInterval backgroundDurationSinceLastCrash;
 
 /** Number of app launches since the last crash. */
-@property(nonatomic,readonly,assign) int launchesSinceLastCrash;
+@property(nonatomic, readonly, assign) int launchesSinceLastCrash;
 
 /** Number of sessions (launch, resume from suspend) since last crash. */
-@property(nonatomic,readonly,assign) int sessionsSinceLastCrash;
+@property(nonatomic, readonly, assign) int sessionsSinceLastCrash;
 
 /** Total active time elapsed since launch. */
-@property(nonatomic,readonly,assign) NSTimeInterval activeDurationSinceLaunch;
+@property(nonatomic, readonly, assign) NSTimeInterval activeDurationSinceLaunch;
 
 /** Total time backgrounded elapsed since launch. */
-@property(nonatomic,readonly,assign) NSTimeInterval backgroundDurationSinceLaunch;
+@property(nonatomic, readonly, assign)
+    NSTimeInterval backgroundDurationSinceLaunch;
 
 /** Number of sessions (launch, resume from suspend) since app launch. */
-@property(nonatomic,readonly,assign) int sessionsSinceLaunch;
+@property(nonatomic, readonly, assign) int sessionsSinceLaunch;
 
 /** If true, the application crashed on the previous launch. */
-@property(nonatomic,readonly,assign) BOOL crashedLastLaunch;
+@property(nonatomic, readonly, assign) BOOL crashedLastLaunch;
 
-/** Max number of reports to store on disk before throwing older reports out. (default 5) */
-@property(nonatomic,readwrite,assign) int maxStoredReports;
+/** Max number of reports to store on disk before throwing older reports out.
+ * (default 5) */
+@property(nonatomic, readwrite, assign) int maxStoredReports;
 
-/** Which languages to demangle when getting stack traces (default BSG_KSCrashDemangleLanguageAll) */
-@property(nonatomic,readwrite,assign) BSG_KSCrashDemangleLanguage demangleLanguages;
+/** Which languages to demangle when getting stack traces (default
+ * BSG_KSCrashDemangleLanguageAll) */
+@property(nonatomic, readwrite, assign)
+    BSG_KSCrashDemangleLanguage demangleLanguages;
 
 /** The total number of unsent reports. Note: This is an expensive operation.
  */
-- (NSUInteger) reportCount;
+- (NSUInteger)reportCount;
 
 /** Get all reports, with data types corrected, as dictionaries.
  */
-- (NSArray*) allReports;
-
+- (NSArray *)allReports;
 
 #pragma mark - Configuration -
 
 /** Init BSG_KSCrash instance with custom report files directory path. */
-- (id) initWithReportFilesDirectory:(NSString *)reportFilesDirectory;
+- (id)initWithReportFilesDirectory:(NSString *)reportFilesDirectory;
 
 /** Store containing all crash reports. */
-@property(nonatomic, readwrite, retain) BSG_KSCrashReportStore* crashReportStore;
+@property(nonatomic, readwrite, retain)
+    BSG_KSCrashReportStore *crashReportStore;
 
 /** The report sink where reports get sent.
  * This MUST be set or else the reporter will not send reports (although it will
@@ -97,10 +101,10 @@ typedef enum
  * Note: If you use an installation, it will automatically set this property.
  *       Do not modify it in such a case.
  */
-@property(nonatomic,readwrite,retain) id<BSG_KSCrashReportFilter> sink;
+@property(nonatomic, readwrite, retain) id<BSG_KSCrashReportFilter> sink;
 
-/** C Function to call during a crash report to give the callee an opportunity to
- * add to the report. NULL = ignore.
+/** C Function to call during a crash report to give the callee an opportunity
+ * to add to the report. NULL = ignore.
  *
  * WARNING: Only call async-safe functions from this function! DO NOT call
  * Objective-C methods!!!
@@ -108,7 +112,7 @@ typedef enum
  * Note: If you use an installation, it will automatically set this property.
  *       Do not modify it in such a case.
  */
-@property(nonatomic,readwrite,assign) BSG_KSReportWriteCallback onCrash;
+@property(nonatomic, readwrite, assign) BSG_KSReportWriteCallback onCrash;
 
 /** Path where the log of BSG_KSCrash's activities will be written.
  * If nil, log entries will be printed to the console.
@@ -118,13 +122,13 @@ typedef enum
  *
  * Default: nil
  */
-@property(nonatomic,readonly,retain) NSString* logFilePath;
+@property(nonatomic, readonly, retain) NSString *logFilePath;
 
 /** If YES, print a stack trace to stdout when a crash occurs.
  *
  * Default: NO
  */
-@property(nonatomic,readwrite,assign) bool printTraceToStdout;
+@property(nonatomic, readwrite, assign) bool printTraceToStdout;
 
 /** Sets logFilePath to the default log file location
  * (Library/Caches/KSCrashReports/<bundle name>-CrashLog.txt).
@@ -132,17 +136,18 @@ typedef enum
  *
  * @return true if the operation was successful.
  */
-- (BOOL) redirectConsoleLogsToDefaultFile;
+- (BOOL)redirectConsoleLogsToDefaultFile;
 
-/** Redirect the log of BSG_KSCrash's activities from the console to the specified log file.
+/** Redirect the log of BSG_KSCrash's activities from the console to the
+ * specified log file.
  *
  * @param fullPath The path to the logfile (nil = log to console instead).
  * @param overwrite If true, overwrite the file (ignored if fullPath is nil).
  *
  * @return true if the operation was successful.
  */
-- (BOOL) redirectConsoleLogsToFile:(NSString*) fullPath overwrite:(BOOL) overwrite;
-
+- (BOOL)redirectConsoleLogsToFile:(NSString *)fullPath
+                        overwrite:(BOOL)overwrite;
 
 #pragma mark - Operations -
 
@@ -151,6 +156,7 @@ typedef enum
  * @param reports The reports to send.
  * @param onCompletion Called when sending is complete (nil = ignore).
  */
-- (void) sendReports:(NSArray*) reports onCompletion:(BSG_KSCrashReportFilterCompletion) onCompletion;
+- (void)sendReports:(NSArray *)reports
+       onCompletion:(BSG_KSCrashReportFilterCompletion)onCompletion;
 
 @end

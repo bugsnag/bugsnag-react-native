@@ -31,19 +31,18 @@ extern "C" {
 
 #include "BSG_KSCrashSentry.h"
 
-
 /** Install the C++ exception handler.
  *
  * @param context Contextual information for the crash handler.
  *
  * @return true if installation was succesful.
  */
-bool bsg_kscrashsentry_installCPPExceptionHandler(BSG_KSCrash_SentryContext* context);
+bool bsg_kscrashsentry_installCPPExceptionHandler(
+    BSG_KSCrash_SentryContext *context);
 
 /** Uninstall the C++ exception handler.
  */
 void bsg_kscrashsentry_uninstallCPPExceptionHandler(void);
-
 
 #ifdef __cplusplus
 }

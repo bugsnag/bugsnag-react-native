@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* Stack backtrace and symbolication functions.
  */
-
 
 #ifndef HDR_BSG_KSBacktrace_h
 #define HDR_BSG_KSBacktrace_h
@@ -36,11 +34,9 @@
 extern "C" {
 #endif
 
-
 #include <dlfcn.h>
 #include <mach/mach.h>
 #include <pthread.h>
-
 
 /** Generate a backtrace on the specified mach thread (async-safe).
  *
@@ -54,9 +50,8 @@ extern "C" {
  *
  * @return The number of backtrace entries generated.
  */
-int bsg_ksbt_backtraceThread(thread_t thread,
-                         uintptr_t* backtraceBuffer,
-                         int maxEntries);
+int bsg_ksbt_backtraceThread(thread_t thread, uintptr_t *backtraceBuffer,
+                             int maxEntries);
 
 /** Generate a backtrace on the specified posix thread (async-safe).
  *
@@ -69,9 +64,8 @@ int bsg_ksbt_backtraceThread(thread_t thread,
  *
  * @return The number of backtrace entries generated.
  */
-int bsg_ksbt_backtracePthread(pthread_t thread,
-                          uintptr_t* backtraceBuffer,
-                          int maxEntries);
+int bsg_ksbt_backtracePthread(pthread_t thread, uintptr_t *backtraceBuffer,
+                              int maxEntries);
 
 /** Generate a backtrace on the currently running thread (async-safe).
  *
@@ -85,8 +79,7 @@ int bsg_ksbt_backtracePthread(pthread_t thread,
  *
  * @return The number of backtrace entries generated.
  */
-int bsg_ksbt_backtraceSelf(uintptr_t* backtraceBuffer,
-                       int maxEntries);
+int bsg_ksbt_backtraceSelf(uintptr_t *backtraceBuffer, int maxEntries);
 
 /** Symbolicate a backtrace (async-safe).
  *
@@ -101,13 +94,12 @@ int bsg_ksbt_backtraceSelf(uintptr_t* backtraceBuffer,
  *
  * @param numEntries The number of entries to examine.
  *
- * @param skippedEntries The number of entries skipped from the start of this backtrace.
+ * @param skippedEntries The number of entries skipped from the start of this
+ * backtrace.
  */
-void bsg_ksbt_symbolicate(const uintptr_t* backtraceBuffer,
-                      Dl_info* symbolsBuffer,
-                      int numEntries,
-                      int skippedEntries);
-
+void bsg_ksbt_symbolicate(const uintptr_t *backtraceBuffer,
+                          Dl_info *symbolsBuffer, int numEntries,
+                          int skippedEntries);
 
 #ifdef __cplusplus
 }

@@ -24,7 +24,6 @@
 // THE SOFTWARE.
 //
 
-
 #define BSG_KSSystemField_AppStartTime "app_start_time"
 #define BSG_KSSystemField_AppUUID "app_uuid"
 #define BSG_KSSystemField_BootTime "boot_time"
@@ -66,6 +65,6 @@
  *
  * @return The system info.
  */
-+ (NSDictionary*) systemInfo;
++ (NSDictionary *)systemInfo;
 
 @end

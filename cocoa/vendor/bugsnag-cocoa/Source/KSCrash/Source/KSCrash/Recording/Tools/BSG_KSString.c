@@ -24,26 +24,22 @@
 // THE SOFTWARE.
 //
 
-
 #include "BSG_KSString.h"
-#include <string.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 // Compiler hints for "if" statements
-#define likely_if(x) if(__builtin_expect(x,1))
-#define unlikely_if(x) if(__builtin_expect(x,0))
+#define likely_if(x) if (__builtin_expect(x, 1))
+#define unlikely_if(x) if (__builtin_expect(x, 0))
 
-static const int bsg_g_printableControlChars[0x20] =
-{
+static const int bsg_g_printableControlChars[0x20] = {
     // Only tab, CR, and LF are considered printable
     // 1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-static const int bsg_g_continuationByteCount[0x40] =
-{
+static const int bsg_g_continuationByteCount[0x40] = {
     /*
      --0xxxxx = 1 (00-1f)
      --10xxxx = 2 (20-2f)
@@ -52,54 +48,39 @@ static const int bsg_g_continuationByteCount[0x40] =
      --11110x = 5 (3c-3d)
      */
     // 1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 0, 0,
 };
 
-bool bsg_ksstring_isNullTerminatedUTF8String(const void* memory,
-                                        int minLength,
-                                        int maxLength)
-{
-    const unsigned char* ptr = memory;
-    const unsigned char* const end = ptr + maxLength;
+bool bsg_ksstring_isNullTerminatedUTF8String(const void *memory, int minLength,
+                                             int maxLength) {
+    const unsigned char *ptr = memory;
+    const unsigned char *const end = ptr + maxLength;
 
-    for(; ptr < end; ptr++)
-    {
+    for (; ptr < end; ptr++) {
         unsigned char ch = *ptr;
-        unlikely_if(ch == 0)
-        {
-            return (ptr - (const unsigned char*)memory) >= minLength;
+        unlikely_if(ch == 0) {
+            return (ptr - (const unsigned char *)memory) >= minLength;
         }
-        unlikely_if(ch & 0x80)
-        {
-            unlikely_if((ch & 0xc0) != 0xc0)
-            {
-                return false;
-            }
+        unlikely_if(ch & 0x80) {
+            unlikely_if((ch & 0xc0) != 0xc0) { return false; }
             int continuationBytes = bsg_g_continuationByteCount[ch & 0x3f];
-            unlikely_if(continuationBytes == 0 || ptr + continuationBytes >= end)
-            {
+            unlikely_if(continuationBytes == 0 ||
+                        ptr + continuationBytes >= end) {
                 return false;
             }
-            for(int i = 0; i < continuationBytes; i++)
-            {
+            for (int i = 0; i < continuationBytes; i++) {
                 ptr++;
-                unlikely_if((*ptr & 0xc0) != 0x80)
-                {
-                    return false;
-                }
+                unlikely_if((*ptr & 0xc0) != 0x80) { return false; }
             }
         }
-        else unlikely_if(ch < 0x20 && !bsg_g_printableControlChars[ch])
-        {
+        else unlikely_if(ch < 0x20 && !bsg_g_printableControlChars[ch]) {
             return false;
         }
     }
     return false;
 }
-
 
 #define INV 0xff
 
@@ -107,58 +88,46 @@ bool bsg_ksstring_isNullTerminatedUTF8String(const void* memory,
  * INV (0x11111) is used to mark invalid characters so that any attempted
  * invalid nybble conversion is always > 0xffff.
  */
-static const unsigned int bsg_g_hexConversion[] =
-{
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, INV, INV, INV, INV, INV, INV,
-    INV, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
-    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+static const unsigned int bsg_g_hexConversion[] = {
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, INV, INV,
+    INV, INV, INV, INV, INV, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV, INV,
+    INV,
 };
 
-bool bsg_ksstring_extractHexValue(const char* string,
-                              size_t stringLength,
-                              uint64_t* const result)
-{
-    if(stringLength > 0)
-    {
-        const unsigned char* current = (const unsigned char*)string;
-        const unsigned char* const end = current + stringLength;
-        for(;;)
-        {
-            current = (const unsigned char*)strnstr((const char*)current, "0x", (size_t)(end - current));
-            unlikely_if(!current)
-            {
-                return false;
-            }
+bool bsg_ksstring_extractHexValue(const char *string, size_t stringLength,
+                                  uint64_t *const result) {
+    if (stringLength > 0) {
+        const unsigned char *current = (const unsigned char *)string;
+        const unsigned char *const end = current + stringLength;
+        for (;;) {
+            current = (const unsigned char *)strnstr(
+                (const char *)current, "0x", (size_t)(end - current));
+            unlikely_if(!current) { return false; }
             current += 2;
-            
+
             // Must have at least one valid digit after "0x".
-            unlikely_if(bsg_g_hexConversion[*current] == INV)
-            {
-                continue;
-            }
-            
+            unlikely_if(bsg_g_hexConversion[*current] == INV) { continue; }
+
             uint64_t accum = 0;
             unsigned int nybble = 0;
-            while(current < end)
-            {
+            while (current < end) {
                 nybble = bsg_g_hexConversion[*current++];
-                unlikely_if(nybble == INV)
-                {
-                    break;
-                }
+                unlikely_if(nybble == INV) { break; }
                 accum <<= 4;
                 accum += nybble;
             }
@@ -169,18 +138,13 @@ bool bsg_ksstring_extractHexValue(const char* string,
     return false;
 }
 
-void bsg_ksstring_replace(const char** dest, const char* replacement)
-{
-    if(*dest != NULL)
-    {
-        free((void*)*dest);
+void bsg_ksstring_replace(const char **dest, const char *replacement) {
+    if (*dest != NULL) {
+        free((void *)*dest);
     }
-    if(replacement == NULL)
-    {
+    if (replacement == NULL) {
         *dest = NULL;
-    }
-    else
-    {
+    } else {
         *dest = strdup(replacement);
     }
 }

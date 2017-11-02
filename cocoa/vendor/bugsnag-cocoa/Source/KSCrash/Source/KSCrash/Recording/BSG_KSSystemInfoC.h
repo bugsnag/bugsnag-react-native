@@ -24,10 +24,8 @@
 // THE SOFTWARE.
 //
 
-
 /* C interface to the system information.
  */
-
 
 #ifndef BSG_KSCrash_KSSystemInfoC_h
 #define BSG_KSCrash_KSSystemInfoC_h
@@ -36,18 +34,17 @@
 extern "C" {
 #endif
 
-
 /** Get the complete system info dictionary encoded to JSON.
  *
  * @return System info as JSON. Caller is responsible for calling free().
  */
-const char* bsg_kssysteminfo_toJSON(void);
+const char *bsg_kssysteminfo_toJSON(void);
 
 /** Create a copy of the current process name.
  *
  * @return The process name. Caller is responsible for calling free().
  */
-char* bsg_kssysteminfo_copyProcessName(void);
+char *bsg_kssysteminfo_copyProcessName(void);
 
 #ifdef __cplusplus
 }

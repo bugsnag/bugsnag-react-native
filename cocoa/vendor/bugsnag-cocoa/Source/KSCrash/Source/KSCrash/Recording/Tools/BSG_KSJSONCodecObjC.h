@@ -24,43 +24,37 @@
 // THE SOFTWARE.
 //
 
-
 #import <Foundation/Foundation.h>
 
-
 /** Optional behavior when encoding JSON data */
-typedef enum
-{
+typedef enum {
     /** Indent 4 spaces per object/array level */
-   BSG_KSJSONEncodeOptionPretty = 1,
+    BSG_KSJSONEncodeOptionPretty = 1,
 
     /** Sort object contents by key name */
-   BSG_KSJSONEncodeOptionSorted = 2,
+    BSG_KSJSONEncodeOptionSorted = 2,
 } BSG_KSJSONEncodeOption;
 
-
 /** Optional behavior when decoding JSON data */
-typedef enum
-{
+typedef enum {
     /** Normally, null elements get stored as [NSNull null].
      * If this option is set, do not store anything when a null element is
      * encountered inside an array.
      */
-   BSG_KSJSONDecodeOptionIgnoreNullInArray = 1,
+    BSG_KSJSONDecodeOptionIgnoreNullInArray = 1,
 
     /** Normally, null elements get stored as [NSNull null].
      * If this option is set, do not store anything when a null element is
      * encountered inside an object.
      */
-   BSG_KSJSONDecodeOptionIgnoreNullInObject = 2,
+    BSG_KSJSONDecodeOptionIgnoreNullInObject = 2,
 
     /** Convenience enum to ignore nulls in arrays and objects. */
-   BSG_KSJSONDecodeOptionIgnoreAllNulls = 3,
+    BSG_KSJSONDecodeOptionIgnoreAllNulls = 3,
 
     /** If an error is encountered, return the partially decoded object. */
-   BSG_KSJSONDecodeOptionKeepPartialObject = 4,
+    BSG_KSJSONDecodeOptionKeepPartialObject = 4,
 } BSG_KSJSONDecodeOption;
-
 
 /**
  * Encodes and decodes UTF-8 JSON data.
@@ -78,9 +72,9 @@ typedef enum
  *
  * @return The encoded UTF-8 JSON data or nil if an error occurred.
  */
-+ (NSData*) encode:(id) object
-           options:(BSG_KSJSONEncodeOption) options
-             error:(NSError**) error;
++ (NSData *)encode:(id)object
+           options:(BSG_KSJSONEncodeOption)options
+             error:(NSError **)error;
 
 /** Decode JSON data to an object.
  *
@@ -94,8 +88,8 @@ typedef enum
  * @return The decoded object or, if the BSG_KSJSONDecodeOptionKeepPartialFile
  *         option is not set, nil when an error occurs.
  */
-+ (id) decode:(NSData*) JSONData
-      options:(BSG_KSJSONDecodeOption) options
-        error:(NSError**) error;
++ (id)decode:(NSData *)JSONData
+     options:(BSG_KSJSONDecodeOption)options
+       error:(NSError **)error;
 
 @end

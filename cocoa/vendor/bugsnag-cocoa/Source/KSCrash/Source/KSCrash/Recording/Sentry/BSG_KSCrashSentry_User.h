@@ -29,12 +29,10 @@
 extern "C" {
 #endif
 
-
 #include "BSG_KSCrashSentry.h"
 
 #include <signal.h>
 #include <stdbool.h>
-
 
 /** Install the user exception handler.
  *
@@ -42,16 +40,16 @@ extern "C" {
  *
  * @return true if installation was succesful.
  */
-bool bsg_kscrashsentry_installUserExceptionHandler(BSG_KSCrash_SentryContext* context);
+bool bsg_kscrashsentry_installUserExceptionHandler(
+    BSG_KSCrash_SentryContext *context);
 
 /** Uninstall the user exception handler.
  */
 void bsg_kscrashsentry_uninstallUserExceptionHandler(void);
 
-
 /** Report a custom, user defined exception.
- * If terminateProgram is true, all sentries will be uninstalled and the application will
- * terminate with an abort().
+ * If terminateProgram is true, all sentries will be uninstalled and the
+ * application will terminate with an abort().
  *
  * @param name The exception name (for namespacing exception types).
  *
@@ -61,18 +59,18 @@ void bsg_kscrashsentry_uninstallUserExceptionHandler(void);
  *
  * @param lineOfCode A copy of the offending line of code (NULL = ignore).
  *
- * @param stackTrace JSON encoded array containing stack trace information (one frame per array entry).
- *                   The frame structure can be anything you want, including bare strings.
+ * @param stackTrace JSON encoded array containing stack trace information (one
+ * frame per array entry). The frame structure can be anything you want,
+ * including bare strings.
  *
- * @param terminateProgram If true, do not return from this function call. Terminate the program instead.
+ * @param terminateProgram If true, do not return from this function call.
+ * Terminate the program instead.
  */
-void bsg_kscrashsentry_reportUserException(const char* name,
-                                       const char* reason,
-                                       const char* language,
-                                       const char* lineOfCode,
-                                       const char* stackTrace,
-                                       bool terminateProgram);
-
+void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
+                                           const char *language,
+                                           const char *lineOfCode,
+                                           const char *stackTrace,
+                                           bool terminateProgram);
 
 #ifdef __cplusplus
 }

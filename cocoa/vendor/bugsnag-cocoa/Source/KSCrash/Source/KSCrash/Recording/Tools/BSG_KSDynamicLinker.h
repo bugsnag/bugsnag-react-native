@@ -31,10 +31,8 @@
 extern "C" {
 #endif
 
-
 #include <dlfcn.h>
 #include <mach-o/dyld.h>
-
 
 /** Find a loaded binary image with the specified name.
  *
@@ -44,7 +42,7 @@ extern "C" {
  *
  * @return the index of the matched image, or UINT32_MAX if not found.
  */
-uint32_t bsg_ksdlimageNamed(const char* const imageName, bool exactMatch);
+uint32_t bsg_ksdlimageNamed(const char *const imageName, bool exactMatch);
 
 /** Get the UUID of a loaded binary image with the specified name.
  *
@@ -55,7 +53,7 @@ uint32_t bsg_ksdlimageNamed(const char* const imageName, bool exactMatch);
  * @return A pointer to the binary (16 byte) UUID of the image, or NULL if it
  *         wasn't found.
  */
-const uint8_t* bsg_ksdlimageUUID(const char* const imageName, bool exactMatch);
+const uint8_t *bsg_ksdlimageUUID(const char *const imageName, bool exactMatch);
 
 /** Get the address of the first command following a header (which will be of
  * type struct load_command).
@@ -65,7 +63,7 @@ const uint8_t* bsg_ksdlimageUUID(const char* const imageName, bool exactMatch);
  * @return The address of the first command, or NULL if none was found (which
  *         should not happen unless the header or image is corrupt).
  */
-uintptr_t bsg_ksdlfirstCmdAfterHeader(const struct mach_header* header);
+uintptr_t bsg_ksdlfirstCmdAfterHeader(const struct mach_header *header);
 
 /** Get the image index that the specified address is part of.
  *
@@ -97,7 +95,7 @@ uintptr_t bsg_ksdlsegmentBaseOfImageIndex(const uint32_t idx);
  * @param info Gets filled out by this function.
  * @return true if at least some information was found.
  */
-bool bsg_ksdldladdr(const uintptr_t address, Dl_info* const info);
+bool bsg_ksdldladdr(const uintptr_t address, Dl_info *const info);
 
 /** Get the address of a symbol in the specified image.
  *
@@ -105,7 +103,8 @@ bool bsg_ksdldladdr(const uintptr_t address, Dl_info* const info);
  * @param symbolName The symbol to search for.
  * @return The address of the symbol or NULL if not found.
  */
-const void* bsg_ksdlgetSymbolAddrInImage(uint32_t imageIdx, const char* symbolName);
+const void *bsg_ksdlgetSymbolAddrInImage(uint32_t imageIdx,
+                                         const char *symbolName);
 
 /** Get the address of a symbol in any image.
  * Searches all images starting at index 0.
@@ -113,8 +112,7 @@ const void* bsg_ksdlgetSymbolAddrInImage(uint32_t imageIdx, const char* symbolNa
  * @param symbolName The symbol to search for.
  * @return The address of the symbol or NULL if not found.
  */
-const void* bsg_ksdlgetSymbolAddrInAnyImage(const char* symbolName);
-
+const void *bsg_ksdlgetSymbolAddrInAnyImage(const char *symbolName);
 
 #ifdef __cplusplus
 }

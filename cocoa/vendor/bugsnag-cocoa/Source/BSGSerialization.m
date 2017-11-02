@@ -1,12 +1,15 @@
+#import "BSGSerialization.h"
 #import <Foundation/Foundation.h>
 #import <math.h>
-#import "BSGSerialization.h"
 
 BOOL BSGIsSanitizedType(id obj) {
     static dispatch_once_t onceToken;
     static NSArray *allowedTypes = nil;
     dispatch_once(&onceToken, ^{
-        allowedTypes = @[[NSArray class], [NSDictionary class], [NSNull class], [NSNumber class], [NSString class]];
+      allowedTypes = @[
+          [NSArray class], [NSDictionary class], [NSNull class],
+          [NSNumber class], [NSString class]
+      ];
     });
 
     for (Class klass in allowedTypes) {
@@ -19,7 +22,8 @@ BOOL BSGIsSanitizedType(id obj) {
 id BSGSanitizeObject(id obj) {
     if ([obj isKindOfClass:[NSNumber class]]) {
         NSNumber *number = obj;
-        if (![number isEqualToNumber:[NSDecimalNumber notANumber]] && !isinf([number doubleValue]))
+        if (![number isEqualToNumber:[NSDecimalNumber notANumber]] &&
+            !isinf([number doubleValue]))
             return obj;
     } else if ([obj isKindOfClass:[NSArray class]]) {
         return BSGSanitizeArray(obj);
@@ -32,13 +36,15 @@ id BSGSanitizeObject(id obj) {
 }
 
 NSDictionary *_Nonnull BSGSanitizeDict(NSDictionary *input) {
-    __block NSMutableDictionary *output = [NSMutableDictionary dictionaryWithCapacity:[input count]];
-    [input enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
-        if ([key isKindOfClass:[NSString class]]) {
-            id cleanedObject = BSGSanitizeObject(obj);
-            if (cleanedObject)
-                [output setObject:cleanedObject forKey:key];
-        }
+    __block NSMutableDictionary *output =
+        [NSMutableDictionary dictionaryWithCapacity:[input count]];
+    [input enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj,
+                                               BOOL *_Nonnull stop) {
+      if ([key isKindOfClass:[NSString class]]) {
+          id cleanedObject = BSGSanitizeObject(obj);
+          if (cleanedObject)
+              [output setObject:cleanedObject forKey:key];
+      }
     }];
     return output;
 }

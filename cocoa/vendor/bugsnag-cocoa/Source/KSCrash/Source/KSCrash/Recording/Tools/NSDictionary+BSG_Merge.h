@@ -24,9 +24,7 @@
 // THE SOFTWARE.
 //
 
-
 #import <Foundation/Foundation.h>
-
 
 /** Adds dictionary merging capabilities.
  */
@@ -47,6 +45,6 @@
  *
  * @return The merged dictionary.
  */
-- (NSDictionary*) mergedInto:(NSDictionary*) dest;
+- (NSDictionary *)bsg_mergedInto:(NSDictionary *)dest;
 
 @end

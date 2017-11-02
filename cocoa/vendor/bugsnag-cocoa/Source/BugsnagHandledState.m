@@ -26,40 +26,42 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 
 @implementation BugsnagHandledState
 
-+ (instancetype)handledStateWithSeverityReason:(SeverityReasonType)severityReason {
++ (instancetype)handledStateWithSeverityReason:
+    (SeverityReasonType)severityReason {
     return [self handledStateWithSeverityReason:severityReason
                                        severity:BSGSeverityWarning
                                       attrValue:nil];
 }
 
-+ (instancetype)handledStateWithSeverityReason:(SeverityReasonType)severityReason
++ (instancetype)handledStateWithSeverityReason:
+                    (SeverityReasonType)severityReason
                                       severity:(BSGSeverity)severity
                                      attrValue:(NSString *)attrValue {
     BOOL unhandled = NO;
 
     switch (severityReason) {
-        case PromiseRejection:
-            severity = BSGSeverityError;
-            unhandled = YES;
-            break;
-        case Signal:
-            severity = BSGSeverityError;
-            unhandled = YES;
-            break;
-        case HandledError:
-            severity = BSGSeverityWarning;
-            break;
-        case HandledException:
-            severity = BSGSeverityWarning;
-            break;
-        case LogMessage:
-        case UserSpecifiedSeverity:
-        case UserCallbackSetSeverity:
-            break;
-        case UnhandledException:
-            severity = BSGSeverityError;
-            unhandled = YES;
-            break;
+    case PromiseRejection:
+        severity = BSGSeverityError;
+        unhandled = YES;
+        break;
+    case Signal:
+        severity = BSGSeverityError;
+        unhandled = YES;
+        break;
+    case HandledError:
+        severity = BSGSeverityWarning;
+        break;
+    case HandledException:
+        severity = BSGSeverityWarning;
+        break;
+    case LogMessage:
+    case UserSpecifiedSeverity:
+    case UserCallbackSetSeverity:
+        break;
+    case UnhandledException:
+        severity = BSGSeverityError;
+        unhandled = YES;
+        break;
     }
 
     return [[BugsnagHandledState alloc] initWithSeverityReason:severityReason
@@ -92,7 +94,8 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 - (instancetype)initWithDictionary:(NSDictionary *)dict {
     if (self = [super init]) {
         _unhandled = [dict[kUnhandled] boolValue];
-        _severityReasonType = [BugsnagHandledState severityReasonFromString:dict[kSeverityReasonType]];
+        _severityReasonType = [BugsnagHandledState
+            severityReasonFromString:dict[kSeverityReasonType]];
         _originalSeverity = BSGParseSeverity(dict[kOriginalSeverity]);
         _currentSeverity = BSGParseSeverity(dict[kCurrentSeverity]);
         _attrKey = dict[kAttrKey];
@@ -102,29 +105,28 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 }
 
 - (SeverityReasonType)calculateSeverityReasonType {
-    return _originalSeverity == _currentSeverity ?
-    _severityReasonType : UserCallbackSetSeverity;
+    return _originalSeverity == _currentSeverity ? _severityReasonType
+                                                 : UserCallbackSetSeverity;
 }
 
 + (NSString *)stringFromSeverityReason:(SeverityReasonType)severityReason {
     switch (severityReason) {
-        case Signal:
-            return kSignal;
-        case HandledError:
-            return kHandledError;
-        case HandledException:
-            return kHandledException;
-        case UserCallbackSetSeverity:
-            return kUserCallbackSetSeverity;
-        case PromiseRejection:
-            return kPromiseRejection;
-        case UserSpecifiedSeverity:
-            return kUserSpecifiedSeverity;
-        case LogMessage:
-            return kLogGenerated;
-        case UnhandledException:
-            return kUnhandledException;
-
+    case Signal:
+        return kSignal;
+    case HandledError:
+        return kHandledError;
+    case HandledException:
+        return kHandledException;
+    case UserCallbackSetSeverity:
+        return kUserCallbackSetSeverity;
+    case PromiseRejection:
+        return kPromiseRejection;
+    case UserSpecifiedSeverity:
+        return kUserSpecifiedSeverity;
+    case LogMessage:
+        return kLogGenerated;
+    case UnhandledException:
+        return kUnhandledException;
     }
 }
 
@@ -153,7 +155,8 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 - (NSDictionary *)toJson {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     dict[kUnhandled] = @(self.unhandled);
-    dict[kSeverityReasonType] = [BugsnagHandledState stringFromSeverityReason:self.severityReasonType];
+    dict[kSeverityReasonType] =
+        [BugsnagHandledState stringFromSeverityReason:self.severityReasonType];
     dict[kOriginalSeverity] = BSGFormatSeverity(self.originalSeverity);
     dict[kCurrentSeverity] = BSGFormatSeverity(self.currentSeverity);
     dict[kAttrKey] = self.attrKey;
@@ -162,4 +165,3 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
 }
 
 @end
-

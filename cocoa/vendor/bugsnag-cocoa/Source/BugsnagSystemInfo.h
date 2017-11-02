@@ -43,11 +43,11 @@
  *
  * @return The system info.
  */
-+ (NSDictionary*) systemInfo;
-+ (NSString*) deviceAndAppHash;
++ (NSDictionary *)systemInfo;
++ (NSString *)deviceAndAppHash;
 + (NSString *)modelName;
 + (NSString *)modelNumber;
 + (NSNumber *)usableMemory;
-+ (NSString*) appUUID;
++ (NSString *)appUUID;
 
 @end

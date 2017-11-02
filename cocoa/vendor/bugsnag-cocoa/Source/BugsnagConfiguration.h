@@ -48,9 +48,8 @@ typedef void (^BugsnagNotifyBlock)(BugsnagCrashReport *_Nonnull report);
  *
  *  @return YES if the report should be sent
  */
-typedef bool (^BugsnagBeforeSendBlock)(
-    NSDictionary *_Nonnull rawEventData,
-    BugsnagCrashReport *_Nonnull reports);
+typedef bool (^BugsnagBeforeSendBlock)(NSDictionary *_Nonnull rawEventData,
+                                       BugsnagCrashReport *_Nonnull reports);
 
 /**
  *  A handler for modifying data before sending it to Bugsnag
@@ -68,68 +67,68 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
 /**
  *  The API key of a Bugsnag project
  */
-@property(nonatomic, readwrite, retain, nullable) NSString *apiKey;
+@property(readwrite, retain, nullable) NSString *apiKey;
 /**
  *  The URL used to notify Bugsnag
  */
-@property(nonatomic, readwrite, retain, nullable) NSURL *notifyURL;
+@property(readwrite, retain, nullable) NSURL *notifyURL;
 /**
  *  The release stage of the application, such as production, development, beta
  *  et cetera
  */
-@property(nonatomic, readwrite, retain, nullable) NSString *releaseStage;
+@property(readwrite, retain, nullable) NSString *releaseStage;
 /**
  *  Release stages which are allowed to notify Bugsnag
  */
-@property(nonatomic, readwrite, retain, nullable) NSArray *notifyReleaseStages;
+@property(readwrite, retain, nullable) NSArray *notifyReleaseStages;
 /**
  *  A general summary of what was occuring in the application
  */
-@property(nonatomic, readwrite, retain, nullable) NSString *context;
+@property(readwrite, retain, nullable) NSString *context;
 /**
  *  The version of the application
  */
-@property(nonatomic, readwrite, retain, nullable) NSString *appVersion;
+@property(readwrite, retain, nullable) NSString *appVersion;
 
 /**
  *  The URL session used to send requests to Bugsnag.
  */
-@property(nonatomic, readwrite, strong, nonnull) NSURLSession *session;
+@property(readwrite, strong, nonnull) NSURLSession *session;
 
 /**
- *  Additional information about the state of the app or environment at the 
+ *  Additional information about the state of the app or environment at the
  *  time the report was generated
  */
-@property(nonatomic, readwrite, retain, nullable) BugsnagMetaData *metaData;
+@property(readwrite, retain, nullable) BugsnagMetaData *metaData;
 /**
  *  Meta-information about the state of Bugsnag
  */
-@property(nonatomic, readwrite, retain, nullable) BugsnagMetaData *config;
+@property(readwrite, retain, nullable) BugsnagMetaData *config;
 /**
  *  Rolling snapshots of user actions leading up to a crash report
  */
-@property(nonatomic, readonly, strong, nullable)
-    BugsnagBreadcrumbs *breadcrumbs;
+@property(readonly, strong, nullable)
+BugsnagBreadcrumbs *breadcrumbs;
 
 /**
  *  Whether to allow collection of automatic breadcrumbs for notable events
  */
-@property(nonatomic, readwrite) BOOL automaticallyCollectBreadcrumbs;
+@property(readwrite) BOOL automaticallyCollectBreadcrumbs;
 
 /**
  *  Hooks for modifying crash reports before it is sent to Bugsnag
  */
-@property(nonatomic, readonly, strong, nullable)
-    NSArray <BugsnagBeforeSendBlock>* beforeSendBlocks;
+@property(readonly, strong, nullable)
+    NSArray<BugsnagBeforeSendBlock> *beforeSendBlocks;
 /**
  *  Optional handler invoked when a crash or fatal signal occurs
  */
-@property(nonatomic) void (*_Nullable onCrashHandler)
+@property void (*_Nullable onCrashHandler)
     (const BSGCrashReportWriter *_Nonnull writer);
 /**
  *  YES if uncaught exceptions should be reported automatically
  */
-@property(nonatomic) BOOL autoNotify;
+@property BOOL autoNotify;
 
 /**
  *  Set user metadata
@@ -150,7 +149,6 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
  */
 - (void)addBeforeSendBlock:(BugsnagBeforeSendBlock _Nonnull)block;
 
-
 /**
  * Clear all callbacks
  */
@@ -168,6 +166,6 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
 /**
  *  Hooks for processing raw report data before it is sent to Bugsnag
  */
-@property(nonatomic, readonly, strong, nullable) NSArray *beforeNotifyHooks
-    __deprecated_msg("Use beforeNotify instead.");
+@property(readonly, strong, nullable)
+    NSArray *beforeNotifyHooks __deprecated_msg("Use beforeNotify instead.");
 @end
