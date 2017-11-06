@@ -43,11 +43,10 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.13.2";
+NSString *const NOTIFIER_VERSION = @"5.13.3";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSAttributeDepth = @"depth";
-NSString *const BSAttributeBreadcrumbs = BSGKeyBreadcrumbs;
 NSString *const BSEventLowMemoryWarning = @"lowMemoryWarning";
 
 static NSInteger const BSGNotifierStackFrameCount = 5;
@@ -473,7 +472,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 - (void)serializeBreadcrumbs {
     BugsnagBreadcrumbs *crumbs = self.configuration.breadcrumbs;
     NSArray *arrayValue = crumbs.count == 0 ? nil : [crumbs arrayValue];
-    [self.state addAttribute:BSAttributeBreadcrumbs
+    [self.state addAttribute:BSGKeyBreadcrumbs
                    withValue:arrayValue
                toTabWithName:BSTabCrash];
 }

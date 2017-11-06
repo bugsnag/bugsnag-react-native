@@ -1,5 +1,8 @@
 Changelog
 =========
+## 2.5.4 (2017-11-06)
+
+* Update Cocoa code to fix archive issue on older versions of XCode
 
 ## 2.5.3 (2017-11-02)
 
