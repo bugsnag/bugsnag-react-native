@@ -15,7 +15,8 @@ allprojects {
 ```
 
 * (Android) Compile annotations dependency as api rather than implementation
-* (Android) Support handled state case for React Native
+* (Android) [Support missing case in handled/unhandled tracker](https://github.com/bugsnag/bugsnag-android/pull/208)
+
 
 ## 2.5.4 (2017-11-06)
 
