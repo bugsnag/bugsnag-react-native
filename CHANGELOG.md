@@ -1,5 +1,23 @@
 Changelog
 =========
+
+## 2.6.0 (2017-11-07)
+
+#### IMPORTANT UPGRADE NOTE:
+Please ensure that Google's maven repository is specified in your `android/build.gradle`:
+
+```
+allprojects {
+    repositories {
+        maven { url 'https://maven.google.com' }
+    }
+}
+```
+
+* (Android) Compile annotations dependency as api rather than implementation
+* (Android) [Support missing case in handled/unhandled tracker](https://github.com/bugsnag/bugsnag-android/pull/208)
+
+
 ## 2.5.4 (2017-11-06)
 
 * Update Cocoa code to fix archive issue on older versions of XCode
