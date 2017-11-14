@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 2.6.1 (2017-11-14)
+
+* Fix duplicate dependencies key in `package.json`
+* Handle null in console breadcrumbs
+
 ## 2.6.0 (2017-11-07)
 
 #### IMPORTANT UPGRADE NOTE:
