@@ -313,3 +313,23 @@ test('config.consoleBreadcrumbsEnabled=true: causes console breadcrumbs to be en
   // switched off for the next test ¯\_(ツ)_/¯
   c.disableConsoleBreadCrumbs()
 })
+
+test('{enable|disable}ConsoleBreadCrumbs(): gracefully handles serialization edge-cases', () => {
+  const mockLeaveBreadcrumb = jest.fn()
+  jest.mock('react-native', () => ({
+    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn(), leaveBreadcrumb: mockLeaveBreadcrumb } }
+  }), { virtual: true })
+
+  const { Client, Configuration } = require('../Bugsnag')
+  const config = new Configuration('API_KEY')
+  config.consoleBreadcrumbsEnabled = true
+  const c = new Client(config)
+
+  const circular = {};
+  circular.ref = circular;
+
+  console.log('undefined cannot have toString() called on it', undefined);
+  console.warn('neither can null', null);
+  console.error('and objects with circular refs cannot be passed to JSON.stringify()', circular);
+  expect(mockLeaveBreadcrumb).toHaveBeenCalledTimes(3)
+})
