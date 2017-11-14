@@ -176,22 +176,26 @@ export class Client {
     CONSOLE_LOG_METHODS.forEach(method => {
       const originalFn = console[method];
       console[method] = (...args) => {
-        this.leaveBreadcrumb('Console', {
-          type: 'log',
-          severity: /^group/.test(method) ? 'log' : method,
-          message: args
-            .map(arg => {
-              // do the best/simplest stringification of each argument
-              let stringified = arg.toString()
-              // unless it stringifies to [object Object], use the toString() value
-              if (stringified !== '[object Object]') return stringified
-              // otherwise attempt to JSON stringify (with indents/spaces)
-              try { stringified = JSON.stringify(arg, null, 2) } catch (e) {}
-              // any errors, fallback to [object Object]
-              return stringified
-            })
-            .join('\n')
-        });
+        try {
+          this.leaveBreadcrumb('Console', {
+            type: 'log',
+            severity: /^group/.test(method) ? 'log' : method,
+            message: args
+              .map(arg => {
+                // do the best/simplest stringification of each argument
+                let stringified = arg.toString()
+                // unless it stringifies to [object Object], use the toString() value
+                if (stringified !== '[object Object]') return stringified
+                // otherwise attempt to JSON stringify (with indents/spaces)
+                try { stringified = JSON.stringify(arg, null, 2) } catch (e) {}
+                // any errors, fallback to [object Object]
+                return stringified
+              })
+              .join('\n')
+          });
+        } catch (error) {
+          console.warn(`Unable to serialize console.${method} arguments to Bugsnag breadcrumb.`, error);
+        }
         originalFn.apply(console, args);
       }
       console[method]._restore = () => { console[method] = originalFn }
