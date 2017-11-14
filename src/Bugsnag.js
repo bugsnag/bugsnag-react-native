@@ -192,9 +192,9 @@ export class Client {
             })
             .join('\n')
         });
-        console[method]._restore = () => { console[method] = originalFn }
         originalFn.apply(console, args);
       }
+      console[method]._restore = () => { console[method] = originalFn }
     });
   }
 
