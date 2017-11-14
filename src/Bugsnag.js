@@ -182,10 +182,11 @@ export class Client {
             severity: /^group/.test(method) ? 'log' : method,
             message: args
               .map(arg => {
+                let stringified
                 // do the best/simplest stringification of each argument
-                let stringified = arg.toString()
+                try { stringified = String(arg) } catch (e) {}
                 // unless it stringifies to [object Object], use the toString() value
-                if (stringified !== '[object Object]') return stringified
+                if (stringified && stringified !== '[object Object]') return stringified
                 // otherwise attempt to JSON stringify (with indents/spaces)
                 try { stringified = JSON.stringify(arg, null, 2) } catch (e) {}
                 // any errors, fallback to [object Object]
