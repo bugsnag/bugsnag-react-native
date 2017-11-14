@@ -332,4 +332,8 @@ test('{enable|disable}ConsoleBreadCrumbs(): gracefully handles serialization edg
   console.warn('neither can null', null);
   console.error('and objects with circular refs cannot be passed to JSON.stringify()', circular);
   expect(mockLeaveBreadcrumb).toHaveBeenCalledTimes(3)
+
+  // because global side effects, ensure console wrapping is
+  // switched off for the next test ¯\_(ツ)_/¯
+  c.disableConsoleBreadCrumbs()
 })
