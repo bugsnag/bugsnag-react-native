@@ -8,7 +8,8 @@
   "main": "index.js",
   "nativePackage": true,
   "dependencies": {
-    "promise": "^7"
+    "promise": "^7",
+    "prop-types": "^15.6.0"
   },
   "scripts": {
     "prepublish": "mkdir -p lib && babel src/Bugsnag.js -s -o lib/Bugsnag.js",
@@ -34,8 +35,5 @@
     "babel-jest": "^21.0.2",
     "babel-preset-react-native": "^1.9.1",
     "jest": "^21.1.0"
-  },
-  "dependencies": {
-    "prop-types": "^15.6.0"
   }
 }
