@@ -10,3 +10,4 @@ coverage
 /android/build
 *.iml
 Pods/
+test/app.js

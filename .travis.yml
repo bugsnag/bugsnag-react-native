@@ -4,4 +4,4 @@ language: javascript
 install: npm install
 
 
-script: npm run test:unit:js
+script: npm run test:unit:js && npm run test:smoke:typescript
