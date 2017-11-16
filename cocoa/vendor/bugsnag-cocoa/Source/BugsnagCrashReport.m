@@ -18,7 +18,6 @@
 #import "BugsnagCrashReport.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagLogger.h"
-#import "BugsnagSystemInfo.h"
 #import "BugsnagKeys.h"
 
 NSMutableDictionary *BSGFormatFrame(NSDictionary *frame,
@@ -308,7 +307,7 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
             [report valueForKeyPath:@"user.state.crash.severity"]);
         _depth = [[report valueForKeyPath:@"user.state.crash.depth"]
             unsignedIntegerValue];
-        _dsymUUID = BugsnagSystemInfo.appUUID;
+        _dsymUUID = [report valueForKeyPath:@"system.app_uuid"];
         _deviceAppHash = [report valueForKeyPath:@"system.device_app_hash"];
         _metaData =
             [report valueForKeyPath:@"user.metaData"] ?: [NSDictionary new];
@@ -365,8 +364,18 @@ initWithErrorName:(NSString *_Nonnull)name
     return self;
 }
 
+@synthesize metaData = _metaData;
+
+- (NSDictionary *)metaData {
+    @synchronized (self) {
+        return _metaData;
+    }
+}
+
 - (void)setMetaData:(NSDictionary *)metaData {
-    _metaData = BSGSanitizeDict(metaData);
+    @synchronized (self) {
+        _metaData = BSGSanitizeDict(metaData);
+    }
 }
 
 - (void)addMetadata:(NSDictionary *_Nonnull)tabData
@@ -411,24 +420,64 @@ initWithErrorName:(NSString *_Nonnull)name
             [[Bugsnag configuration] shouldSendReports]);
 }
 
+@synthesize context = _context;
+
+- (NSString *)context {
+    @synchronized (self) {
+        return _context;
+    }
+}
+
 - (void)setContext:(NSString *)context {
     [self setOverrideProperty:BSGKeyContext value:context];
-    _context = context;
+    @synchronized (self) {
+        _context = context;
+    }
+}
+
+@synthesize groupingHash = _groupingHash;
+
+- (NSString *)groupingHash {
+    @synchronized (self) {
+        return _groupingHash;
+    }
 }
 
 - (void)setGroupingHash:(NSString *)groupingHash {
     [self setOverrideProperty:BSGKeyGroupingHash value:groupingHash];
-    _groupingHash = groupingHash;
+    @synchronized (self) {
+        _groupingHash = groupingHash;
+    }
+}
+
+@synthesize breadcrumbs = _breadcrumbs;
+
+- (NSArray *)breadcrumbs {
+    @synchronized (self) {
+        return _breadcrumbs;
+    }
 }
 
 - (void)setBreadcrumbs:(NSArray *)breadcrumbs {
     [self setOverrideProperty:BSGKeyBreadcrumbs value:breadcrumbs];
-    _breadcrumbs = breadcrumbs;
+    @synchronized (self) {
+        _breadcrumbs = breadcrumbs;
+    }
+}
+
+@synthesize releaseStage = _releaseStage;
+
+- (NSString *)releaseStage {
+    @synchronized (self) {
+        return _releaseStage;
+    }
 }
 
 - (void)setReleaseStage:(NSString *)releaseStage {
     [self setOverrideProperty:BSGKeyReleaseStage value:releaseStage];
-    _releaseStage = releaseStage;
+    @synchronized (self) {
+        _releaseStage = releaseStage;
+    }
 }
 
 - (void)attachCustomStacktrace:(NSArray *)frames withType:(NSString *)type {
@@ -436,9 +485,19 @@ initWithErrorName:(NSString *_Nonnull)name
     [self setOverrideProperty:@"customStacktraceType" value:type];
 }
 
+@synthesize severity = _severity;
+
+- (BSGSeverity)severity {
+    @synchronized (self) {
+        return _severity;
+    }
+}
+
 - (void)setSeverity:(BSGSeverity)severity {
-    _severity = severity;
-    _handledState.currentSeverity = severity;
+    @synchronized (self) {
+        _severity = severity;
+        _handledState.currentSeverity = severity;
+    }
 }
 
 - (void)setOverrideProperty:(NSString *)key value:(id)value {

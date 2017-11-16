@@ -406,8 +406,6 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
         block(report);
     }
 
-    // TODO need to serialise unhandled here!!
-
     [self.metaDataLock lock];
     BSSerializeJSONDictionary([report.handledState toJson],
                               &bsg_g_bugsnag_data.handledState);

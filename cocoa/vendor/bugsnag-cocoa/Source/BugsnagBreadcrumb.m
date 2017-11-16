@@ -80,20 +80,87 @@ NSString *BSGBreadcrumbTypeValue(BSGBreadcrumbType type) {
 }
 
 - (NSDictionary *)objectValue {
-    NSString *timestamp =
-        [[Bugsnag payloadDateFormatter] stringFromDate:self.timestamp];
-    if (timestamp && self.name.length > 0) {
-        NSMutableDictionary *data = @{
-            BSGKeyName : self.name,
-            BSGKeyTimestamp : timestamp,
-            BSGKeyType : BSGBreadcrumbTypeValue(self.type)
+    @synchronized (self) {
+        NSString *timestamp =
+        [[Bugsnag payloadDateFormatter] stringFromDate:_timestamp];
+        if (timestamp && _name.length > 0) {
+            NSMutableDictionary *metadata = [NSMutableDictionary new];
+            for (NSString *key in _metadata) {
+                metadata[[key copy]] = [_metadata[key] copy];
+            }
+            return @{
+                 BSGKeyName : [_name copy],
+                 BSGKeyTimestamp : timestamp,
+                 BSGKeyType : BSGBreadcrumbTypeValue(_type),
+                 BSGKeyMetaData : metadata
+            };
         }
-                                        .mutableCopy;
-        if (self.metadata)
-            data[BSGKeyMetaData] = self.metadata;
-        return data;
+        return nil;
     }
-    return nil;
+}
+
+@synthesize timestamp = _timestamp;
+
+- (NSDate *)timestamp {
+    @synchronized (self) {
+        return _timestamp;
+    }
+}
+
+- (void)setTimestamp:(NSDate * _Nullable)timestamp {
+    @synchronized (self) {
+        [self willChangeValueForKey:NSStringFromSelector(@selector(timestamp))];
+        _timestamp = timestamp;
+        [self didChangeValueForKey:NSStringFromSelector(@selector(timestamp))];
+    }
+}
+
+@synthesize name = _name;
+
+- (NSString *)name {
+    @synchronized (self) {
+        return _name;
+    }
+}
+
+@synthesize type = _type;
+
+- (BSGBreadcrumbType)type {
+    @synchronized (self) {
+        return _type;
+    }
+}
+
+- (void)setType:(BSGBreadcrumbType)type {
+    @synchronized (self) {
+        [self willChangeValueForKey:NSStringFromSelector(@selector(type))];
+        _type = type;
+        [self didChangeValueForKey:NSStringFromSelector(@selector(type))];
+    }
+}
+
+- (void)setName:(NSString *)name {
+    @synchronized (self) {
+        [self willChangeValueForKey:NSStringFromSelector(@selector(name))];
+        _name = name;
+        [self didChangeValueForKey:NSStringFromSelector(@selector(name))];
+    }
+}
+
+@synthesize metadata = _metadata;
+
+- (NSDictionary *)metadata {
+    @synchronized (self) {
+        return _metadata;
+    }
+}
+
+- (void)setMetadata:(NSDictionary *)metadata {
+    @synchronized (self) {
+        [self willChangeValueForKey:NSStringFromSelector(@selector(metadata))];
+        _metadata = metadata;
+        [self didChangeValueForKey:NSStringFromSelector(@selector(metadata))];
+    }
 }
 
 + (instancetype)breadcrumbWithBlock:(BSGBreadcrumbConfiguration)block {
@@ -118,7 +185,7 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
         _breadcrumbs = [NSMutableArray new];
         _capacity = BreadcrumbsDefaultCapacity;
         _readWriteQueue = dispatch_queue_create("com.bugsnag.BreadcrumbRead",
-                                                DISPATCH_QUEUE_CONCURRENT);
+                                                DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -142,15 +209,24 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
         });
     }
 }
+@synthesize capacity = _capacity;
+
+- (NSUInteger)capacity {
+    @synchronized (self) {
+        return _capacity;
+    }
+}
 
 - (void)setCapacity:(NSUInteger)capacity {
-    if (capacity == _capacity) {
-        return;
+    @synchronized (self) {
+        if (capacity == _capacity) {
+            return;
+        }
+        [self resizeToFitCapacity:capacity];
+        [self willChangeValueForKey:NSStringFromSelector(@selector(capacity))];
+        _capacity = capacity;
+        [self didChangeValueForKey:NSStringFromSelector(@selector(capacity))];
     }
-    [self resizeToFitCapacity:capacity];
-    [self willChangeValueForKey:NSStringFromSelector(@selector(capacity))];
-    _capacity = capacity;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(capacity))];
 }
 
 - (void)clearBreadcrumbs {
@@ -166,7 +242,7 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
 - (BugsnagBreadcrumb *)objectAtIndexedSubscript:(NSUInteger)index {
     if (index < [self count]) {
         __block BugsnagBreadcrumb *crumb = nil;
-        dispatch_sync(self.readWriteQueue, ^{
+        dispatch_barrier_sync(self.readWriteQueue, ^{
           crumb = self.breadcrumbs[index];
         });
         return crumb;
@@ -180,7 +256,7 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
     }
     __block NSMutableArray *contents =
         [[NSMutableArray alloc] initWithCapacity:[self count]];
-    dispatch_sync(self.readWriteQueue, ^{
+    dispatch_barrier_sync(self.readWriteQueue, ^{
       for (BugsnagBreadcrumb *crumb in self.breadcrumbs) {
           NSDictionary *objectValue = [crumb objectValue];
           NSError *error = nil;

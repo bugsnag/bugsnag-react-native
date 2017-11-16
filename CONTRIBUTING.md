@@ -59,9 +59,6 @@ Please follow the testing instructions in [the platforms release checklist](http
 * Generate a signed APK for Android
 
 ### Making a new release
-
-1. Update the version number by running `make VERSION=[number] bump`
-2. Update the changelog with new features and fixes
-3. Commit the changes and tag in the format `v[version]`. Push.
-4. Publish the package to npm using `npm publish`.
-5. Create a new release on GitHub, copying the changelog entry.
+1. Update the changelog with new features and fixes
+2. `make VERSION=[number] release`
+3. Create a new release on GitHub, copying the changelog entry.
