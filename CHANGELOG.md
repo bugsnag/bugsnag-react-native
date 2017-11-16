@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.7.0 (2017-11-16)
+
+* Add typescript definitions
+
 ## 2.6.1 (2017-11-14)
 
 * Fix duplicate dependencies key in `package.json`

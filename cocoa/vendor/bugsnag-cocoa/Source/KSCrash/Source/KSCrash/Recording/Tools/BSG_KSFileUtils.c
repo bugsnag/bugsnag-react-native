@@ -44,7 +44,7 @@
 #define BSG_KSFU_WriteFmtBufferSize 1024
 #endif
 
-#define BUFFER_SIZE 131072
+#define BUFFER_SIZE 65536
 
 char charBuffer[BUFFER_SIZE];
 ssize_t bufferLen = 0;
@@ -75,19 +75,16 @@ bool bsg_ksfuflushWriteBuffer(const int fd) {
 
 bool bsg_ksfuwriteBytesToFD(const int fd, const char *const bytes,
                             ssize_t length) {
-    ssize_t newLen = bufferLen + length;
 
-    if (newLen >= BUFFER_SIZE) { // flush the current buffer
-        bsg_ksfuflushWriteBuffer(fd);
-        newLen = bufferLen + length; // recalculate new position
+    for (ssize_t k = 0; k < length; k++) {
+        if (bufferLen >= BUFFER_SIZE) {
+            if (!bsg_ksfuflushWriteBuffer(fd)) {
+                return false;
+            }
+        }
+        charBuffer[bufferLen] = bytes[k];
+        bufferLen++;
     }
-
-    for (ssize_t k = bufferLen; k < newLen;
-         k++) { // place in buffer for future write
-        ssize_t j = k - bufferLen;
-        charBuffer[k] = bytes[j];
-    }
-    bufferLen += length;
     return true;
 }
 

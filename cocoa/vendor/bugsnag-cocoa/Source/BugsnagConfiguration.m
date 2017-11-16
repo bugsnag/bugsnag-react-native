@@ -97,42 +97,92 @@
     [(NSMutableArray *)self.beforeNotifyHooks addObject:[hook copy]];
 }
 
+@synthesize releaseStage = _releaseStage;
+
+- (NSString *)releaseStage {
+    @synchronized (self) {
+        return _releaseStage;
+    }
+}
+
 - (void)setReleaseStage:(NSString *)newReleaseStage {
-    _releaseStage = newReleaseStage;
-    [self.config addAttribute:BSGKeyReleaseStage
-                    withValue:newReleaseStage
-                toTabWithName:BSGKeyConfig];
+    @synchronized (self) {
+        _releaseStage = newReleaseStage;
+        [self.config addAttribute:BSGKeyReleaseStage
+                        withValue:newReleaseStage
+                    toTabWithName:BSGKeyConfig];
+    }
+}
+
+@synthesize notifyReleaseStages = _notifyReleaseStages;
+
+- (NSArray *)notifyReleaseStages {
+    @synchronized (self) {
+        return _notifyReleaseStages;
+    }
 }
 
 - (void)setNotifyReleaseStages:(NSArray *)newNotifyReleaseStages;
 {
-    NSArray *notifyReleaseStagesCopy = [newNotifyReleaseStages copy];
-    _notifyReleaseStages = notifyReleaseStagesCopy;
-    [self.config addAttribute:BSGKeyNotifyReleaseStages
-                    withValue:notifyReleaseStagesCopy
-                toTabWithName:BSGKeyConfig];
+    @synchronized (self) {
+        NSArray *notifyReleaseStagesCopy = [newNotifyReleaseStages copy];
+        _notifyReleaseStages = notifyReleaseStagesCopy;
+        [self.config addAttribute:BSGKeyNotifyReleaseStages
+                        withValue:notifyReleaseStagesCopy
+                    toTabWithName:BSGKeyConfig];
+    }
+}
+
+@synthesize automaticallyCollectBreadcrumbs = _automaticallyCollectBreadcrumbs;
+
+- (BOOL)automaticallyCollectBreadcrumbs {
+    @synchronized (self) {
+        return _automaticallyCollectBreadcrumbs;
+    }
 }
 
 - (void)setAutomaticallyCollectBreadcrumbs:
     (BOOL)automaticallyCollectBreadcrumbs {
-    if (automaticallyCollectBreadcrumbs == _automaticallyCollectBreadcrumbs)
-        return;
+    @synchronized (self) {
+        if (automaticallyCollectBreadcrumbs == _automaticallyCollectBreadcrumbs)
+            return;
 
-    _automaticallyCollectBreadcrumbs = automaticallyCollectBreadcrumbs;
-    [[Bugsnag notifier] updateAutomaticBreadcrumbDetectionSettings];
+        _automaticallyCollectBreadcrumbs = automaticallyCollectBreadcrumbs;
+        [[Bugsnag notifier] updateAutomaticBreadcrumbDetectionSettings];
+    }
+}
+
+@synthesize context = _context;
+
+- (NSString *)context {
+    @synchronized (self) {
+        return _context;
+    }
 }
 
 - (void)setContext:(NSString *)newContext {
-    _context = newContext;
-    [self.config addAttribute:BSGKeyContext
-                    withValue:newContext
-                toTabWithName:BSGKeyConfig];
+    @synchronized (self) {
+        _context = newContext;
+        [self.config addAttribute:BSGKeyContext
+                        withValue:newContext
+                    toTabWithName:BSGKeyConfig];
+    }
+}
+
+@synthesize appVersion = _appVersion;
+
+- (NSString *)appVersion {
+    @synchronized (self) {
+        return _appVersion;
+    }
 }
 
 - (void)setAppVersion:(NSString *)newVersion {
-    _appVersion = newVersion;
-    [self.config addAttribute:BSGKeyAppVersion
-                    withValue:newVersion
-                toTabWithName:BSGKeyConfig];
+    @synchronized (self) {
+        _appVersion = newVersion;
+        [self.config addAttribute:BSGKeyAppVersion
+                        withValue:newVersion
+                    toTabWithName:BSGKeyConfig];
+    }
 }
 @end

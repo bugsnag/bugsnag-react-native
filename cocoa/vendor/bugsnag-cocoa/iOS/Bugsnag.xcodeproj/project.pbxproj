@@ -126,8 +126,6 @@
 		E72962D71F4BBA8B00CEA15D /* BugsnagCrashSentry.m in Sources */ = {isa = PBXBuildFile; fileRef = E72962D11F4BBA8A00CEA15D /* BugsnagCrashSentry.m */; };
 		E72962D81F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.h in Headers */ = {isa = PBXBuildFile; fileRef = E72962D21F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.h */; };
 		E72962D91F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E72962D31F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.m */; };
-		E72962DA1F4BBA8B00CEA15D /* BugsnagSystemInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = E72962D41F4BBA8B00CEA15D /* BugsnagSystemInfo.h */; };
-		E72962DB1F4BBA8B00CEA15D /* BugsnagSystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E72962D51F4BBA8B00CEA15D /* BugsnagSystemInfo.m */; };
 		E737DEA21F73AD7400BC7C80 /* BugsnagHandledState.h in Headers */ = {isa = PBXBuildFile; fileRef = E737DEA01F73AD7400BC7C80 /* BugsnagHandledState.h */; };
 		E737DEA31F73AD7400BC7C80 /* BugsnagHandledState.m in Sources */ = {isa = PBXBuildFile; fileRef = E737DEA11F73AD7400BC7C80 /* BugsnagHandledState.m */; };
 		E7397E121F83BBF70034242A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2C8F6B1C6BBE9500846019 /* SystemConfiguration.framework */; };
@@ -150,7 +148,6 @@
 		E7397E231F83BC2A0034242A /* BSG_RFC3339DateTool.m in Sources */ = {isa = PBXBuildFile; fileRef = E7107C191F4C97F100BB3F98 /* BSG_RFC3339DateTool.m */; };
 		E7397E241F83BC2A0034242A /* BugsnagCrashSentry.m in Sources */ = {isa = PBXBuildFile; fileRef = E72962D11F4BBA8A00CEA15D /* BugsnagCrashSentry.m */; };
 		E7397E251F83BC2A0034242A /* BugsnagErrorReportApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E72962D31F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.m */; };
-		E7397E261F83BC2A0034242A /* BugsnagSystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = E72962D51F4BBA8B00CEA15D /* BugsnagSystemInfo.m */; };
 		E7397E271F83BC2A0034242A /* BSGConnectivity.m in Sources */ = {isa = PBXBuildFile; fileRef = E72352B51F55718E00436528 /* BSGConnectivity.m */; };
 		E7397E281F83BC2A0034242A /* BSGSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A627CD11EC2A62900F7C04E /* BSGSerialization.m */; };
 		E7397E291F83BC2A0034242A /* Bugsnag.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A2C8F3E1C6BBE3C00846019 /* Bugsnag.m */; };
@@ -233,7 +230,6 @@
 		E7397EDF1F83CFC20034242A /* BSG_KSCrashReportFilterCompletion.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E7107C1D1F4C97F100BB3F98 /* BSG_KSCrashReportFilterCompletion.h */; };
 		E7397EE01F83CFC20034242A /* BugsnagCrashSentry.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E72962D01F4BBA8A00CEA15D /* BugsnagCrashSentry.h */; };
 		E7397EE11F83CFC20034242A /* BugsnagErrorReportApiClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E72962D21F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.h */; };
-		E7397EE21F83CFC20034242A /* BugsnagSystemInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E72962D41F4BBA8B00CEA15D /* BugsnagSystemInfo.h */; };
 		E7397EE31F83CFC20034242A /* BSGConnectivity.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E72352B41F55718E00436528 /* BSGConnectivity.h */; };
 		E7397EE41F83CFC20034242A /* BSGSerialization.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A627CCF1EC2A5FD00F7C04E /* BSGSerialization.h */; };
 		E7397EE51F83CFC20034242A /* BugsnagLogger.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8A381D491EAA49A700AF8429 /* BugsnagLogger.h */; };
@@ -320,7 +316,6 @@
 				E7397EDF1F83CFC20034242A /* BSG_KSCrashReportFilterCompletion.h in CopyFiles */,
 				E7397EE01F83CFC20034242A /* BugsnagCrashSentry.h in CopyFiles */,
 				E7397EE11F83CFC20034242A /* BugsnagErrorReportApiClient.h in CopyFiles */,
-				E7397EE21F83CFC20034242A /* BugsnagSystemInfo.h in CopyFiles */,
 				E7397EE31F83CFC20034242A /* BSGConnectivity.h in CopyFiles */,
 				E7397EE41F83CFC20034242A /* BSGSerialization.h in CopyFiles */,
 				E7397EE51F83CFC20034242A /* BugsnagLogger.h in CopyFiles */,
@@ -467,8 +462,6 @@
 		E72962D11F4BBA8A00CEA15D /* BugsnagCrashSentry.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = BugsnagCrashSentry.m; path = ../Source/BugsnagCrashSentry.m; sourceTree = SOURCE_ROOT; };
 		E72962D21F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = BugsnagErrorReportApiClient.h; path = ../Source/BugsnagErrorReportApiClient.h; sourceTree = SOURCE_ROOT; };
 		E72962D31F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = BugsnagErrorReportApiClient.m; path = ../Source/BugsnagErrorReportApiClient.m; sourceTree = SOURCE_ROOT; };
-		E72962D41F4BBA8B00CEA15D /* BugsnagSystemInfo.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = BugsnagSystemInfo.h; path = ../Source/BugsnagSystemInfo.h; sourceTree = SOURCE_ROOT; };
-		E72962D51F4BBA8B00CEA15D /* BugsnagSystemInfo.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = BugsnagSystemInfo.m; path = ../Source/BugsnagSystemInfo.m; sourceTree = SOURCE_ROOT; };
 		E737DEA01F73AD7400BC7C80 /* BugsnagHandledState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BugsnagHandledState.h; path = ../Source/BugsnagHandledState.h; sourceTree = SOURCE_ROOT; };
 		E737DEA11F73AD7400BC7C80 /* BugsnagHandledState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagHandledState.m; path = ../Source/BugsnagHandledState.m; sourceTree = SOURCE_ROOT; };
 		E7397DB21F83BA410034242A /* Bugsnag copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Bugsnag copy-Info.plist"; path = "/Users/jamielynch/repos/bugsnag-cocoa/iOS/Bugsnag copy-Info.plist"; sourceTree = "<absolute>"; };
@@ -546,8 +539,6 @@
 				E72962D11F4BBA8A00CEA15D /* BugsnagCrashSentry.m */,
 				E72962D21F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.h */,
 				E72962D31F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.m */,
-				E72962D41F4BBA8B00CEA15D /* BugsnagSystemInfo.h */,
-				E72962D51F4BBA8B00CEA15D /* BugsnagSystemInfo.m */,
 				E72352B41F55718E00436528 /* BSGConnectivity.h */,
 				E72352B51F55718E00436528 /* BSGConnectivity.m */,
 				8A627CCF1EC2A5FD00F7C04E /* BSGSerialization.h */,
@@ -817,7 +808,6 @@
 				E7107C871F4C97F100BB3F98 /* BSG_KSCrashReportFilterCompletion.h in Headers */,
 				E7107C6F1F4C97F100BB3F98 /* BSG_KSMachApple.h in Headers */,
 				E7107C581F4C97F100BB3F98 /* BSG_KSCrashSentry_User.h in Headers */,
-				E72962DA1F4BBA8B00CEA15D /* BugsnagSystemInfo.h in Headers */,
 				E7107C4B1F4C97F100BB3F98 /* BSG_KSCrashSentry.h in Headers */,
 				E7107C541F4C97F100BB3F98 /* BSG_KSCrashSentry_Private.h in Headers */,
 				8A2C8F5D1C6BBE3C00846019 /* BugsnagNotifier.h in Headers */,
@@ -997,7 +987,6 @@
 				E7107C4F1F4C97F100BB3F98 /* BSG_KSCrashSentry_Deadlock.m in Sources */,
 				E7107C7F1F4C97F100BB3F98 /* NSDictionary+BSG_Merge.m in Sources */,
 				E7107C3F1F4C97F100BB3F98 /* BSG_KSCrashReportStore.m in Sources */,
-				E72962DB1F4BBA8B00CEA15D /* BugsnagSystemInfo.m in Sources */,
 				E7107C481F4C97F100BB3F98 /* BSG_KSSystemInfo.m in Sources */,
 				8A2C8F521C6BBE3C00846019 /* BugsnagBreadcrumb.m in Sources */,
 				E72962D91F4BBA8B00CEA15D /* BugsnagErrorReportApiClient.m in Sources */,
@@ -1071,7 +1060,6 @@
 				E7397E231F83BC2A0034242A /* BSG_RFC3339DateTool.m in Sources */,
 				E7397E241F83BC2A0034242A /* BugsnagCrashSentry.m in Sources */,
 				E7397E251F83BC2A0034242A /* BugsnagErrorReportApiClient.m in Sources */,
-				E7397E261F83BC2A0034242A /* BugsnagSystemInfo.m in Sources */,
 				E7397E271F83BC2A0034242A /* BSGConnectivity.m in Sources */,
 				E7397E281F83BC2A0034242A /* BSGSerialization.m in Sources */,
 				E7397E291F83BC2A0034242A /* Bugsnag.m in Sources */,
@@ -1211,6 +1199,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1237,6 +1226,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1255,6 +1245,7 @@
 		8A2C8F301C6BBD2300846019 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = TestsInfo.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1266,6 +1257,7 @@
 		8A2C8F311C6BBD2300846019 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = TestsInfo.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1289,6 +1281,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = (
 					"-lc++",
@@ -1317,6 +1310,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = (
 					"-lc++",
