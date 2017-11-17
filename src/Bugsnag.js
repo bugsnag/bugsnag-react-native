@@ -309,7 +309,7 @@ export class Report {
     this.stacktrace = error.stack;
     this.user = {};
 
-    if (!_handledState) {
+    if (!_handledState instanceof HandledState) {
       _handledState = new HandledState('warning', false, 'handledException');
     }
 
@@ -329,9 +329,17 @@ export class Report {
   }
 
   toJSON = () => {
+    // severityReason must be a string, and severity must match the original
+    // state, otherwise we assume that the user has modified _handledState
+    // in a callback
     const defaultSeverity = this._handledState.originalSeverity === this.severity;
-    const severityType = defaultSeverity ?
+    const isValidReason = (typeof this._handledState.severityReason === 'string');
+    const severityType = defaultSeverity && isValidReason ?
      this._handledState.severityReason : 'userCallbackSetSeverity';
+
+    // if unhandled not set, user has modified the report in a callback
+    // or via notify, so default to false
+    const isUnhandled = (typeof this._handledState.unhandled === 'boolean') ? this._handledState.unhandled : false;
 
     return {
       apiKey: this.apiKey,
@@ -344,7 +352,7 @@ export class Report {
       stacktrace: this.stacktrace,
       user: this.user,
       defaultSeverity: defaultSeverity,
-      unhandled: this._handledState.unhandled,
+      unhandled: isUnhandled,
       severityReason: severityType
     }
   }
