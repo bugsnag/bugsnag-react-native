@@ -309,7 +309,7 @@ export class Report {
     this.stacktrace = error.stack;
     this.user = {};
 
-    if (!_handledState instanceof HandledState) {
+    if (!_handledState || !_handledState instanceof HandledState) {
       _handledState = new HandledState('warning', false, 'handledException');
     }
 
