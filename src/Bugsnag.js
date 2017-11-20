@@ -329,6 +329,9 @@ export class Report {
   }
 
   toJSON = () => {
+    if (!_handledState || !(_handledState instanceof HandledState)) {
+      _handledState = new HandledState('warning', false, 'handledException');
+    }
     // severityReason must be a string, and severity must match the original
     // state, otherwise we assume that the user has modified _handledState
     // in a callback
