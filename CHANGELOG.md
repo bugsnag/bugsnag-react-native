@@ -1,5 +1,8 @@
 Changelog
 =========
+## 2.7.1 (2017-11-20)
+
+* Improved validation of handled/unhandled state
 
 ## 2.7.0 (2017-11-16)
 
