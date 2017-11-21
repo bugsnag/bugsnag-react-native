@@ -1,5 +1,10 @@
 Changelog
 =========
+
+## 2.7.2 (2017-11-21)
+
+* (iOS) Remove misleading information (address, mach, signal) from non-fatal error reports
+
 ## 2.7.1 (2017-11-20)
 
 * Improved validation of handled/unhandled state

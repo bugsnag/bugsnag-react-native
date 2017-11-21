@@ -1685,48 +1685,17 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
 
     writer->beginObject(writer, key);
     {
-        writer->beginObject(writer, BSG_KSCrashField_Mach);
-        {
-            writer->addUIntegerElement(writer, BSG_KSCrashField_Exception,
-                                       (unsigned)machExceptionType);
-            if (machExceptionName != NULL) {
-                writer->addStringElement(writer, BSG_KSCrashField_ExceptionName,
-                                         machExceptionName);
-            }
-            writer->addUIntegerElement(writer, BSG_KSCrashField_Code,
-                                       (unsigned)machCode);
-            if (machCodeName != NULL) {
-                writer->addStringElement(writer, BSG_KSCrashField_CodeName,
-                                         machCodeName);
-            }
-            writer->addUIntegerElement(writer, BSG_KSCrashField_Subcode,
-                                       (unsigned)machSubCode);
-        }
-        writer->endContainer(writer);
 
-        writer->beginObject(writer, BSG_KSCrashField_Signal);
-        {
-            writer->addUIntegerElement(writer, BSG_KSCrashField_Signal,
-                                       (unsigned)sigNum);
-            if (sigName != NULL) {
-                writer->addStringElement(writer, BSG_KSCrashField_Name,
-                                         sigName);
-            }
-            writer->addUIntegerElement(writer, BSG_KSCrashField_Code,
-                                       (unsigned)sigCode);
-            if (sigCodeName != NULL) {
-                writer->addStringElement(writer, BSG_KSCrashField_CodeName,
-                                         sigCodeName);
-            }
+        if (BSG_KSCrashTypeUserReported != crash->crashType) {
+            writer->addUIntegerElement(writer, BSG_KSCrashField_Address,
+                                       crash->faultAddress);
         }
-        writer->endContainer(writer);
 
-        writer->addUIntegerElement(writer, BSG_KSCrashField_Address,
-                                   crash->faultAddress);
         if (crashReason != NULL) {
             writer->addStringElement(writer, BSG_KSCrashField_Reason,
                                      crashReason);
         }
+
 
         // Gather specific info.
         switch (crash->crashType) {
@@ -1736,6 +1705,24 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
             break;
 
         case BSG_KSCrashTypeMachException:
+            writer->beginObject(writer, BSG_KSCrashField_Mach);
+            {
+                writer->addUIntegerElement(writer, BSG_KSCrashField_Exception,
+                                           (unsigned)machExceptionType);
+                if (machExceptionName != NULL) {
+                    writer->addStringElement(writer, BSG_KSCrashField_ExceptionName,
+                                             machExceptionName);
+                }
+                writer->addUIntegerElement(writer, BSG_KSCrashField_Code,
+                                           (unsigned)machCode);
+                if (machCodeName != NULL) {
+                    writer->addStringElement(writer, BSG_KSCrashField_CodeName,
+                                             machCodeName);
+                }
+                writer->addUIntegerElement(writer, BSG_KSCrashField_Subcode,
+                                           (unsigned)machSubCode);
+            }
+            writer->endContainer(writer);
             writer->addStringElement(writer, BSG_KSCrashField_Type,
                                      BSG_KSCrashExcType_Mach);
             break;
@@ -1765,6 +1752,22 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
             break;
         }
         case BSG_KSCrashTypeSignal:
+            writer->beginObject(writer, BSG_KSCrashField_Signal);
+            {
+                writer->addUIntegerElement(writer, BSG_KSCrashField_Signal,
+                                           (unsigned)sigNum);
+                if (sigName != NULL) {
+                    writer->addStringElement(writer, BSG_KSCrashField_Name,
+                                             sigName);
+                }
+                writer->addUIntegerElement(writer, BSG_KSCrashField_Code,
+                                           (unsigned)sigCode);
+                if (sigCodeName != NULL) {
+                    writer->addStringElement(writer, BSG_KSCrashField_CodeName,
+                                             sigCodeName);
+                }
+            }
+            writer->endContainer(writer);
             writer->addStringElement(writer, BSG_KSCrashField_Type,
                                      BSG_KSCrashExcType_Signal);
             break;

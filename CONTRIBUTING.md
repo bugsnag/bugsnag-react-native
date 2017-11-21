@@ -46,8 +46,7 @@ the Source and iOS directories. Assuming bugsnag-cocoa is located in the same
 directory as bugsnag-react-native:
 
 ```
-cp -r ../bugsnag-cocoa/Source/* cocoa/vendor/bugsnag-cocoa/Source
-cp -r ../bugsnag-cocoa/iOS/* cocoa/vendor/bugsnag-cocoa/iOS
+make ANDROID_VERSION=X IOS_VERSION=X upgrade_vendor
 ```
 
 ### Release Checklist
