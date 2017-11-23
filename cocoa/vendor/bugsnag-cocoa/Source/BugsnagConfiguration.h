@@ -24,7 +24,7 @@
 // THE SOFTWARE.
 //
 
-#import "BSGKSCrashReportWriter.h"
+#import "BSG_KSCrashReportWriter.h"
 #import "BugsnagBreadcrumb.h"
 #import "BugsnagCrashReport.h"
 #import "BugsnagMetaData.h"
@@ -124,7 +124,7 @@ BugsnagBreadcrumbs *breadcrumbs;
  *  Optional handler invoked when a crash or fatal signal occurs
  */
 @property void (*_Nullable onCrashHandler)
-    (const BSGCrashReportWriter *_Nonnull writer);
+    (const BSG_KSCrashReportWriter *_Nonnull writer);
 /**
  *  YES if uncaught exceptions should be reported automatically
  */

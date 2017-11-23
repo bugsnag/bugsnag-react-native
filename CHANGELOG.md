@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 2.7.3 (2017-11-23)
+
+* (iOS) Use `BSG_KSCrashReportWriter` header rather than `KSCrashReportWriter` for custom JSON serialization
+* (Android) Enqueue activity lifecycle events when initialisation not complete to prevent NPE
+
 ## 2.7.2 (2017-11-21)
 
 * (iOS) Remove misleading information (address, mach, signal) from non-fatal error reports
