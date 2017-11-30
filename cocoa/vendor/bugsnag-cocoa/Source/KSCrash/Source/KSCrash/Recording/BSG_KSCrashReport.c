@@ -781,6 +781,12 @@ void bsg_kscrw_i_writeUnknownObjectContents(
             *limit -= (int)ivarCount;
             for (size_t i = 0; i < ivarCount; i++) {
                 BSG_KSObjCIvar *ivar = &ivars[i];
+                
+                if (ivar->type == NULL) {
+                    BSG_KSLOG_ERROR("Found null ivar :(");
+                    continue;
+                }
+                
                 switch (ivar->type[0]) {
                 case 'c':
                     bsg_ksobjc_ivarValue(object, ivar->index, &s8);
