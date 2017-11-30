@@ -12,6 +12,7 @@
 - react-native version:
 - bugsnag-react-native version:
 - react-native-code-push version (if any):
+- cocoapods version (if any):
 - iOS/Android version(s):
 - Simulator or physical device?:
 
