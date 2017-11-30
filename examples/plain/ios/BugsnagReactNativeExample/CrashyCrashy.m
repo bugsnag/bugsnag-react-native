@@ -7,7 +7,7 @@
 //
 
 #import "CrashyCrashy.h"
-#import "RCTBridgeModule.h"
+#import <React/RCTBridgeModule.h>
 
 @implementation CrashyCrashy
 RCT_EXPORT_MODULE();

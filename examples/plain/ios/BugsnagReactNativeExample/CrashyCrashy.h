@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RCTBridgeModule.h"
+#import <React/RCTBridgeModule.h>
 
 @interface CrashyCrashy : NSObject <RCTBridgeModule>
 
