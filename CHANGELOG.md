@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 2.7.5 (2017-11-30)
+
+### Bug Fixes
+
+* (iOS - CocoaPods only) Fix ambiguous headers issue in 2.7.3+
+* (iOS) Fix intermittent dropped native crash reports due to parsing runtime
+  options incorrectly
+
 ## 2.7.4 (2017-11-30)
 * (iOS) Fix encoding of control characters in crash reports. Ensures crash reports are written correctly and delivered when containing U+0000 - U+001F
 
