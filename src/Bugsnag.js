@@ -275,6 +275,7 @@ export class Configuration {
       notifyReleaseStages: this.notifyReleaseStages,
       endpoint: this.delivery.endpoint,
       appVersion: this.appVersion,
+      autoNotify: this.autoNotify,
       version: this.version
     };
   }
