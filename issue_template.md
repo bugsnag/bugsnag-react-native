@@ -1,11 +1,12 @@
+### Steps to reproduce
+<!-- Insert reproduction steps (if known) -->
+
 ### Expected behavior
-*[Insert details on expected behaviour]*
+<!-- Insert details on expected behaviour -->
 
 ### Observed behavior
-*[Insert details on observed behaviour]*
+<!-- Insert details on observed behaviour -->
 
-### Steps to reproduce
-*[Insert reproduction steps (if known)]*
 
 ### Environment
 
@@ -17,4 +18,4 @@
 - Simulator or physical device?:
 
 ### Additional information
-*[Insert any additional information]*
+<!-- Add additional information -->
