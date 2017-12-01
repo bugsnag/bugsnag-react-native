@@ -25,6 +25,8 @@ endif
 ifeq ($(IOS_VERSION),)
 	@$(error IOS_VERSION is not defined. Run with `make ANDROID_VERSION=number IOS_VERSION=number upgrade_vendor`)
 endif
-	cd ../bugsnag-cocoa; git fetch; pwd; git checkout v$(IOS_VERSION);
-	cp -r ../bugsnag-cocoa/Source/* cocoa/vendor/bugsnag-cocoa/Source
-	cp -r ../bugsnag-cocoa/iOS/* cocoa/vendor/bugsnag-cocoa/iOS
+	@git -C ../bugsnag-cocoa fetch
+	@git -C ../bugsnag-cocoa checkout v$(IOS_VERSION)
+	@rsync --delete -al ../bugsnag-cocoa/Source cocoa/vendor/bugsnag-cocoa/Source
+	@rsync --delete -al ../bugsnag-cocoa/iOS cocoa/vendor/bugsnag-cocoa/iOS
+	@git status
