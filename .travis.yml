@@ -1,10 +1,10 @@
 jobs:
   include:
-    # - stage: test
-    #   sudo: false
-    #   language: javascript
-    #   install: npm install
-    #   script: npm run test:unit:js && npm run test:smoke:typescript
+    - stage: test
+      sudo: false
+      language: javascript
+      install: npm install
+      script: npm run test:unit:js && npm run test:smoke:typescript
     - stage: build_android
       language: android
       sudo: false
@@ -28,3 +28,4 @@ jobs:
       osx-image: xcode7.3
       env: SDK=macosx10.11 BUILD_OSX=1
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
+      xcode_scheme: BugsnagReactNative
