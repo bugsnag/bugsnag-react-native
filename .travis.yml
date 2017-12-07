@@ -1,7 +1,29 @@
-sudo: false
-language: javascript
+jobs:
+  include:
+    - stage: test
+      sudo: false
+      language: javascript
+      install: npm install
+      script: npm run test:unit:js && npm run test:smoke:typescript
+    - stage: build_android
+      language: android
+      android:
+        components:
+         - tools
+         - platform-tools
+         - build-tools-26.0.2
+         - android-16
+         - android-21
+         - android-26
+      env:
+        matrix:
+          - ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
+          - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+        global:
+          - ADB-INSTALL_TIMEOUT=5
 
-install: npm install
-
-
-script: npm run test:unit:js && npm run test:smoke:typescript
+    - stage: build_cocoa
+      language: objective-c
+      osx-image: xcode7.3
+      env: SDK=macosx10.11 BUILD_OSX=1
+         
