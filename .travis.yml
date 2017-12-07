@@ -13,9 +13,7 @@ jobs:
          - tools
          - platform-tools
          - build-tools-26.0.2
-         - android-16
          - android-21
-         - android-26
       env:
         - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
         - ADB-INSTALL_TIMEOUT=5
