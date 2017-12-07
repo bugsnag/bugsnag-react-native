@@ -7,6 +7,7 @@ jobs:
     #   script: npm run test:unit:js && npm run test:smoke:typescript
     - stage: build_android
       language: android
+      sudo: false
       android:
         components:
          - tools
@@ -18,9 +19,10 @@ jobs:
       env:
         - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
         - ADB-INSTALL_TIMEOUT=5
-      script: 
-        - chmod +x ./android/gradlew
-        - ./android/gradlew assembleRelease
+      script:
+        - cd android
+        - chmod +x ./gradlew
+        - ./gradlew assembleRelease
     - stage: build_cocoa
       language: objective-c
       osx-image: xcode7.3
