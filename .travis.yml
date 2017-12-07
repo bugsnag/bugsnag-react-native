@@ -16,12 +16,9 @@ jobs:
          - android-21
          - android-26
       env:
-        matrix:
-          - ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
-          - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
-        global:
-          - ADB-INSTALL_TIMEOUT=5
-
+        - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+        - ADB-INSTALL_TIMEOUT=5
+      script: ./android/gradlew assembleRelease
     - stage: build_cocoa
       language: objective-c
       osx-image: xcode7.3
