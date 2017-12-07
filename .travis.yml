@@ -20,7 +20,6 @@ jobs:
         - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
         - ADB-INSTALL_TIMEOUT=5
       script:
-        - cd android
         - chmod +x ./gradlew
         - ./gradlew assembleRelease
     - stage: build_cocoa
