@@ -1,12 +1,5 @@
 apply plugin: 'com.android.library'
 
-repositories {
-    jcenter()
-    maven {
-        url 'https://maven.google.com'
-    }
-}
-
 android {
     buildToolsVersion '23.0.1'
     compileSdkVersion 23
