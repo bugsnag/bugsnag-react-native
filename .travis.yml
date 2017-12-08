@@ -5,7 +5,7 @@ jobs:
       language: javascript
       install: npm install
       script: npm run test:unit:js && npm run test:smoke:typescript
-    - stage: build_android
+    - stage: build android
       language: android
       sudo: false
       android:
@@ -22,9 +22,10 @@ jobs:
       script:
         - chmod +x ./gradlew
         - ./gradlew assembleRelease
-    - stage: build_cocoa
+    - stage: build cocoa
       language: objective-c
       osx-image: xcode7.3
       env: SDK=macosx10.11 BUILD_OSX=1
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
       xcode_scheme: BugsnagReactNative
+      script: xcodebuild -project ./cocoa/BugsnagReactNative.xcodeproj -scheme BugsnagReactNative build
