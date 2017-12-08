@@ -1,6 +1,10 @@
 ### Steps to reproduce
 <!-- Insert reproduction steps (if known) -->
 
+1.
+2.
+3.
+
 ### Expected behavior
 <!-- Insert details on expected behaviour -->
 
@@ -15,7 +19,8 @@
 - react-native-code-push version (if any):
 - cocoapods version (if any):
 - iOS/Android version(s):
-- Simulator or physical device?:
+- simulator/emulator or physical device?:
+- debug mode or production?:
 
 ### Additional information
 <!-- Add additional information -->
