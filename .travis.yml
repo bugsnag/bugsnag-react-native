@@ -19,8 +19,12 @@ jobs:
         - ADB-INSTALL_TIMEOUT=5
       install:
         - echo y | android update sdk -u -a -t android-23
+        - cd 
       script:
-        - chmod +x ./gradlew
+        - cd examples/plain
+        - npm install
+        - react-native link
+        - cd android
         - ./gradlew assembleRelease
     - stage: build cocoa
       language: objective-c
@@ -28,4 +32,9 @@ jobs:
       env: SDK=macosx10.11 BUILD_OSX=1
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
       xcode_scheme: BugsnagReactNative
-      script: xcodebuild -project ./cocoa/BugsnagReactNative.xcodeproj -scheme BugsnagReactNative build
+      script:
+        - cd examples/plain
+        - npm install
+        - react-native link
+        - cd ios
+        - xcodebuild -project BugsnagReactNativeExample.xcodeproj -scheme BugsnagReactNativeExample build
