@@ -18,8 +18,7 @@ jobs:
         - ANDROID_TARGET=android-26 ANDROID_ABI=armeabi-v7a
         - ADB-INSTALL_TIMEOUT=5
       install:
-        - echo y | android update sdk -u -a -t android-23
-        - cd 
+        - echo y | android update sdk -u -a -t android-23 
       script:
         - cd examples/plain
         - npm install
