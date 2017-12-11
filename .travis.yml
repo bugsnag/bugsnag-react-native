@@ -18,10 +18,10 @@ jobs:
         - ANDROID_TARGET=android-26 ANDROID_ABI=armeabi-v7a
         - ADB-INSTALL_TIMEOUT=5
       install:
-        - echo y | android update sdk -u -a -t android-23 
         - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
         - sudo apt-get install -y nodejs
       script:
+        - echo y | android update sdk -u -a -t android-23 
         - cd examples/plain
         - npm install
         - ./node_modules/.bin/react-native link
@@ -34,8 +34,7 @@ jobs:
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
       xcode_scheme: BugsnagReactNative
       install:
-        - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-        - sudo apt-get install -y nodejs
+        - brew install node
       script:
         - cd examples/plain
         - npm install
