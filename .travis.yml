@@ -24,7 +24,7 @@ jobs:
       script:
         - cd examples/plain
         - npm install
-        - react-native link
+        - ./node_modules/.bin/react-native link
         - cd android
         - ./gradlew assembleRelease
     - stage: build cocoa
@@ -39,6 +39,6 @@ jobs:
       script:
         - cd examples/plain
         - npm install
-        - react-native link
+        - ./node_modules/.bin/react-native link
         - cd ios
         - xcodebuild -project BugsnagReactNativeExample.xcodeproj -scheme BugsnagReactNativeExample build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
