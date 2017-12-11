@@ -21,7 +21,7 @@ jobs:
         - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
         - sudo apt-get install -y nodejs
       script:
-        - echo y | android update sdk -u -a -t android-23 
+        - yes | android update sdk -u -a -t android-23 
         - cd examples/plain
         - npm install
         - ./node_modules/.bin/react-native link
