@@ -19,6 +19,8 @@ jobs:
         - ADB-INSTALL_TIMEOUT=5
       install:
         - echo y | android update sdk -u -a -t android-23 
+        - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+        - sudo apt-get install -y nodejs
       script:
         - cd examples/plain
         - npm install
@@ -31,6 +33,9 @@ jobs:
       env: SDK=macosx10.11 BUILD_OSX=1
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
       xcode_scheme: BugsnagReactNative
+      install:
+        - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+        - sudo apt-get install -y nodejs
       script:
         - cd examples/plain
         - npm install
