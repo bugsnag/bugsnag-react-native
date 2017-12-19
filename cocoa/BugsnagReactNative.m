@@ -207,6 +207,7 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     NSString *releaseStage = [self  parseReleaseStage:[RCTConvert NSString:options[@"releaseStage"]]];
     NSArray *notifyReleaseStages = [RCTConvert NSStringArray:options[@"notifyReleaseStages"]];
     NSString *notifyURLPath = [RCTConvert NSString:options[@"endpoint"]];
+    NSString *sessionURLPath = [RCTConvert NSString:options[@"sessionsEndpoint"]];
     NSString *appVersion = [RCTConvert NSString:options[@"appVersion"]];
     NSString *codeBundleId = [RCTConvert NSString:options[@"codeBundleId"]];
     BugsnagConfiguration* config = [Bugsnag bugsnagStarted] ? [Bugsnag configuration] : [BugsnagConfiguration new];
@@ -214,11 +215,17 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     config.releaseStage = releaseStage;
     config.notifyReleaseStages = notifyReleaseStages;
     config.autoNotify = [RCTConvert BOOL:options[@"autoNotify"]];
+    config.shouldAutoCaptureSessions = [RCTConvert BOOL:options[@"autoCaptureSessions"]];
     [config addBeforeSendBlock:^bool(NSDictionary *_Nonnull rawEventData,
                                      BugsnagCrashReport *_Nonnull report) {
         return !([report.errorClass hasPrefix:@"RCTFatalException"]
                  && [report.errorMessage hasPrefix:@"Unhandled JS Exception"]);
     }];
+    if (sessionURLPath.length > 0) {
+        NSURL *sessionURL = [NSURL URLWithString:sessionURLPath];
+        if (sessionURL)
+            config.sessionURL = sessionURL;
+    }
     if (notifyURLPath.length > 0) {
         NSURL *notifyURL = [NSURL URLWithString:notifyURLPath];
         if (notifyURL)

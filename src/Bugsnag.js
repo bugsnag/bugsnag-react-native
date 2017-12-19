@@ -129,6 +129,10 @@ export class Client {
     NativeClient.clearUser();
   }
 
+  startSession = () => {
+    NativeClient.startSession();
+  }
+
   /**
    * Leaves a 'breadcrumb' log message. The most recent breadcrumbs
    * are attached to subsequent error reports.
@@ -226,6 +230,7 @@ export class Configuration {
     this.releaseStage = undefined;
     this.appVersion = undefined;
     this.codeBundleId = undefined;
+    this.autoCaptureSessions = false;
     this.autoNotify = true;
     this.handlePromiseRejections = !__DEV__; // prefer banner in dev mode
     this.consoleBreadcrumbsEnabled = false;
@@ -274,16 +279,19 @@ export class Configuration {
       releaseStage: this.releaseStage,
       notifyReleaseStages: this.notifyReleaseStages,
       endpoint: this.delivery.endpoint,
+      sessionsEndpoint: this.delivery.sessionsEndpoint,
       appVersion: this.appVersion,
       autoNotify: this.autoNotify,
-      version: this.version
+      version: this.version,
+      autoCaptureSessions: this.autoCaptureSessions,
     };
   }
 }
 
 export class StandardDelivery {
-  constructor(endpoint) {
+  constructor(endpoint, sessionsEndpoint) {
     this.endpoint = endpoint || 'https://notify.bugsnag.com';
+    this.sessionsEndpoint = sessionsEndpoint || 'https://sessions.bugsnag.com';
   }
 }
 
