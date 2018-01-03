@@ -12,11 +12,16 @@ jobs:
         components:
          - tools
          - platform-tools
+         - tools
          - build-tools-26.0.2
          - android-26
+         - extra-google-m2repository
+          - extra-android-m2repository
       env:
         - ANDROID_TARGET=android-26 ANDROID_ABI=armeabi-v7a
         - ADB-INSTALL_TIMEOUT=5
+      before_install:
+        - yes | sdkmanager "platforms;android-26"
       install:
         - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
         - sudo apt-get install -y nodejs
@@ -26,6 +31,8 @@ jobs:
         - ./node_modules/.bin/react-native link
         - cd android
         - ./gradlew assembleRelease
+      licenses:
+        - 
     - stage: build cocoa
       language: objective-c
       osx-image: xcode7.3
