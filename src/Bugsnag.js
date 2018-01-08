@@ -290,8 +290,8 @@ export class Configuration {
 
 export class StandardDelivery {
   constructor(endpoint, sessionsEndpoint) {
-    this.endpoint = endpoint || 'https://notify.bugsnag.com';
-    this.sessionsEndpoint = sessionsEndpoint || 'https://sessions.bugsnag.com';
+    this.endpoint = endpoint;
+    this.sessionsEndpoint = sessionsEndpoint;
   }
 }
 
