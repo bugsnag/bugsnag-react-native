@@ -268,7 +268,7 @@ int bsg_ksjsoncodecobjc_i_onBooleanElement(const char *const cName,
                                            const bool value,
                                            void *const userData) {
     NSString *name = stringFromCString(cName);
-    id element = [NSNumber numberWithBool:value];
+    id element = @(value);
     BSG_KSJSONCodec *codec = (__bridge BSG_KSJSONCodec *)userData;
     return bsg_ksjsoncodecobjc_i_onElement(codec, name, element);
 }
@@ -277,7 +277,7 @@ int bsg_ksjsoncodecobjc_i_onFloatingPointElement(const char *const cName,
                                                  const double value,
                                                  void *const userData) {
     NSString *name = stringFromCString(cName);
-    id element = [NSNumber numberWithDouble:value];
+    id element = @(value);
     BSG_KSJSONCodec *codec = (__bridge BSG_KSJSONCodec *)userData;
     return bsg_ksjsoncodecobjc_i_onElement(codec, name, element);
 }
@@ -286,7 +286,7 @@ int bsg_ksjsoncodecobjc_i_onIntegerElement(const char *const cName,
                                            const long long value,
                                            void *const userData) {
     NSString *name = stringFromCString(cName);
-    id element = [NSNumber numberWithLongLong:value];
+    id element = @(value);
     BSG_KSJSONCodec *codec = (__bridge BSG_KSJSONCodec *)userData;
     return bsg_ksjsoncodecobjc_i_onElement(codec, name, element);
 }
@@ -347,7 +347,7 @@ int bsg_ksjsoncodecobjc_i_onEndContainer(void *const userData) {
     NSUInteger count = [codec->_containerStack count];
     if (count > 0) {
         codec->_currentContainer =
-            [codec->_containerStack objectAtIndex:count - 1];
+                codec->_containerStack[count - 1];
     } else {
         codec->_currentContainer = nil;
     }

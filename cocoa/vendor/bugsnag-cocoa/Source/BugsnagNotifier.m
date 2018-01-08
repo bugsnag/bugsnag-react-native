@@ -27,23 +27,21 @@
 #import "BugsnagNotifier.h"
 #import "BSGConnectivity.h"
 #import "Bugsnag.h"
-#import "BugsnagBreadcrumb.h"
-#import "BugsnagCollections.h"
-#import "BugsnagCrashReport.h"
 #import "BugsnagCrashSentry.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagLogger.h"
-#import "BugsnagSink.h"
 #import "BugsnagKeys.h"
+#import "BugsnagSessionTracker.h"
+#import "BugsnagSessionTrackingApiClient.h"
+#import "BSG_RFC3339DateTool.h"
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
-#include <sys/utsname.h>
 #elif TARGET_OS_MAC
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.14.1";
+NSString *const NOTIFIER_VERSION = @"5.15.0";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSAttributeDepth = @"depth";
@@ -72,6 +70,11 @@ static struct bugsnag_data_t bsg_g_bugsnag_data;
 
 static NSDictionary *notificationNameMap;
 
+static char *sessionId[128];
+static char *sessionStartDate[128];
+static NSUInteger handledCount;
+static bool hasRecordedSessions;
+
 /**
  *  Handler executed when the application crashes. Writes information about the
  *  current application state using the crash report writer.
@@ -86,10 +89,25 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer) {
         writer->addJSONElement(writer, "metaData",
                                bsg_g_bugsnag_data.metaDataJSON);
     }
+
+    if (hasRecordedSessions) { // a session is available
+        // persist session info
+        writer->addStringElement(writer, "id", (const char *) sessionId);
+        writer->addStringElement(writer, "startedAt", (const char *) sessionStartDate);
+        writer->addUIntegerElement(writer, "handledCount", handledCount);
+
+        if (!bsg_g_bugsnag_data.handledState) {
+            writer->addUIntegerElement(writer, "unhandledCount", 1);
+        } else {
+            writer->addUIntegerElement(writer, "unhandledCount", 0);
+        }
+    }
+
     if (bsg_g_bugsnag_data.handledState) {
         writer->addJSONElement(writer, "handledState",
                                bsg_g_bugsnag_data.handledState);
     }
+
     if (bsg_g_bugsnag_data.stateJSON) {
         writer->addJSONElement(writer, "state", bsg_g_bugsnag_data.stateJSON);
     }
@@ -146,7 +164,10 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
 
 @interface BugsnagNotifier ()
 @property(nonatomic) BugsnagCrashSentry *crashSentry;
-@property(nonatomic) BugsnagErrorReportApiClient *apiClient;
+@property(nonatomic) BugsnagErrorReportApiClient *errorReportApiClient;
+@property(nonatomic) BugsnagSessionTrackingApiClient *sessionTrackingApiClient;
+@property(nonatomic) BugsnagSessionTracker *sessionTracker;
+@property(nonatomic) NSTimer *sessionTimer;
 @end
 
 @implementation BugsnagNotifier
@@ -167,6 +188,34 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
         self.configuration.metaData.delegate = self;
         self.configuration.config.delegate = self;
         self.state.delegate = self;
+        self.crashSentry = [BugsnagCrashSentry new];
+        self.errorReportApiClient = [[BugsnagErrorReportApiClient alloc] initWithConfig:configuration
+                                                                              queueName:@"Error API queue"];
+        self.sessionTrackingApiClient = [[BugsnagSessionTrackingApiClient alloc] initWithConfig:configuration
+                                                                                      queueName:@"Session API queue"];
+
+        self.sessionTracker = [[BugsnagSessionTracker alloc] initWithConfig:initConfiguration
+                                                                  apiClient:self.sessionTrackingApiClient
+                                                                   callback:^(BugsnagSession *session) {
+
+                                                                       // copy session id
+                                                                       const char *newSessionId = [session.sessionId UTF8String];
+                                                                       size_t idSize = strlen(newSessionId);
+                                                                       strncpy((char *)sessionId, newSessionId, idSize);
+                                                                       sessionId[idSize - 1] = NULL;
+
+                                                                       const char *newSessionDate = [[BSG_RFC3339DateTool stringFromDate:session.startedAt] UTF8String];
+                                                                       size_t dateSize = strlen(newSessionDate);
+                                                                       strncpy((char *)sessionStartDate, newSessionDate, dateSize);
+                                                                       sessionStartDate[dateSize - 1] = NULL;
+
+                                                                       // record info for C JSON serialiser
+                                                                       handledCount = session.handledCount;
+                                                                       hasRecordedSessions = true;
+                                                                   }];
+
+        
+        [self.sessionTracker startNewSession:[NSDate date] withUser:nil autoCaptured:YES];
 
         [self metaDataChanged:self.configuration.metaData];
         [self metaDataChanged:self.configuration.config];
@@ -250,41 +299,41 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 }
 
 - (void)start {
-    self.crashSentry = [BugsnagCrashSentry new];
-    self.apiClient = [BugsnagErrorReportApiClient new];
-
     [self.crashSentry install:self.configuration
-                    apiClient:self.apiClient
+                    apiClient:self.errorReportApiClient
                       onCrash:&BSSerializeDataCrashHandler];
 
     [self setupConnectivityListener];
     [self updateAutomaticBreadcrumbDetectionSettings];
+    
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [self watchLifecycleEvents:center];
 
 #if TARGET_OS_TV
     [self.details setValue:@"tvOS Bugsnag Notifier" forKey:BSGKeyName];
+
 #elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
     [self.details setValue:@"iOS Bugsnag Notifier" forKey:BSGKeyName];
 
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-           selector:@selector(batteryChanged:)
-               name:UIDeviceBatteryStateDidChangeNotification
-             object:nil];
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-           selector:@selector(batteryChanged:)
-               name:UIDeviceBatteryLevelDidChangeNotification
-             object:nil];
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-           selector:@selector(orientationChanged:)
-               name:UIDeviceOrientationDidChangeNotification
-             object:nil];
-    [[NSNotificationCenter defaultCenter]
-        addObserver:self
-           selector:@selector(lowMemoryWarning:)
-               name:UIApplicationDidReceiveMemoryWarningNotification
-             object:nil];
+    [center addObserver:self
+               selector:@selector(batteryChanged:)
+                   name:UIDeviceBatteryStateDidChangeNotification
+                 object:nil];
+
+    [center addObserver:self
+               selector:@selector(batteryChanged:)
+                   name:UIDeviceBatteryLevelDidChangeNotification
+                 object:nil];
+
+    [center addObserver:self
+               selector:@selector(orientationChanged:)
+                   name:UIDeviceOrientationDidChangeNotification
+                 object:nil];
+
+    [center addObserver:self
+               selector:@selector(lowMemoryWarning:)
+                   name:UIApplicationDidReceiveMemoryWarningNotification
+                 object:nil];
 
     [UIDevice currentDevice].batteryMonitoringEnabled = YES;
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -293,11 +342,79 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     [self orientationChanged:nil];
 #elif TARGET_OS_MAC
     [self.details setValue:@"OSX Bugsnag Notifier" forKey:BSGKeyName];
+
+    [center addObserver:self
+               selector:@selector(willEnterForeground:)
+                   name:NSApplicationDidBecomeActiveNotification
+                 object:nil];
+
+    [center addObserver:self
+               selector:@selector(willEnterBackground:)
+                   name:NSApplicationDidResignActiveNotification
+                 object:nil];
 #endif
+
+    // notification not received in time on initial startup, so trigger manually
+    [self willEnterForeground:self];
+}
+
+- (void)watchLifecycleEvents:(NSNotificationCenter *)center {
+    NSString *foregroundName;
+    NSString *backgroundName;
+    
+    #if TARGET_OS_TV || TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
+    foregroundName = UIApplicationWillEnterForegroundNotification;
+    backgroundName = UIApplicationWillEnterForegroundNotification;
+    #elif TARGET_OS_MAC
+    foregroundName = NSApplicationWillBecomeActiveNotification;
+    backgroundName = NSApplicationDidFinishLaunchingNotification;
+    #endif
+    
+    [center addObserver:self
+               selector:@selector(willEnterForeground:)
+                   name:foregroundName
+                 object:nil];
+
+    [center addObserver:self
+               selector:@selector(willEnterBackground:)
+                   name:backgroundName
+                 object:nil];
+}
+
+- (void)willEnterForeground:(id)sender {
+    [self.sessionTracker startNewSession:[NSDate date]
+                                withUser:self.configuration.currentUser
+                            autoCaptured:YES];
+
+    NSTimeInterval sessionTickSeconds = 60;
+
+    if (!self.sessionTimer) {
+        _sessionTimer = [NSTimer scheduledTimerWithTimeInterval:sessionTickSeconds
+                                                         target:self
+                                                       selector:@selector(sessionTick:)
+                                                       userInfo:nil
+                                                        repeats:YES];
+        [self sessionTick:self];
+    }
+}
+
+- (void)willEnterBackground:(id)sender {
+    [self.sessionTracker suspendCurrentSession:[NSDate date]];
+
+    if (self.sessionTimer) {
+        [self.sessionTimer invalidate];
+        self.sessionTimer = nil;
+    }
+
+}
+
+- (void)sessionTick:(id)sender {
+    [self.sessionTracker send];
+    NSLog(@"Session Tick!");
 }
 
 - (void)flushPendingReports {
-    [self.apiClient sendPendingReports];
+    [self.errorReportApiClient flushPendingData];
 }
 
 - (void)setupConnectivityListener {
@@ -310,6 +427,12 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                                    [weakSelf flushPendingReports];
                                  }];
     [self.networkReachable startWatchingConnectivity];
+}
+
+- (void)startSession {
+    [self.sessionTracker startNewSession:[NSDate date]
+                                withUser:self.configuration.currentUser
+                            autoCaptured:NO];
 }
 
 - (void)notifyError:(NSError *)error
@@ -367,9 +490,9 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                     withData:(NSDictionary *_Nullable)metaData
                        block:(BugsnagNotifyBlock _Nullable)block {
 
-    NSString *severity = [metaData objectForKey:BSGKeySeverity];
-    NSString *severityReason = [metaData objectForKey:BSGKeySeverityReason];
-    NSString *logLevel = [metaData objectForKey:BSGKeyLogLevel];
+    NSString *severity = metaData[BSGKeySeverity];
+    NSString *severityReason = metaData[BSGKeySeverityReason];
+    NSString *logLevel = metaData[BSGKeyLogLevel];
     NSParameterAssert(severity.length > 0);
     NSParameterAssert(severityReason.length > 0);
 
@@ -396,12 +519,15 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     handledState:(BugsnagHandledState *_Nonnull)handledState
            block:(void (^)(BugsnagCrashReport *))block {
 
+    [self.sessionTracker incrementHandledError];
+
     BugsnagCrashReport *report = [[BugsnagCrashReport alloc]
         initWithErrorName:exceptionName
              errorMessage:message
             configuration:self.configuration
                  metaData:[self.configuration.metaData toDictionary]
-             handledState:handledState];
+             handledState:handledState
+                  session:self.sessionTracker.currentSession];
     if (block) {
         block(report);
     }
@@ -499,10 +625,10 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 #elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 - (void)batteryChanged:(NSNotification *)notif {
     NSNumber *batteryLevel =
-        [NSNumber numberWithFloat:[UIDevice currentDevice].batteryLevel];
+            @([UIDevice currentDevice].batteryLevel);
     NSNumber *charging =
-        [NSNumber numberWithBool:[UIDevice currentDevice].batteryState ==
-                                 UIDeviceBatteryStateCharging];
+            @([UIDevice currentDevice].batteryState ==
+                    UIDeviceBatteryStateCharging);
 
     [[self state] addAttribute:BSGKeyBatteryLevel
                      withValue:batteryLevel

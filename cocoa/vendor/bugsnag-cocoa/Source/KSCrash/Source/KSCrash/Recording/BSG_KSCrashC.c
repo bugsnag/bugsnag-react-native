@@ -31,7 +31,6 @@
 #include "BSG_KSCrashSentry_User.h"
 #include "BSG_KSMach.h"
 #include "BSG_KSObjC.h"
-#include "BSG_KSSignalInfo.h"
 #include "BSG_KSString.h"
 #include "BSG_KSSystemInfoC.h"
 #include "BSG_KSZombie.h"
@@ -39,13 +38,7 @@
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
 
-#include <errno.h>
-#include <execinfo.h>
-#include <fcntl.h>
 #include <mach/mach_time.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 // ============================================================================
 #pragma mark - Globals -

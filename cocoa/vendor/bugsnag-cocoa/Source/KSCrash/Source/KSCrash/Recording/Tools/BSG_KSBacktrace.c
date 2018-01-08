@@ -26,7 +26,6 @@
 
 #include "BSG_KSBacktrace_Private.h"
 
-#include "BSG_KSArchSpecific.h"
 #include "BSG_KSDynamicLinker.h"
 #include "BSG_KSMach.h"
 

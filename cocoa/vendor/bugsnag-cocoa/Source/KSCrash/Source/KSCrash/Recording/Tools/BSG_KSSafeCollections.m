@@ -58,12 +58,12 @@ static inline id safeValue(id value) {
 
 - (void)bsg_ksc_setObjectIfNotNil:(id)object forKey:(id)key {
     if (object != nil && key != nil) {
-        [self setObject:object forKey:key];
+        self[key] = object;
     }
 }
 
 - (void)bsg_ksc_safeSetObject:(id)object forKey:(id)key {
-    [self setObject:safeValue(object) forKey:key];
+    self[key] = safeValue(object);
 }
 
 - (void)bsg_ksc_setValueIfNotNil:(id)value forKey:(NSString *)key {

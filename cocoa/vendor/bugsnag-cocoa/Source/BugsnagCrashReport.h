@@ -10,6 +10,7 @@
 
 @class BugsnagConfiguration;
 @class BugsnagHandledState;
+@class BugsnagSession;
 
 typedef NS_ENUM(NSUInteger, BSGSeverity) {
     BSGSeverityError,
@@ -66,7 +67,8 @@ initWithErrorName:(NSString *_Nonnull)name
      errorMessage:(NSString *_Nonnull)message
     configuration:(BugsnagConfiguration *_Nonnull)config
          metaData:(NSDictionary *_Nonnull)metaData
-     handledState:(BugsnagHandledState *_Nonnull)handledState;
+     handledState:(BugsnagHandledState *_Nonnull)handledState
+          session:(BugsnagSession *_Nullable)session;
 
 /**
  *  Serialize a crash report as a JSON payload
@@ -77,7 +79,10 @@ initWithErrorName:(NSString *_Nonnull)name
  *  @return a crash report
  */
 - (NSDictionary *_Nonnull)serializableValueWithTopLevelData:
-    (NSMutableDictionary *_Nonnull)data;
+    (NSMutableDictionary *_Nonnull)data
+__deprecated_msg("Use toJson: instead.");
+
+- (NSDictionary *_Nonnull)toJson;
 
 /**
  *  Whether this report should be sent, based on release stage information

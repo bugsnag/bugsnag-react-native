@@ -1,6 +1,4 @@
 #import "BSGSerialization.h"
-#import <Foundation/Foundation.h>
-#import <math.h>
 
 BOOL BSGIsSanitizedType(id obj) {
     static dispatch_once_t onceToken;
@@ -43,7 +41,7 @@ NSDictionary *_Nonnull BSGSanitizeDict(NSDictionary *input) {
       if ([key isKindOfClass:[NSString class]]) {
           id cleanedObject = BSGSanitizeObject(obj);
           if (cleanedObject)
-              [output setObject:cleanedObject forKey:key];
+              output[key] = cleanedObject;
       }
     }];
     return output;

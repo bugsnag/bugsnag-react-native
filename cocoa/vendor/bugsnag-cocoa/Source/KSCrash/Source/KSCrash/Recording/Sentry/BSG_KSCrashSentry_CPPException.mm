@@ -35,8 +35,6 @@
 #include <dlfcn.h>
 #include <exception>
 #include <execinfo.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <typeinfo>
 
 #define STACKTRACE_BUFFER_LENGTH 30

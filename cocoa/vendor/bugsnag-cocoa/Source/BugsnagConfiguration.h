@@ -24,13 +24,15 @@
 // THE SOFTWARE.
 //
 
+#import <Foundation/Foundation.h>
+
 #import "BSG_KSCrashReportWriter.h"
 #import "BugsnagBreadcrumb.h"
 #import "BugsnagCrashReport.h"
 #import "BugsnagMetaData.h"
-#import <Foundation/Foundation.h>
 
 @class BugsnagBreadcrumbs;
+@class BugsnagUser;
 
 /**
  *  A configuration block for modifying an error report
@@ -96,6 +98,11 @@ typedef NSDictionary *_Nullable (^BugsnagBeforeNotifyHook)(
 @property(readwrite, strong, nonnull) NSURLSession *session;
 
 /**
+ * The current user
+ */
+@property(nullable) BugsnagUser *currentUser;
+
+/**
  *  Additional information about the state of the app or environment at the
  *  time the report was generated
  */
@@ -129,6 +136,17 @@ BugsnagBreadcrumbs *breadcrumbs;
  *  YES if uncaught exceptions should be reported automatically
  */
 @property BOOL autoNotify;
+
+/**
+ * Determines whether app sessions should be tracked automatically. By default this value is false.
+ */
+@property BOOL shouldAutoCaptureSessions;
+
+/**
+ * Set the endpoint to which tracked sessions reports are sent. This defaults to https://sessions.bugsnag.com,
+ * but should be overridden if you are using Bugsnag On-premise, to point to your own Bugsnag endpoint.
+ */
+@property(readwrite, retain, nullable) NSURL *sessionURL;
 
 /**
  *  Set user metadata
@@ -168,4 +186,11 @@ BugsnagBreadcrumbs *breadcrumbs;
  */
 @property(readonly, strong, nullable)
     NSArray *beforeNotifyHooks __deprecated_msg("Use beforeNotify instead.");
+
+- (NSDictionary *_Nonnull)errorApiHeaders;
+- (NSDictionary *_Nonnull)sessionApiHeaders;
+
+@property(nullable) NSString *codeBundleId;
+@property(nullable) NSString *notifierType;
+
 @end

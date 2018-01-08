@@ -69,11 +69,12 @@ static NSString *const BSGKeyThreads = @"threads";
 static NSString *const BSGKeyExceptions = @"exceptions";
 static NSString *const BSGKeyPayloadVersion = @"payloadVersion";
 static NSString *const BSGKeyDevice = @"device";
-static NSString *const BSGKeyAppState = @"appState";
+static NSString *const BSGKeyAppState = @"app";
 static NSString *const BSGKeyApp = @"app";
 static NSString *const BSGKeyUnhandled = @"unhandled";
 static NSString *const BSGKeyAttributes = @"attributes";
 static NSString *const BSGKeyAction = @"action";
+static NSString *const BSGKeySession = @"session";
 
 
 static NSString *const BSGKeyExecutableName = @"CFBundleExecutable";

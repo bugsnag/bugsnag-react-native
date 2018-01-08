@@ -53,9 +53,8 @@
  * @return The result of the sysctl call.
  */
 + (NSNumber *)int32Sysctl:(NSString *)name {
-    return [NSNumber
-        numberWithInt:bsg_kssysctl_int32ForName(
-                          [name cStringUsingEncoding:NSUTF8StringEncoding])];
+    return @(bsg_kssysctl_int32ForName(
+            [name cStringUsingEncoding:NSUTF8StringEncoding]));
 }
 
 /** Get a sysctl value as an NSNumber.
@@ -65,9 +64,8 @@
  * @return The result of the sysctl call.
  */
 + (NSNumber *)int64Sysctl:(NSString *)name {
-    return [NSNumber
-        numberWithLongLong:bsg_kssysctl_int64ForName([name
-                               cStringUsingEncoding:NSUTF8StringEncoding])];
+    return @(bsg_kssysctl_int64ForName([name
+            cStringUsingEncoding:NSUTF8StringEncoding]));
 }
 
 /** Get a sysctl value as an NSString.
@@ -410,7 +408,7 @@
                             forKey:@BSG_KSSystemField_KernelVersion];
     [sysInfo bsg_ksc_safeSetObject:[self stringSysctl:@"kern.osversion"]
                             forKey:@BSG_KSSystemField_OSVersion];
-    [sysInfo bsg_ksc_safeSetObject:[NSNumber numberWithBool:[self isJailbroken]]
+    [sysInfo bsg_ksc_safeSetObject:@([self isJailbroken])
                             forKey:@BSG_KSSystemField_Jailbroken];
     [sysInfo bsg_ksc_safeSetObject:[self dateSysctl:@"kern.boottime"]
                             forKey:@BSG_KSSystemField_BootTime];
@@ -418,17 +416,16 @@
                             forKey:@BSG_KSSystemField_AppStartTime];
     [sysInfo bsg_ksc_safeSetObject:[self executablePath]
                             forKey:@BSG_KSSystemField_ExecutablePath];
-    [sysInfo bsg_ksc_safeSetObject:[infoDict objectForKey:BSGKeyExecutableName]
+    [sysInfo bsg_ksc_safeSetObject:infoDict[BSGKeyExecutableName]
                             forKey:@BSG_KSSystemField_Executable];
-    [sysInfo bsg_ksc_safeSetObject:[infoDict objectForKey:@"CFBundleIdentifier"]
+    [sysInfo bsg_ksc_safeSetObject:infoDict[@"CFBundleIdentifier"]
                             forKey:@BSG_KSSystemField_BundleID];
-    [sysInfo bsg_ksc_safeSetObject:[infoDict objectForKey:@"CFBundleName"]
+    [sysInfo bsg_ksc_safeSetObject:infoDict[@"CFBundleName"]
                             forKey:@BSG_KSSystemField_BundleName];
-    [sysInfo bsg_ksc_safeSetObject:[infoDict objectForKey:@"CFBundleVersion"]
+    [sysInfo bsg_ksc_safeSetObject:infoDict[@"CFBundleVersion"]
                             forKey:@BSG_KSSystemField_BundleVersion];
     [sysInfo
-        bsg_ksc_safeSetObject:[infoDict
-                                  objectForKey:@"CFBundleShortVersionString"]
+        bsg_ksc_safeSetObject:infoDict[@"CFBundleShortVersionString"]
                        forKey:@BSG_KSSystemField_BundleShortVersion];
     [sysInfo bsg_ksc_safeSetObject:[self appUUID]
                             forKey:@BSG_KSSystemField_AppUUID];
@@ -438,19 +435,18 @@
                             forKey:@BSG_KSSystemField_CPUType];
     [sysInfo bsg_ksc_safeSetObject:[self int32Sysctl:@BSGKeyHwCpusubtype]
                             forKey:@BSG_KSSystemField_CPUSubType];
-    [sysInfo bsg_ksc_safeSetObject:[NSNumber numberWithInt:header->cputype]
+    [sysInfo bsg_ksc_safeSetObject:@(header->cputype)
                             forKey:@BSG_KSSystemField_BinaryCPUType];
-    [sysInfo bsg_ksc_safeSetObject:[NSNumber numberWithInt:header->cpusubtype]
+    [sysInfo bsg_ksc_safeSetObject:@(header->cpusubtype)
                             forKey:@BSG_KSSystemField_BinaryCPUSubType];
     [sysInfo bsg_ksc_safeSetObject:[[NSTimeZone localTimeZone] abbreviation]
                             forKey:@BSG_KSSystemField_TimeZone];
     [sysInfo bsg_ksc_safeSetObject:[NSProcessInfo processInfo].processName
                             forKey:@BSG_KSSystemField_ProcessName];
-    [sysInfo bsg_ksc_safeSetObject:[NSNumber
-                                       numberWithInt:[NSProcessInfo processInfo]
-                                                         .processIdentifier]
+    [sysInfo bsg_ksc_safeSetObject:@([NSProcessInfo processInfo]
+                    .processIdentifier)
                             forKey:@BSG_KSSystemField_ProcessID];
-    [sysInfo bsg_ksc_safeSetObject:[NSNumber numberWithInt:getppid()]
+    [sysInfo bsg_ksc_safeSetObject:@(getppid())
                             forKey:@BSG_KSSystemField_ParentProcessID];
     [sysInfo bsg_ksc_safeSetObject:[self deviceAndAppHash]
                             forKey:@BSG_KSSystemField_DeviceAppHash];
@@ -458,8 +454,7 @@
                             forKey:@BSG_KSSystemField_BuildType];
 
     NSDictionary *memory =
-        [NSDictionary dictionaryWithObject:[self int64Sysctl:@"hw.memsize"]
-                                    forKey:@BSG_KSSystemField_Size];
+            @{@BSG_KSSystemField_Size: [self int64Sysctl:@"hw.memsize"]};
     [sysInfo bsg_ksc_safeSetObject:memory forKey:@BSG_KSSystemField_Memory];
 
     return sysInfo;

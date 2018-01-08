@@ -45,6 +45,8 @@
     (BugsnagConfiguration *_Nonnull)configuration;
 - (void)start;
 
+- (void)startSession;
+
 /**
  *  Notify Bugsnag of an exception
  *

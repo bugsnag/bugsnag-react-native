@@ -34,7 +34,6 @@
 #include <errno.h>
 #include <mach-o/arch.h>
 #include <mach/mach_time.h>
-#include <mach/vm_map.h>
 #include <sys/sysctl.h>
 
 // Avoiding static functions due to linker issues.
