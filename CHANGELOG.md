@@ -1,6 +1,17 @@
 Changelog
 =========
 
+## 2.8.0 (2018-01-09)
+
+### Enhancements
+
+* Add support for tracking app sessions and enabling overall crash rate metrics
+
+### Bug Fixes
+
+* Fix issue where breadcrumb functions are called before initialization
+  [bugsnag-android#211](https://github.com/bugsnag/bugsnag-android/pull/211)
+
 ## 2.7.5 (2017-11-30)
 
 ### Bug Fixes
