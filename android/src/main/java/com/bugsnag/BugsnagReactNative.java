@@ -199,6 +199,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   private void configureRuntimeOptions(Client client, ReadableMap options) {
       client.setIgnoreClasses(new String[] {"com.facebook.react.common.JavascriptException"});
+      Configuration config = client.getConfig();
       if (options.hasKey("appVersion")) {
           String version = options.getString("appVersion");
           if (version != null && version.length() > 0)
@@ -209,6 +210,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
           String endpoint = options.getString("endpoint");
           if (endpoint != null && endpoint.length() > 0)
               client.setEndpoint(endpoint);
+      }
+
+      if (options.hasKey("sessionsEndpoint")) {
+          String endpoint = options.getString("sessionsEndpoint");
+          if (endpoint != null && endpoint.length() > 0)
+              config.setSessionEndpoint(endpoint);
       }
 
       if (options.hasKey("releaseStage")) {
@@ -223,6 +230,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
           } else {
               client.disableExceptionHandler();
           }
+      }
+
+      if (options.hasKey("autoCaptureSessions")) {
+          boolean autoCapture = options.getBoolean("autoCaptureSessions");
+          config.setAutoCaptureSessions(autoCapture);
       }
 
       if (options.hasKey("codeBundleId")) {

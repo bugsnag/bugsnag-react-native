@@ -82,7 +82,7 @@ void bsg_ksnsexc_i_handleException(NSException *exception) {
         NSUInteger numFrames = [addresses count];
         uintptr_t *callstack = malloc(numFrames * sizeof(*callstack));
         for (NSUInteger i = 0; i < numFrames; i++) {
-            callstack[i] = [[addresses objectAtIndex:i] unsignedLongValue];
+            callstack[i] = [addresses[i] unsignedLongValue];
         }
 
         bsg_g_context->crashType = BSG_KSCrashTypeNSException;

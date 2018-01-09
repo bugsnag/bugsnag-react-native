@@ -26,16 +26,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import "BugsnagFileStore.h"
+
 /**
  * Manages a store of crash reports.
  */
-@interface BSG_KSCrashReportStore : NSObject
-
-/** Location where reports are stored. */
-@property(nonatomic, readonly, retain) NSString *path;
-
-/** The total number of reports. Note: This is an expensive operation. */
-@property(nonatomic, readonly, assign) NSUInteger reportCount;
+@interface BSG_KSCrashReportStore : BugsnagFileStore
 
 /** If true, demangle any C++ symbols found in stack traces. */
 @property(nonatomic, readwrite, assign) BOOL demangleCPP;
@@ -43,65 +39,9 @@
 /** If true, demangle any Swift symbols found in stack traces. */
 @property(nonatomic, readwrite, assign) BOOL demangleSwift;
 
-/** Create a new store.
- *
- * @param path Where to store crash reports.
- *
- * @return A new crash report store.
- */
+
 + (BSG_KSCrashReportStore *)storeWithPath:(NSString *)path;
 
-/** Initialize a store.
- *
- * @param path Where to store crash reports.
- *
- * @return The initialized crash report store.
- */
-- (id)initWithPath:(NSString *)path;
-
-/** Get a list of report IDs.
- *
- * @return A list of report IDs in chronological order (oldest first).
- */
-- (NSArray *)reportIDs;
-
-/** Fetch a report.
- *
- * @param reportID The ID of the report to fetch.
- *
- * @return The report or nil if not found.
- */
-- (NSDictionary *)reportWithID:(NSString *)reportID;
-
-/** Get a list of all reports.
- *
- * @return A list of reports in chronological order (oldest first).
- */
-- (NSArray *)allReports;
-
-/** Delete a report.
- *
- * @param reportID The report ID.
- */
-- (void)deleteReportWithID:(NSString *)reportID;
-
-/** Delete all reports.
- */
-- (void)deleteAllReports;
-
-/** Prune reports, keeping only the newest ones.
- *
- * @param numReports the number of reports to keep.
- */
-- (void)pruneReportsLeaving:(int)numReports;
-
-/** Full path to the crash report with the specified ID.
- *
- * @param reportID The report ID
- *
- * @return The full path.
- */
-- (NSString *)pathToCrashReportWithID:(NSString *)reportID;
 
 /** Full path to the recrash report with the specified ID.
  *
@@ -110,14 +50,5 @@
  * @return The full path.
  */
 - (NSString *)pathToRecrashReportWithID:(NSString *)reportID;
-
-/** Add a custom report to the store.
- *
- * @param report The report to store. This method will add a standard top-level
- * "report" section to it.
- *
- * @return The report ID
- */
-- (NSString *)addCustomReport:(NSDictionary *)report;
 
 @end

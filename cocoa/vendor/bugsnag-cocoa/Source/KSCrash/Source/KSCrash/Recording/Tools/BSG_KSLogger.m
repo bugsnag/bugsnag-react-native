@@ -30,13 +30,6 @@
 #pragma mark - Common -
 // ===========================================================================
 
-#include <errno.h>
-#include <fcntl.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
 // Compiler hints for "if" statements
 #define likely_if(x) if (__builtin_expect(x, 1))
 #define unlikely_if(x) if (__builtin_expect(x, 0))

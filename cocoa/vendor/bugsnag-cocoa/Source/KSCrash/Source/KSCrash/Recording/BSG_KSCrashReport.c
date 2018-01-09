@@ -29,7 +29,6 @@
 #include "BSG_KSBacktrace_Private.h"
 #include "BSG_KSCrashReportFields.h"
 #include "BSG_KSCrashReportVersion.h"
-#include "BSG_KSCrashReportWriter.h"
 #include "BSG_KSDynamicLinker.h"
 #include "BSG_KSFileUtils.h"
 #include "BSG_KSJSONCodec.h"
@@ -41,12 +40,6 @@
 
 //#define BSG_kSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
-
-#include <errno.h>
-#include <fcntl.h>
-#include <mach-o/dyld.h>
-#include <stdio.h>
-#include <unistd.h>
 
 #ifdef __arm64__
 #include <sys/_types/_ucontext64.h>

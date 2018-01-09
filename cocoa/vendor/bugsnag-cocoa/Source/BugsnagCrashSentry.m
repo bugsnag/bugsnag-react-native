@@ -38,7 +38,7 @@ NSUInteger const BSG_MAX_STORED_REPORTS = 12;
                     @"reported!");
     }
 
-    [sink.apiClient sendPendingReports];
+    [sink.apiClient flushPendingData];
 }
 
 - (void)reportUserException:(NSString *)reportName

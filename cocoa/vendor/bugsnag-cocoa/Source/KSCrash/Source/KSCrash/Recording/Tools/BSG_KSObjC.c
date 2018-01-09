@@ -27,11 +27,8 @@
 #include "BSG_KSObjC.h"
 #include "BSG_KSObjCApple.h"
 
-#include "BSG_KSDynamicLinker.h"
 #include "BSG_KSMach.h"
 #include "BSG_KSString.h"
-
-#include "BSG_KSLogger.h"
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > 70000
 #include <objc/NSObjCRuntime.h>
@@ -45,7 +42,7 @@ typedef int NSInteger;
 typedef unsigned int NSUInteger;
 #endif
 #endif
-#include <CoreFoundation/CFBase.h>
+
 #include <CoreGraphics/CGBase.h>
 #include <objc/runtime.h>
 

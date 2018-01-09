@@ -15,10 +15,13 @@
 #import "BSGSerialization.h"
 #import "Bugsnag.h"
 #import "BugsnagCollections.h"
-#import "BugsnagCrashReport.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagLogger.h"
 #import "BugsnagKeys.h"
+#import "NSDictionary+BSG_Merge.h"
+#import "BugsnagKSCrashSysInfoParser.h"
+#import "BugsnagSession.h"
+#import "BSG_RFC3339DateTool.h"
 
 NSMutableDictionary *BSGFormatFrame(NSDictionary *frame,
                                     NSArray *binaryImages) {
@@ -97,91 +100,6 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error,
         }
     }
     return error[BSGKeyReason] ?: @"";
-}
-
-NSDictionary *BSGParseDevice(NSDictionary *report) {
-    NSDictionary *system = report[@"system"];
-    NSMutableDictionary *device = [NSMutableDictionary dictionary];
-    
-    BSGDictSetSafeObject(device, @"Apple", @"manufacturer");
-    BSGDictSetSafeObject(device, [[NSLocale currentLocale] localeIdentifier],
-                         @"locale");
-
-    BSGDictSetSafeObject(device, system[@"device_app_hash"], @"id");
-    BSGDictSetSafeObject(device, system[@"time_zone"], @"timezone");
-    BSGDictSetSafeObject(device, system[@"model"], @"modelNumber");
-    BSGDictSetSafeObject(device, system[@"machine"], @"model");
-    BSGDictSetSafeObject(device, system[@"system_name"], @"osName");
-    BSGDictSetSafeObject(device, system[@"system_version"], @"osVersion");
-    BSGDictSetSafeObject(device, system[@"memory"][@"usable"],
-                         @"totalMemory");
-    return device;
-}
-
-NSDictionary *BSGParseApp(NSDictionary *report, NSString *appVersion) {
-    NSDictionary *system = report[BSGKeySystem];
-    NSMutableDictionary *app = [NSMutableDictionary dictionary];
-
-    BSGDictSetSafeObject(app, system[@"CFBundleVersion"], @"bundleVersion");
-    BSGDictSetSafeObject(app, system[@"CFBundleIdentifier"], BSGKeyId);
-    BSGDictSetSafeObject(app, system[BSGKeyExecutableName], BSGKeyName);
-    BSGDictSetSafeObject(app, [Bugsnag configuration].releaseStage,
-                         BSGKeyReleaseStage);
-    if ([appVersion isKindOfClass:[NSString class]]) {
-        BSGDictSetSafeObject(app, appVersion, BSGKeyVersion);
-    } else {
-        BSGDictSetSafeObject(app, system[@"CFBundleShortVersionString"],
-                             BSGKeyVersion);
-    }
-
-    return app;
-}
-
-NSDictionary *BSGParseAppState(NSDictionary *report) {
-    NSDictionary *appStats = report[BSGKeySystem][@"application_stats"];
-    NSMutableDictionary *appState = [NSMutableDictionary dictionary];
-    NSInteger activeTimeSinceLaunch =
-        [appStats[@"active_time_since_launch"] doubleValue] * 1000.0;
-    NSInteger backgroundTimeSinceLaunch =
-        [appStats[@"background_time_since_launch"] doubleValue] * 1000.0;
-
-    BSGDictSetSafeObject(appState, @(activeTimeSinceLaunch),
-                         @"durationInForeground");
-    BSGDictSetSafeObject(appState,
-                         @(activeTimeSinceLaunch + backgroundTimeSinceLaunch),
-                         @"duration");
-    BSGDictSetSafeObject(appState, appStats[@"application_in_foreground"],
-                         @"inForeground");
-    BSGDictSetSafeObject(appState, appStats, @"stats");
-
-    return appState;
-}
-
-NSDictionary *BSGParseDeviceState(NSDictionary *report) {
-    NSMutableDictionary *deviceState =
-        [[report valueForKeyPath:@"user.state.deviceState"] mutableCopy];
-    BSGDictSetSafeObject(deviceState,
-                         [report valueForKeyPath:@"system.memory.free"],
-                         @"freeMemory");
-    BSGDictSetSafeObject(deviceState,
-                         [report valueForKeyPath:@"report.timestamp"], @"time");
-
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(
-        NSDocumentDirectory, NSUserDomainMask, true);
-    NSString *path = [searchPaths lastObject];
-
-    NSError *error;
-    NSDictionary *fileSystemAttrs =
-        [fileManager attributesOfFileSystemForPath:path error:&error];
-
-    if (error) {
-        bsg_log_warn(@"Failed to read free disk space: %@", error);
-    }
-
-    NSNumber *freeBytes = [fileSystemAttrs objectForKey:NSFileSystemFreeSize];
-    BSGDictSetSafeObject(deviceState, freeBytes, @"freeDisk");
-    return deviceState;
 }
 
 NSString *BSGParseContext(NSDictionary *report, NSDictionary *metaData) {
@@ -285,6 +203,7 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
  *  User-provided exception metadata
  */
 @property(nonatomic, readwrite, copy, nullable) NSDictionary *customException;
+@property(nonatomic) BugsnagSession *session;
 
 @end
 
@@ -314,9 +233,8 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
         _context = BSGParseContext(report, _metaData);
         _deviceState = BSGParseDeviceState(report);
         _device = BSGParseDevice(report);
-        _app = BSGParseApp(report,
-                           [report valueForKeyPath:@"user.config.appVersion"]);
-        _appState = BSGParseAppState(report);
+        _app = BSGParseApp(report[BSGKeySystem]);
+        _appState = BSGParseAppState(report[BSGKeySystem]);
         _groupingHash = BSGParseGroupingHash(report, _metaData);
         _overrides = [report valueForKeyPath:@"user.overrides"];
         _customException = BSGParseCustomException(report, [_errorClass copy],
@@ -338,6 +256,10 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
                                      attrValue:_errorClass];
         }
         _severity = _handledState.currentSeverity;
+
+        if (report[@"user"][@"id"]) {
+            _session = [[BugsnagSession alloc] initWithDictionary:report[@"user"]];
+        }
     }
     return self;
 }
@@ -347,7 +269,8 @@ initWithErrorName:(NSString *_Nonnull)name
      errorMessage:(NSString *_Nonnull)message
     configuration:(BugsnagConfiguration *_Nonnull)config
          metaData:(NSDictionary *_Nonnull)metaData
-     handledState:(BugsnagHandledState *_Nonnull)handledState {
+     handledState:(BugsnagHandledState *_Nonnull)handledState
+          session:(BugsnagSession *_Nullable)session {
     if (self = [super init]) {
         _errorClass = name;
         _errorMessage = message;
@@ -360,6 +283,7 @@ initWithErrorName:(NSString *_Nonnull)name
 
         _handledState = handledState;
         _severity = handledState.currentSeverity;
+        _session = session;
     }
     return self;
 }
@@ -515,6 +439,10 @@ initWithErrorName:(NSString *_Nonnull)name
 
 - (NSDictionary *)serializableValueWithTopLevelData:
     (NSMutableDictionary *)data {
+    return [self toJson];
+}
+
+- (NSDictionary *)toJson {
     NSMutableDictionary *event = [NSMutableDictionary dictionary];
     NSMutableDictionary *metaData = [[self metaData] mutableCopy];
 
@@ -533,17 +461,26 @@ initWithErrorName:(NSString *_Nonnull)name
             event, [self serializeThreadsWithException:exception], BSGKeyThreads);
     }
     // Build Event
-    BSGDictInsertIfNotNil(event, [self dsymUUID], @"dsymUUID");
     BSGDictSetSafeObject(event, BSGFormatSeverity(self.severity), BSGKeySeverity);
     BSGDictSetSafeObject(event, [self breadcrumbs], BSGKeyBreadcrumbs);
-    BSGDictSetSafeObject(event, @"3", BSGKeyPayloadVersion);
     BSGDictSetSafeObject(event, metaData, BSGKeyMetaData);
-    BSGDictSetSafeObject(event, [self deviceState], BSGKeyDeviceState);
-    BSGDictSetSafeObject(event, [self device], BSGKeyDevice);
-    BSGDictSetSafeObject(event, [self appState], BSGKeyAppState);
-    BSGDictSetSafeObject(event, [self app], BSGKeyApp);
+    
+    NSDictionary *device = [self.device bsg_mergedInto:self.deviceState];
+    BSGDictSetSafeObject(event, device, BSGKeyDevice);
+    
+    NSMutableDictionary *appObj = [NSMutableDictionary new];
+    [appObj addEntriesFromDictionary:self.app];
+    [appObj addEntriesFromDictionary:self.appState];
+    
+    if (self.dsymUUID) {
+        BSGDictInsertIfNotNil(appObj, @[self.dsymUUID], @"dsymUUIDs");
+    }
+    
+    BSGDictSetSafeObject(event, appObj, BSGKeyApp);
+    
     BSGDictSetSafeObject(event, [self context], BSGKeyContext);
     BSGDictInsertIfNotNil(event, self.groupingHash, BSGKeyGroupingHash);
+    
 
     BSGDictSetSafeObject(event, @(self.handledState.unhandled), BSGKeyUnhandled);
 
@@ -567,15 +504,33 @@ initWithErrorName:(NSString *_Nonnull)name
 
     // Make user mutable and set the id if the user hasn't already
     NSMutableDictionary *user = [metaData[BSGKeyUser] mutableCopy];
-    if (user == nil)
+    if (user == nil) {
         user = [NSMutableDictionary dictionary];
-    BSGDictSetSafeObject(metaData, user, BSGKeyUser);
+    }
+    BSGDictInsertIfNotNil(event, user, BSGKeyUser);
 
     if (!user[BSGKeyId] && self.device[BSGKeyId]) { // if device id is null, don't set user id to default
         BSGDictSetSafeObject(user, [self deviceAppHash], BSGKeyId);
     }
 
+    if (self.session) {
+        BSGDictSetSafeObject(event, [self generateSessionDict], BSGKeySession);
+    }
     return event;
+}
+
+- (NSDictionary *)generateSessionDict {
+    NSDictionary *events = @{
+            @"handled": @(self.session.handledCount),
+            @"unhandled": @(self.session.unhandledCount)
+    };
+
+    NSDictionary *sessionJson = @{
+            BSGKeyId: self.session.sessionId,
+            @"startedAt": [BSG_RFC3339DateTool stringFromDate:self.session.startedAt],
+            @"events": events
+    };
+    return sessionJson;
 }
 
 // Build all stacktraces for threads and the error

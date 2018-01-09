@@ -57,7 +57,7 @@ typedef enum {
     if (![self.name isEqualToString:@"objc_msgSend"]) {
         return nil;
     }
-    BSG_KSCrashDoctorParam *receiverParam = [self.params objectAtIndex:0];
+    BSG_KSCrashDoctorParam *receiverParam = self.params[0];
     NSString *receiver = receiverParam.previousClassName;
     if (receiver == nil) {
         receiver = receiverParam.className;
@@ -66,7 +66,7 @@ typedef enum {
         }
     }
 
-    BSG_KSCrashDoctorParam *selectorParam = [self.params objectAtIndex:1];
+    BSG_KSCrashDoctorParam *selectorParam = self.params[1];
     if (![selectorParam.type isEqualToString:@BSG_KSCrashMemType_String]) {
         return nil;
     }
@@ -75,12 +75,12 @@ typedef enum {
     int paramCount = (int)[splitSelector count] - 1;
 
     NSMutableString *string = [NSMutableString
-        stringWithFormat:@"-[%@ %@", receiver, [splitSelector objectAtIndex:0]];
+            stringWithFormat:@"-[%@ %@", receiver, splitSelector[0]];
     for (int paramNum = 0; paramNum < paramCount; paramNum++) {
         [string appendString:@":"];
         if (paramNum < 2) {
             BSG_KSCrashDoctorParam *param =
-                [self.params objectAtIndex:(NSUInteger)paramNum + 2];
+                    self.params[(NSUInteger) paramNum + 2];
             if (param.value != nil) {
                 if ([param.type isEqualToString:@BSG_KSCrashMemType_String]) {
                     [string appendFormat:@"\"%@\"", param.value];
@@ -120,7 +120,7 @@ typedef enum {
     [str appendFormat:@"Function: %@\n", self.name];
     for (int i = 0; i < paramCount; i++) {
         BSG_KSCrashDoctorParam *param =
-            [self.params objectAtIndex:(NSUInteger)i];
+                self.params[(NSUInteger) i];
         [str appendFormat:@"Param %d:  ", i + 1];
         if (param.className != nil) {
             [str appendFormat:@"%@ (%@) ", param.className,
@@ -148,28 +148,28 @@ typedef enum {
 }
 
 - (NSDictionary *)recrashReport:(NSDictionary *)report {
-    return [report objectForKey:@BSG_KSCrashField_RecrashReport];
+    return report[@BSG_KSCrashField_RecrashReport];
 }
 
 - (NSDictionary *)systemReport:(NSDictionary *)report {
-    return [report objectForKey:@BSG_KSCrashField_System];
+    return report[@BSG_KSCrashField_System];
 }
 
 - (NSDictionary *)crashReport:(NSDictionary *)report {
-    return [report objectForKey:@BSG_KSCrashField_Crash];
+    return report[@BSG_KSCrashField_Crash];
 }
 
 - (NSDictionary *)infoReport:(NSDictionary *)report {
-    return [report objectForKey:@BSG_KSCrashField_Report];
+    return report[@BSG_KSCrashField_Report];
 }
 
 - (NSDictionary *)errorReport:(NSDictionary *)report {
-    return [[self crashReport:report] objectForKey:@BSG_KSCrashField_Error];
+    return [self crashReport:report][@BSG_KSCrashField_Error];
 }
 
 - (BSG_CPUFamily)cpuFamily:(NSDictionary *)report {
     NSDictionary *system = [self systemReport:report];
-    NSString *cpuArch = [system objectForKey:@BSG_KSSystemField_CPUArch];
+    NSString *cpuArch = system[@BSG_KSSystemField_CPUArch];
     if ([cpuArch rangeOfString:@"arm"].location == 0) {
         return BSG_CPUFamilyArm;
     }
@@ -231,20 +231,20 @@ typedef enum {
 
 - (NSString *)mainExecutableNameForReport:(NSDictionary *)report {
     NSDictionary *info = [self infoReport:report];
-    return [info objectForKey:@BSG_KSCrashField_ProcessName];
+    return info[@BSG_KSCrashField_ProcessName];
 }
 
 - (NSDictionary *)crashedThreadReport:(NSDictionary *)report {
     NSDictionary *crashReport = [self crashReport:report];
     NSDictionary *crashedThread =
-        [crashReport objectForKey:@BSG_KSCrashField_CrashedThread];
+            crashReport[@BSG_KSCrashField_CrashedThread];
     if (crashedThread != nil) {
         return crashedThread;
     }
 
     for (NSDictionary *thread in
-         [crashReport objectForKey:@BSG_KSCrashField_Threads]) {
-        if ([[thread objectForKey:@BSG_KSCrashField_Crashed] boolValue]) {
+            crashReport[@BSG_KSCrashField_Threads]) {
+        if ([thread[@BSG_KSCrashField_Crashed] boolValue]) {
             return thread;
         }
     }
@@ -253,14 +253,14 @@ typedef enum {
 
 - (NSArray *)backtraceFromThreadReport:(NSDictionary *)threadReport {
     NSDictionary *backtrace =
-        [threadReport objectForKey:@BSG_KSCrashField_Backtrace];
-    return [backtrace objectForKey:@BSG_KSCrashField_Contents];
+            threadReport[@BSG_KSCrashField_Backtrace];
+    return backtrace[@BSG_KSCrashField_Contents];
 }
 
 - (NSDictionary *)basicRegistersFromThreadReport:(NSDictionary *)threadReport {
     NSDictionary *registers =
-        [threadReport objectForKey:@BSG_KSCrashField_Registers];
-    NSDictionary *basic = [registers objectForKey:@BSG_KSCrashField_Basic];
+            threadReport[@BSG_KSCrashField_Registers];
+    NSDictionary *basic = registers[@BSG_KSCrashField_Basic];
     return basic;
 }
 
@@ -270,7 +270,7 @@ typedef enum {
     NSArray *backtrace = [self backtraceFromThreadReport:crashedThread];
     for (NSDictionary *entry in backtrace) {
         NSString *objectName =
-            [entry objectForKey:@BSG_KSCrashField_ObjectName];
+                entry[@BSG_KSCrashField_ObjectName];
         if ([objectName isEqualToString:executableName]) {
             return entry;
         }
@@ -282,43 +282,43 @@ typedef enum {
     NSDictionary *crashedThread = [self crashedThreadReport:report];
     NSArray *backtrace = [self backtraceFromThreadReport:crashedThread];
     if ([backtrace count] > 0) {
-        return [backtrace objectAtIndex:0];
+        return backtrace[0];
     }
     return nil;
 }
 
 - (BOOL)isInvalidAddress:(NSDictionary *)errorReport {
-    NSDictionary *machError = [errorReport objectForKey:@BSG_KSCrashField_Mach];
+    NSDictionary *machError = errorReport[@BSG_KSCrashField_Mach];
     if (machError != nil) {
         NSString *exceptionName =
-            [machError objectForKey:@BSG_KSCrashField_ExceptionName];
+                machError[@BSG_KSCrashField_ExceptionName];
         return [exceptionName isEqualToString:@"EXC_BAD_ACCESS"];
     }
-    NSDictionary *signal = [errorReport objectForKey:@BSG_KSCrashField_Signal];
-    NSString *sigName = [signal objectForKey:@BSG_KSCrashField_Name];
+    NSDictionary *signal = errorReport[@BSG_KSCrashField_Signal];
+    NSString *sigName = signal[@BSG_KSCrashField_Name];
     return [sigName isEqualToString:@"SIGSEGV"];
 }
 
 - (BOOL)isMathError:(NSDictionary *)errorReport {
-    NSDictionary *machError = [errorReport objectForKey:@BSG_KSCrashField_Mach];
+    NSDictionary *machError = errorReport[@BSG_KSCrashField_Mach];
     if (machError != nil) {
         NSString *exceptionName =
-            [machError objectForKey:@BSG_KSCrashField_ExceptionName];
+                machError[@BSG_KSCrashField_ExceptionName];
         return [exceptionName isEqualToString:@"EXC_ARITHMETIC"];
     }
-    NSDictionary *signal = [errorReport objectForKey:@BSG_KSCrashField_Signal];
-    NSString *sigName = [signal objectForKey:@BSG_KSCrashField_Name];
+    NSDictionary *signal = errorReport[@BSG_KSCrashField_Signal];
+    NSString *sigName = signal[@BSG_KSCrashField_Name];
     return [sigName isEqualToString:@"SIGFPE"];
 }
 
 - (BOOL)isMemoryCorruption:(NSDictionary *)report {
     NSDictionary *crashedThread = [self crashedThreadReport:report];
     NSArray *notableAddresses =
-        [crashedThread objectForKey:@BSG_KSCrashField_NotableAddresses];
+            crashedThread[@BSG_KSCrashField_NotableAddresses];
     for (NSDictionary *address in [notableAddresses objectEnumerator]) {
-        NSString *type = [address objectForKey:@BSG_KSCrashField_Type];
+        NSString *type = address[@BSG_KSCrashField_Type];
         if ([type isEqualToString:@"string"]) {
-            NSString *value = [address objectForKey:@BSG_KSCrashField_Value];
+            NSString *value = address[@BSG_KSCrashField_Value];
             if ([value rangeOfString:@"autorelease pool page"].location !=
                     NSNotFound &&
                 [value rangeOfString:@"corrupted"].location != NSNotFound) {
@@ -334,9 +334,9 @@ typedef enum {
     NSArray *backtrace = [self backtraceFromThreadReport:crashedThread];
     for (NSDictionary *entry in backtrace) {
         NSString *objectName =
-            [entry objectForKey:@BSG_KSCrashField_ObjectName];
+                entry[@BSG_KSCrashField_ObjectName];
         NSString *symbolName =
-            [entry objectForKey:@BSG_KSCrashField_SymbolName];
+                entry[@BSG_KSCrashField_SymbolName];
         if ([symbolName isEqualToString:@"objc_autoreleasePoolPush"]) {
             return YES;
         }
@@ -359,36 +359,34 @@ typedef enum {
     BSG_KSCrashDoctorFunctionCall *function =
         [[BSG_KSCrashDoctorFunctionCall alloc] init];
     NSDictionary *lastStackEntry = [self lastStackEntry:report];
-    function.name = [lastStackEntry objectForKey:@BSG_KSCrashField_SymbolName];
+    function.name = lastStackEntry[@BSG_KSCrashField_SymbolName];
 
     NSDictionary *crashedThread = [self crashedThreadReport:report];
     NSDictionary *notableAddresses =
-        [crashedThread objectForKey:@BSG_KSCrashField_NotableAddresses];
+            crashedThread[@BSG_KSCrashField_NotableAddresses];
     BSG_CPUFamily family = [self cpuFamily:report];
     NSDictionary *registers =
         [self basicRegistersFromThreadReport:crashedThread];
-    NSArray *regNames = [NSArray
-        arrayWithObjects:[self registerNameForFamily:family paramIndex:0],
-                         [self registerNameForFamily:family paramIndex:1],
-                         [self registerNameForFamily:family paramIndex:2],
-                         [self registerNameForFamily:family paramIndex:3], nil];
+    NSArray *regNames = @[[self registerNameForFamily:family paramIndex:0],
+            [self registerNameForFamily:family paramIndex:1],
+            [self registerNameForFamily:family paramIndex:2],
+            [self registerNameForFamily:family paramIndex:3]];
     NSMutableArray *params = [NSMutableArray arrayWithCapacity:4];
     for (NSString *regName in regNames) {
         BSG_KSCrashDoctorParam *param = [[BSG_KSCrashDoctorParam alloc] init];
         param.address =
-            (uintptr_t)[[registers objectForKey:regName] unsignedLongLongValue];
-        NSDictionary *notableAddress = [notableAddresses objectForKey:regName];
+            (uintptr_t)[registers[regName] unsignedLongLongValue];
+        NSDictionary *notableAddress = notableAddresses[regName];
         if (notableAddress == nil) {
             param.value =
                 [NSString stringWithFormat:@"%p", (void *)param.address];
         } else {
-            param.type = [notableAddress objectForKey:@BSG_KSCrashField_Type];
+            param.type = notableAddress[@BSG_KSCrashField_Type];
             NSString *className =
-                [notableAddress objectForKey:@BSG_KSCrashField_Class];
-            NSString *previousClass = [notableAddress
-                objectForKey:@BSG_KSCrashField_LastDeallocObject];
+                    notableAddress[@BSG_KSCrashField_Class];
+            NSString *previousClass = notableAddress[@BSG_KSCrashField_LastDeallocObject];
             NSString *value =
-                [notableAddress objectForKey:@BSG_KSCrashField_Value];
+                    notableAddress[@BSG_KSCrashField_Value];
 
             if ([param.type isEqualToString:@BSG_KSCrashMemType_String]) {
                 param.value = value;
@@ -413,11 +411,11 @@ typedef enum {
 - (NSString *)zombieCall:(BSG_KSCrashDoctorFunctionCall *)functionCall {
     if ([functionCall.name isEqualToString:@"objc_msgSend"] &&
         functionCall.params.count > 0 &&
-        [[functionCall.params objectAtIndex:0] previousClassName] != nil) {
+        [functionCall.params[0] previousClassName] != nil) {
         return [functionCall descriptionWithParamCount:4];
     } else if ([functionCall.name isEqualToString:@"objc_retain"] &&
                functionCall.params.count > 0 &&
-               [[functionCall.params objectAtIndex:0] previousClassName] !=
+               [functionCall.params[0] previousClassName] !=
                    nil) {
         return [functionCall descriptionWithParamCount:1];
     }
@@ -426,13 +424,13 @@ typedef enum {
 
 - (BOOL)isStackOverflow:(NSDictionary *)crashedThreadReport {
     NSDictionary *stack =
-        [crashedThreadReport objectForKey:@BSG_KSCrashField_Stack];
-    return [[stack objectForKey:@BSG_KSCrashField_Overflow] boolValue];
+            crashedThreadReport[@BSG_KSCrashField_Stack];
+    return [stack[@BSG_KSCrashField_Overflow] boolValue];
 }
 
 - (BOOL)isDeadlock:(NSDictionary *)report {
     NSDictionary *errorReport = [self errorReport:report];
-    NSString *crashType = [errorReport objectForKey:@BSG_KSCrashField_Type];
+    NSString *crashType = errorReport[@BSG_KSCrashField_Type];
     return [@BSG_KSCrashExcType_Deadlock isEqualToString:crashType];
 }
 
@@ -448,8 +446,7 @@ typedef enum {
 
 - (NSString *)diagnoseCrash:(NSDictionary *)report {
     @try {
-        NSString *lastFunctionName = [[self lastInAppStackEntry:report]
-            objectForKey:@BSG_KSCrashField_SymbolName];
+        NSString *lastFunctionName = [self lastInAppStackEntry:report][@BSG_KSCrashField_SymbolName];
         NSDictionary *crashedThreadReport = [self crashedThreadReport:report];
         NSDictionary *errorReport = [self errorReport:report];
 
@@ -463,13 +460,13 @@ typedef enum {
                 stringWithFormat:@"Stack overflow in %@", lastFunctionName];
         }
 
-        NSString *crashType = [errorReport objectForKey:@BSG_KSCrashField_Type];
+        NSString *crashType = errorReport[@BSG_KSCrashField_Type];
         if ([crashType isEqualToString:@BSG_KSCrashExcType_NSException]) {
             NSDictionary *exception =
-                [errorReport objectForKey:@BSG_KSCrashField_NSException];
-            NSString *name = [exception objectForKey:@BSG_KSCrashField_Name];
+                    errorReport[@BSG_KSCrashField_NSException];
+            NSString *name = exception[@BSG_KSCrashField_Name];
             NSString *reason =
-                [exception objectForKey:@BSG_KSCrashField_Reason];
+                    exception[@BSG_KSCrashField_Reason];
             return [self
                 appendOriginatingCall:
                     [NSString
@@ -503,8 +500,7 @@ typedef enum {
         }
 
         if ([self isInvalidAddress:errorReport]) {
-            uintptr_t address = (uintptr_t)[[errorReport
-                objectForKey:@BSG_KSCrashField_Address] unsignedLongLongValue];
+            uintptr_t address = (uintptr_t)[errorReport[@BSG_KSCrashField_Address] unsignedLongLongValue];
             if (address == 0) {
                 return [self appendOriginatingCall:
                                  @"Attempted to dereference null pointer."

@@ -27,8 +27,6 @@
 #import "BugsnagSink.h"
 #import "Bugsnag.h"
 #import "BugsnagCollections.h"
-#import "BugsnagCrashReport.h"
-#import "BugsnagLogger.h"
 #import "BugsnagNotifier.h"
 #import "BugsnagKeys.h"
 
@@ -63,7 +61,7 @@
     BugsnagConfiguration *configuration = [Bugsnag configuration];
     for (NSDictionary *report in reports) {
         BugsnagCrashReport *bugsnagReport =
-            [[BugsnagCrashReport alloc] initWithKSReport:report];
+                [[BugsnagCrashReport alloc] initWithKSReport:report];
         if (![bugsnagReport shouldBeSent])
             continue;
         BOOL shouldSend = YES;
@@ -104,29 +102,27 @@
         return;
     }
 
-    [self.apiClient sendReports:bugsnagReports
-                        payload:reportData
-                          toURL:configuration.notifyURL
-                   onCompletion:onCompletion];
+    [self.apiClient sendData:bugsnagReports
+                 withPayload:reportData
+                       toURL:configuration.notifyURL
+            headers:[configuration errorApiHeaders]
+                onCompletion:onCompletion];
 }
 
 
 // Generates the payload for notifying Bugsnag
 - (NSDictionary *)getBodyFromReports:(NSArray *)reports {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    BSGDictSetSafeObject(data, [Bugsnag configuration].apiKey, BSGKeyApiKey);
     BSGDictSetSafeObject(data, [Bugsnag notifier].details, BSGKeyNotifier);
 
     NSMutableArray *formatted =
-        [[NSMutableArray alloc] initWithCapacity:[reports count]];
+            [[NSMutableArray alloc] initWithCapacity:[reports count]];
 
     for (BugsnagCrashReport *report in reports) {
-        BSGArrayAddSafeObject(formatted,
-                              [report serializableValueWithTopLevelData:data]);
+        BSGArrayAddSafeObject(formatted, [report toJson]);
     }
 
     BSGDictSetSafeObject(data, formatted, BSGKeyEvents);
-
     return data;
 }
 

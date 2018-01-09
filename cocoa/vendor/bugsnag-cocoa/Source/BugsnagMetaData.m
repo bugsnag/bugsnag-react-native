@@ -56,10 +56,10 @@
 
 - (NSMutableDictionary *)getTab:(NSString *)tabName {
     @synchronized(self) {
-        NSMutableDictionary *tab = [self.dictionary objectForKey:tabName];
+        NSMutableDictionary *tab = self.dictionary[tabName];
         if (!tab) {
             tab = [NSMutableDictionary dictionary];
-            [self.dictionary setObject:tab forKey:tabName];
+            self.dictionary[tabName] = tab;
         }
         return tab;
     }
@@ -86,8 +86,7 @@
         if (value) {
             id cleanedValue = BSGSanitizeObject(value);
             if (cleanedValue) {
-                [[self getTab:tabName] setObject:cleanedValue
-                                          forKey:attributeName];
+                [self getTab:tabName][attributeName] = cleanedValue;
             } else {
                 Class klass = [value class];
                 bsg_log_err(@"Failed to add metadata: Value of class %@ is not "

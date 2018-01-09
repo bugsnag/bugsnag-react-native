@@ -37,7 +37,6 @@
 #include <fcntl.h>
 #include <mach/mach_time.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 // ============================================================================
@@ -267,11 +266,11 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
         goto done;
     }
     result = bsg_ksjsonendEncode(&JSONContext);
-
-done:
     if (!bsg_ksfuflushWriteBuffer(fd)) {
         BSG_KSLOG_ERROR("Failed to flush write buffer");
     }
+
+done:
     close(fd);
 
     if (result != BSG_KSJSON_OK) {

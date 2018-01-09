@@ -34,7 +34,6 @@
 #include <net/if_dl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
 
 #define CHECK_SYSCTL_NAME(TYPE, CALL)                                          \
     if (0 != (CALL)) {                                                         \
