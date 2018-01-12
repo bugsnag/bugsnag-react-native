@@ -234,6 +234,7 @@ export class Configuration {
     this.autoNotify = true;
     this.handlePromiseRejections = !__DEV__; // prefer banner in dev mode
     this.consoleBreadcrumbsEnabled = false;
+    this.automaticallyCollectBreadcrumbs = true;
   }
 
   /**
@@ -284,6 +285,7 @@ export class Configuration {
       autoNotify: this.autoNotify,
       version: this.version,
       autoCaptureSessions: this.autoCaptureSessions,
+      automaticallyCollectBreadcrumbs: this.automaticallyCollectBreadcrumbs,
     };
   }
 }

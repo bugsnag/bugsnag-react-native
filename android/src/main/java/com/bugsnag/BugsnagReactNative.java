@@ -253,6 +253,10 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
               client.setNotifyReleaseStages(releaseStages);
           }
       }
+      if (options.hasKey("automaticallyCollectBreadcrumbs")) {
+          boolean autoCapture = options.getBoolean("automaticallyCollectBreadcrumbs");
+          config.setAutomaticallyCollectBreadcrumbs(autoCapture);
+      }
   }
 }
 
