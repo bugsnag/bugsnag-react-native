@@ -12,7 +12,6 @@ jobs:
         components:
          - tools
          - platform-tools
-         - tools
          - build-tools-26.0.2
          - android-26
          - extra-google-m2repository
