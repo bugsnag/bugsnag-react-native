@@ -142,7 +142,7 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
                               exceptionWithName:[RCTConvert NSString:options[@"errorClass"]]
                               reason:[RCTConvert NSString:options[@"errorMessage"]]
                               userInfo:nil];
-    
+
     [Bugsnag internalClientNotify:exception
                          withData:options
                             block:^(BugsnagCrashReport *report) {
@@ -216,6 +216,8 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     config.notifyReleaseStages = notifyReleaseStages;
     config.autoNotify = [RCTConvert BOOL:options[@"autoNotify"]];
     config.shouldAutoCaptureSessions = [RCTConvert BOOL:options[@"autoCaptureSessions"]];
+    config.automaticallyCollectBreadcrumbs = [RCTConvert BOOL:options[@"automaticallyCollectBreadcrumbs"]];
+
     [config addBeforeSendBlock:^bool(NSDictionary *_Nonnull rawEventData,
                                      BugsnagCrashReport *_Nonnull report) {
         return !([report.errorClass hasPrefix:@"RCTFatalException"]
