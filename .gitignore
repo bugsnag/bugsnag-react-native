@@ -11,3 +11,4 @@ coverage
 *.iml
 Pods/
 test/app.js
+cocoa/vendor/bugsnag-cocoa/iOS/build/

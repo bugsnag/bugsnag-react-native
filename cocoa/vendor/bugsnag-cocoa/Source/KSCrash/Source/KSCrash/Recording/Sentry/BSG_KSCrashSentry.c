@@ -46,7 +46,7 @@ typedef struct {
 } BSG_CrashSentry;
 
 static BSG_CrashSentry bsg_g_sentries[] = {
-#if KSCRASH_HAS_MACH
+#if BSG_KSCRASH_HAS_MACH
     {
         BSG_KSCrashTypeMachException, bsg_kscrashsentry_installMachHandler,
         bsg_kscrashsentry_uninstallMachHandler,

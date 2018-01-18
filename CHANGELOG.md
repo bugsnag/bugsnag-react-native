@@ -1,6 +1,22 @@
 Changelog
 =========
 
+## 2.9.0 (2018-01-18)
+
+### React Native
+- Allow disabling of breadcrumbs via config
+
+### Android
+- Move capture of thread stacktraces to start of notify process
+- Add configuration option to disable automatic breadcrumb capture
+- Update Gradle Wrapper
+- Parse manifest meta-data for Session Auto-Capture boolean flag
+
+### iOS
+* Fix default user/device ID generation on iOS devices
+* Fix mach exception detection
+* Misc Session Tracking fixes and enhancements
+
 ## 2.8.0 (2018-01-09)
 
 ### Enhancements
