@@ -15,6 +15,7 @@
 typedef enum {
     BSG_CPUFamilyUnknown,
     BSG_CPUFamilyArm,
+    BSG_CPUFamilyArm64,
     BSG_CPUFamilyX86,
     BSG_CPUFamilyX86_64
 } BSG_CPUFamily;
@@ -170,6 +171,9 @@ typedef enum {
 - (BSG_CPUFamily)cpuFamily:(NSDictionary *)report {
     NSDictionary *system = [self systemReport:report];
     NSString *cpuArch = system[@BSG_KSSystemField_CPUArch];
+    if ([cpuArch isEqualToString:@"arm64"]) {
+        return BSG_CPUFamilyArm64;
+    }
     if ([cpuArch rangeOfString:@"arm"].location == 0) {
         return BSG_CPUFamilyArm;
     }
@@ -177,8 +181,7 @@ typedef enum {
         [cpuArch rangeOfString:@"86"].location == 2) {
         return BSG_CPUFamilyX86;
     }
-    if ([cpuArch rangeOfString:@"x86_64" options:NSCaseInsensitiveSearch]
-            .location != NSNotFound) {
+    if ([@[@"x86_64", @"x86"] containsObject:cpuArch]) {
         return BSG_CPUFamilyX86_64;
     }
     return BSG_CPUFamilyUnknown;
@@ -197,6 +200,18 @@ typedef enum {
             return @"r2";
         case 3:
             return @"r3";
+        }
+    }
+    case BSG_CPUFamilyArm64: {
+        switch (index) {
+            case 0:
+                return @"x0";
+            case 1:
+                return @"x1";
+            case 2:
+                return @"x2";
+            case 3:
+                return @"x3";
         }
     }
     case BSG_CPUFamilyX86: {
@@ -367,10 +382,13 @@ typedef enum {
     BSG_CPUFamily family = [self cpuFamily:report];
     NSDictionary *registers =
         [self basicRegistersFromThreadReport:crashedThread];
-    NSArray *regNames = @[[self registerNameForFamily:family paramIndex:0],
-            [self registerNameForFamily:family paramIndex:1],
-            [self registerNameForFamily:family paramIndex:2],
-            [self registerNameForFamily:family paramIndex:3]];
+    NSMutableArray *regNames = [NSMutableArray arrayWithCapacity:4];
+    for (int paramIndex = 0; paramIndex <= 3; paramIndex++) {
+        NSString *regName = [self registerNameForFamily:family paramIndex:paramIndex];
+        if (regName.length > 0) {
+            [regNames addObject:regName];
+        }
+    }
     NSMutableArray *params = [NSMutableArray arrayWithCapacity:4];
     for (NSString *regName in regNames) {
         BSG_KSCrashDoctorParam *param = [[BSG_KSCrashDoctorParam alloc] init];

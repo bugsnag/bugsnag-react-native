@@ -114,6 +114,7 @@
 - (NSDictionary *)getBodyFromReports:(NSArray *)reports {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     BSGDictSetSafeObject(data, [Bugsnag notifier].details, BSGKeyNotifier);
+    BSGDictSetSafeObject(data, [Bugsnag notifier].configuration.apiKey, BSGKeyApiKey);
 
     NSMutableArray *formatted =
             [[NSMutableArray alloc] initWithCapacity:[reports count]];

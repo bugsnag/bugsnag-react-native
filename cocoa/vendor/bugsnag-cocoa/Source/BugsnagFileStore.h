@@ -70,4 +70,5 @@
 + (NSString *)findReportStorePath:(NSString *)customDirectory
                        bundleName:(NSString *)bundleName;
 
+- (NSString *)fileIdFromFilename:(NSString *)filename;
 @end
