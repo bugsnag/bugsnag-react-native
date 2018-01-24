@@ -187,6 +187,10 @@ RCT_EXPORT_METHOD(setUser:(NSDictionary *)userInfo) {
     [[Bugsnag configuration] setUser:identifier withName:name andEmail:email];
 }
 
+RCT_EXPORT_METHOD(startSession) {
+    [Bugsnag startSession];
+}
+
 RCT_EXPORT_METHOD(clearUser) {
     [[Bugsnag configuration] setUser:nil withName:nil andEmail:nil];
 }

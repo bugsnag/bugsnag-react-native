@@ -65,6 +65,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void startSession() {
+      Bugsnag.startSession();
+  }
+
+  @ReactMethod
   public void startWithOptions(ReadableMap options) {
       String apiKey = null;
       if (options.hasKey("apiKey")) {
