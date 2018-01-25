@@ -14,6 +14,12 @@ export class Client {
 
   public clearUser(): void;
 
+  public startSession(): void;
+
+  public enableConsoleBreadcrumbs(): void;
+
+  public disableConsoleBreadCrumbs(): void;
+
   public leaveBreadcrumb(name: string, metadata?: IMetadata | string): void;
 }
 
@@ -30,6 +36,7 @@ export class Configuration {
   public handlePromiseRejections: boolean;
   public autoCaptureSessions: boolean;
   public automaticallyCollectBreadcrumbs: boolean;
+  public consoleBreadcrumbsEnabled: boolean;
 
   constructor(apiKey?: string);
 
@@ -42,8 +49,6 @@ export class Configuration {
   ): void;
 
   public clearBeforeSendCallbacks(): void;
-
-  public startSession(): void;
 
   public toJSON(): any;
 }
