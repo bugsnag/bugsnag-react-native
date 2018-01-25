@@ -28,6 +28,8 @@ export class Configuration {
   public codeBundleId?: string;
   public autoNotify: boolean;
   public handlePromiseRejections: boolean;
+  public autoCaptureSessions: boolean;
+  public automaticallyCollectBreadcrumbs: boolean;
 
   constructor(apiKey?: string);
 
@@ -41,6 +43,8 @@ export class Configuration {
 
   public clearBeforeSendCallbacks(): void;
 
+  public startSession(): void;
+
   public toJSON(): any;
 }
 
@@ -48,8 +52,9 @@ type BeforeSend = (report: Report) => boolean | void;
 
 export class StandardDelivery {
   public endpoint: string;
+  public sessionsEndpoint: string;
 
-  constructor(endpoint: string);
+  constructor(endpoint: string, sessionsEndpoint: string);
 }
 
 export interface IMetadata {
