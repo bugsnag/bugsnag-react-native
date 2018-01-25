@@ -232,11 +232,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
           }
       }
 
-      if (options.hasKey("autoCaptureSessions")) {
-          boolean autoCapture = options.getBoolean("autoCaptureSessions");
-          config.setAutoCaptureSessions(autoCapture);
-      }
-
       if (options.hasKey("codeBundleId")) {
           String codeBundleId = options.getString("codeBundleId");
           if (codeBundleId != null && codeBundleId.length() > 0)
@@ -256,6 +251,13 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       if (options.hasKey("automaticallyCollectBreadcrumbs")) {
           boolean autoCapture = options.getBoolean("automaticallyCollectBreadcrumbs");
           config.setAutomaticallyCollectBreadcrumbs(autoCapture);
+      }
+      // Process session tracking last in case the effects of other options
+      // should be captured as a part of the session
+      if (options.hasKey("autoCaptureSessions")) {
+          boolean autoCapture = options.getBoolean("autoCaptureSessions");
+          config.setAutoCaptureSessions(autoCapture);
+          client.startFirstSession();
       }
   }
 }
