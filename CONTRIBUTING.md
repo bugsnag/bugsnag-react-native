@@ -49,6 +49,8 @@ directory as bugsnag-react-native:
 make ANDROID_VERSION=X IOS_VERSION=X upgrade_vendor
 ```
 
+- Upgrade TypeScript definitions if the JavaScript has changed.
+
 ### Release Checklist
 Please follow the testing instructions in [the platforms release checklist](https://github.com/bugsnag/platforms-release-checklist/blob/master/README.md), and any additional steps directly below.
 

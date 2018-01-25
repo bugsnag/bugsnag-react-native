@@ -14,6 +14,12 @@ export class Client {
 
   public clearUser(): void;
 
+  public startSession(): void;
+
+  public enableConsoleBreadcrumbs(): void;
+
+  public disableConsoleBreadCrumbs(): void;
+
   public leaveBreadcrumb(name: string, metadata?: IMetadata | string): void;
 }
 
@@ -28,6 +34,9 @@ export class Configuration {
   public codeBundleId?: string;
   public autoNotify: boolean;
   public handlePromiseRejections: boolean;
+  public autoCaptureSessions: boolean;
+  public automaticallyCollectBreadcrumbs: boolean;
+  public consoleBreadcrumbsEnabled: boolean;
 
   constructor(apiKey?: string);
 
@@ -48,8 +57,9 @@ type BeforeSend = (report: Report) => boolean | void;
 
 export class StandardDelivery {
   public endpoint: string;
+  public sessionsEndpoint: string;
 
-  constructor(endpoint: string);
+  constructor(endpoint: string, sessionsEndpoint: string);
 }
 
 export interface IMetadata {
