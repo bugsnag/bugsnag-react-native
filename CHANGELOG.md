@@ -1,6 +1,47 @@
 Changelog
 =========
 
+## 2.9.0 (2018-01-26)
+
+This release includes features and fixes to the native interface.
+
+### Enhancements
+
+* Allow disabling of breadcrumbs via the `Configuration` object via the JS
+  interface
+* Upgrade bugsnag-android to v4.3.1:
+  - *Enhancements:*
+    - Move capture of thread stacktraces to start of notify process
+    - Add configuration option to disable automatic breadcrumb capture
+    - Parse manifest meta-data for Session Auto-Capture boolean flag
+  - *Bug Fixes:*
+    - Fix possible ANR when enabling session tracking via
+      `Bugsnag.setAutoCaptureSessions()` and connecting to latent networks.
+      [#231](https://github.com/bugsnag/bugsnag-android/pull/231)
+    - Fix invalid payloads being sent when processing multiple Bugsnag events
+      in the same millisecond
+      [#235](https://github.com/bugsnag/bugsnag-android/pull/235)
+    - Re-add API key to error report HTTP request body to preserve backwards
+      compatibility with older versions of the error reporting API
+      [#228](https://github.com/bugsnag/bugsnag-android/pull/228)-
+* Upgrade bugsnag-cocoa to v5.15.3:
+  - *Bug Fixes:*
+    - Remove chatty logging from session tracking
+      [#231](https://github.com/bugsnag/bugsnag-cocoa/pull/231)
+      [Jamie Lynch](https://github.com/fractalwrench)
+    - Re-add API key to payload body to preserve backwards compatibility with older
+      versions of the error reporting API
+      [#232](https://github.com/bugsnag/bugsnag-cocoa/pull/232)
+      [Jamie Lynch](https://github.com/fractalwrench)
+    - Fix crash in iPhone X Simulator when reporting user exceptions
+      [#234](https://github.com/bugsnag/bugsnag-cocoa/pull/234)
+      [Paul Zabelin](https://github.com/paulz)
+    - Improve capture of Swift assertion error messages on arm64 devices, inserting
+      the assertion type into the report's `errorClass`
+      [#235](https://github.com/bugsnag/bugsnag-cocoa/pull/235)
+    - Fix default user/device ID generation on iOS devices
+    - Fix mach exception detection
+
 ## 2.8.0 (2018-01-09)
 
 ### Enhancements
