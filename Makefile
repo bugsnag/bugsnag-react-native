@@ -13,8 +13,20 @@ release:
 ifeq ($(VERSION),)
 	@$(error VERSION is not defined. Run with `make VERSION=number release`)
 endif
-	make VERSION=$(VERSION) bump && git commit -am "v$(VERSION)" && git tag v$(VERSION) \
-	&& git push origin && git push --tags && npm publish
+ifneq ($(shell git rev-parse --abbrev-ref HEAD),master)
+	@$(error You are not on the master branch)
+endif
+ifneq ($(shell git diff origin/master..master),)
+	@$(error You have unpushed commits on the master branch)
+endif
+ifneq ($(shell git diff),)
+	@$(error You have uncommitted changes)
+endif
+	@make VERSION=$(VERSION) bump
+	@git commit -am "Release v$(VERSION)"
+	@git tag v$(VERSION)
+	@git push origin master "v$(VERSION)"
+	@npm publish
 
 upgrade_vendor:
 ifeq ($(ANDROID_VERSION),)
