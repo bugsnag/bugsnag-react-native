@@ -52,14 +52,29 @@ make ANDROID_VERSION=X IOS_VERSION=X upgrade_vendor
 - Upgrade TypeScript definitions if the JavaScript has changed.
 
 ### Release Checklist
-Please follow the testing instructions in [the platforms release checklist](https://github.com/bugsnag/platforms-release-checklist/blob/master/README.md), and any additional steps directly below.
 
-* Ensure the example app sends the correct error for each type on iOS and
-  Android
-* Archive the iOS app and validate the bundle
-* Generate a signed APK for Android
+#### Pre-release
 
-### Making a new release
-1. Update the changelog with new features and fixes
-2. `make VERSION=[number] release`
+- [ ] Does the build pass on the CI server?
+- [ ] Have the changelog and README been updated?
+- [ ] Have all the version numbers been incremented?
+- [ ] Has all new functionality been manually tested on a release build? Use `npm pack` to generate an artifact to install in a new app.
+  - [ ] Ensure the example app sends the correct error for each type on iOS and Android
+  - [ ] Archive the iOS app and validate the bundle type
+  - [ ] Generate a signed APK for Android
+- [ ] Do the installation instructions work when creating an example app from scratch?
+- [ ] Have the installation instructions been updated on the [dashboard](https://github.com/bugsnag/bugsnag-website/tree/master/app/views/dashboard/projects/install) as well as the [docs site](https://github.com/bugsnag/docs.bugsnag.com)?
+
+#### Making the release
+
+1. Update the changelog with new features and fixes. Any changes to the native interface requires a minor version bump.
+2. Run `make VERSION=[number] release`
 3. Create a new release on GitHub, copying the changelog entry.
+
+#### Post-release
+
+- [ ] Have all Docs PRs been merged?
+- [ ] Can the latest release be installed via npm?
+- [ ] Do the installation instructions work using the released artefact?
+- [ ] Can a freshly created example app send an error report from a release build, using the released artefact?
+- [ ] Do the existing example apps send an error report using the released artefact?
