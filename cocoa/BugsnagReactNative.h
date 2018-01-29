@@ -27,5 +27,6 @@
 - (void)notify:(NSDictionary *)payload;
 - (void)setUser:(NSDictionary *)userInfo;
 - (void)clearUser;
+- (void)startSession;
 
 @end

@@ -197,6 +197,6 @@ __deprecated_msg("Use toJson: instead.");
 /**
  * Returns the enhanced error message for the thread, or nil if none exists.
  */
-- (NSString *_Nullable)enhancedErrorMessageForThread:(NSDictionary *_Nullable)thread;
+- (NSString *_Nullable)enhancedErrorMessageForThread:(NSDictionary *_Nullable)thread __deprecated;
 
 @end

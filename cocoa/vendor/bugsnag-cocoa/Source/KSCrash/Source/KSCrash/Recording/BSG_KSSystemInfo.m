@@ -176,7 +176,7 @@
 + (NSString *)deviceAndAppHash {
     NSMutableData *data = nil;
 
-#if KSCRASH_HAS_UIDEVICE
+#if BSG_KSCRASH_HAS_UIDEVICE
     if ([[UIDevice currentDevice]
             respondsToSelector:@selector(identifierForVendor)]) {
         data = [NSMutableData dataWithLength:16];
@@ -393,7 +393,7 @@
         [sysInfo bsg_ksc_safeSetObject:@"simulator"
                                 forKey:@BSG_KSSystemField_Model];
     } else {
-#if KSCRASH_HOST_OSX
+#if BSG_KSCRASH_HOST_OSX
         // MacOS has the machine in the model field, and no model
         [sysInfo bsg_ksc_safeSetObject:[self stringSysctl:BSGKeyHwModel]
                                 forKey:@BSG_KSSystemField_Machine];
