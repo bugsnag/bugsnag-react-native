@@ -25,6 +25,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.uimanager.ViewManager;
 
 import android.content.Context;
+import android.app.Activity;
 
 import com.bugsnag.android.*;
 
@@ -262,7 +263,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       if (options.hasKey("autoCaptureSessions")) {
           boolean autoCapture = options.getBoolean("autoCaptureSessions");
           config.setAutoCaptureSessions(autoCapture);
-          client.startFirstSession();
+          Activity activity = getCurrentActivity();
+
+          if (activity != null) {
+              client.startFirstSession(getCurrentActivity());
+          }
       }
   }
 }
