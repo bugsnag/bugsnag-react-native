@@ -1,5 +1,9 @@
 Changelog
 =========
+## 2.9.1 (2018-01-29)
+
+- Adds missing bundle ID in iOS example project
+- Fixes missing parameter in Android initialisation
 
 ## 2.9.0 (2018-01-26)
 
