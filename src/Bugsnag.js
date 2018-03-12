@@ -379,7 +379,8 @@ const allowedMapObjectTypes = ['string', 'number', 'boolean'];
  * Convert an object into a structure with types suitable for serializing
  * across to native code.
  */
-const typedMap = function(map) {
+const typedMap = function(map, maxDepth = 10, depth = 0, seen = new Set()) {
+  seen.add(map)
   const output = {};
   for (const key in map) {
     if (!{}.hasOwnProperty.call(map, key)) continue;
@@ -390,7 +391,13 @@ const typedMap = function(map) {
     if (value == undefined || (typeof value === 'number' && isNaN(value))) {
       output[key] = {type: 'string', value: String(value)}
     } else if (typeof value === 'object') {
-      output[key] = {type: 'map', value: typedMap(value)};
+      if (seen.has(value)) {
+        output[key] = {type: 'string', value: '[circular]'}
+      } else if (depth === maxDepth) {
+        output[key] = {type: 'string', value: '[max depth exceeded]'}
+      } else {
+        output[key] = {type: 'map', value: typedMap(value, maxDepth, depth + 1, seen)};
+      }
     } else {
       const type = typeof value;
       if (allowedMapObjectTypes.includes(type)) {
@@ -402,3 +409,5 @@ const typedMap = function(map) {
   }
   return output;
 }
+
+export { typedMap };
