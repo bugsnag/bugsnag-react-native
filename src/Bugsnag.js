@@ -157,9 +157,10 @@ export class Client {
       metadata = {};
     }
 
-    let type = metadata['type'] || 'manual';
-    const breadcrumbMetaData = { ...metadata };
-    delete breadcrumbMetaData['type'];
+    const {
+      type = 'manual',
+      ...breadcrumbMetaData
+    } = metadata;
 
     NativeClient.leaveBreadcrumb({
       name,
