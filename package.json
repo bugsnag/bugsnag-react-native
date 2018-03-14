@@ -15,6 +15,7 @@
   "scripts": {
     "prepublish": "mkdir -p lib && babel src/Bugsnag.js -s -o lib/Bugsnag.js",
     "test:unit:js": "jest --coverage src/__tests__",
+    "test:lint:js": "standard",
     "test:smoke:typescript": "tslint index.d.ts && tsc --strict test/app.ts"
   },
   "peerDependencies": {
@@ -32,11 +33,22 @@
       "packageImportPath": "import com.bugsnag.BugsnagReactNative;"
     }
   },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "lib",
+      "test",
+      "test-harness",
+      "examples"
+    ]
+  },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-eslint": "^8.2.2",
     "babel-jest": "^21.0.2",
     "babel-preset-react-native": "^1.9.1",
     "jest": "^21.1.0",
+    "standard": "^11.0.0",
     "tslint": "^5.8.0",
     "typescript": "^2.6.1"
   }

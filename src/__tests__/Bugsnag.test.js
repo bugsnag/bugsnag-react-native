@@ -1,3 +1,5 @@
+/* global jest, beforeEach, test, expect */
+
 beforeEach(() => {
   // ensure freshly mocked clients in each test
   jest.resetModules()
@@ -32,6 +34,7 @@ test('constructor(): works if everything is ok', () => {
 
   const { Client } = require('../Bugsnag')
   const c = new Client('API_KEY')
+  expect(c).toBeTruthy()
   expect(mockStart).toHaveBeenCalledWith(expect.objectContaining({ apiKey: 'API_KEY' }))
   expect(global.ErrorUtils.getGlobalHandler).toHaveBeenCalled()
   expect(global.ErrorUtils.setGlobalHandler).toHaveBeenCalled()
@@ -52,15 +55,15 @@ test('handleUncaughtErrors(): error handler calls notify(…) correctly', () => 
   handler(new Error('boom!'), false)
 
   expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, false, expect.any(Function), {
-    originalSeverity: "error",
-    severityReason: "unhandledException",
+    originalSeverity: 'error',
+    severityReason: 'unhandledException',
     unhandled: true
   })
 })
 
 test('handlePromiseRejections(): error handler calls notify(…) correctly', () => {
   jest.mock('react-native', () => ({
-    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn() } },
+    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn() } }
   }), { virtual: true })
 
   const Promise = require('promise/setimmediate')
@@ -77,10 +80,9 @@ test('handlePromiseRejections(): error handler calls notify(…) correctly', () 
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
-
         expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, false, null, {
-          originalSeverity: "error",
-          severityReason: "unhandledPromiseRejection",
+          originalSeverity: 'error',
+          severityReason: 'unhandledPromiseRejection',
           unhandled: true
         })
       } catch (e) {
@@ -173,28 +175,28 @@ test('notify(): supplying unhandled state as param changes payload', () => {
   c.notify(new Error('nb boom!'), null, true, null, {
     originalSeverity: 'warning',
     unhandled: false,
-    severityReason: "handledException",
+    severityReason: 'handledException'
   })
   expect(mockNotifyBlocking).toHaveBeenCalledWith(
     expect.objectContaining({
       severity: 'warning',
       unhandled: false,
-      severityReason: "handledException"
+      severityReason: 'handledException'
     }),
     true,
     null
   )
 
   // mutate severity
-  c.notify(new Error('Mutate Severity'), report => {report.severity = 'info'}, true, null, {
+  c.notify(new Error('Mutate Severity'), report => { report.severity = 'info' }, true, null, {
     originalSeverity: 'warning',
     unhandled: false,
-    severityReason: "handledException",
+    severityReason: 'handledException'
   })
   expect(mockNotifyBlocking).toHaveBeenCalledWith(
     expect.objectContaining({
       severity: 'info',
-      severityReason: "userCallbackSetSeverity"
+      severityReason: 'userCallbackSetSeverity'
     }),
     true,
     null
@@ -344,19 +346,18 @@ test('{enable|disable}ConsoleBreadCrumbs(): gracefully handles serialization edg
   config.consoleBreadcrumbsEnabled = true
   const c = new Client(config)
 
-  const circular = {};
-  circular.ref = circular;
+  const circular = {}
+  circular.ref = circular
 
-  console.log('undefined cannot have toString() called on it', undefined);
-  console.warn('neither can null', null);
-  console.error('and objects with circular refs cannot be passed to JSON.stringify()', circular);
+  console.log('undefined cannot have toString() called on it', undefined)
+  console.warn('neither can null', null)
+  console.error('and objects with circular refs cannot be passed to JSON.stringify()', circular)
   expect(mockLeaveBreadcrumb).toHaveBeenCalledTimes(3)
 
   // because global side effects, ensure console wrapping is
   // switched off for the next test ¯\_(ツ)_/¯
   c.disableConsoleBreadCrumbs()
 })
-
 
 test('typedMap converts arrays, objects, strings and numbers', () => {
   const { typedMap } = require('../Bugsnag')
@@ -393,15 +394,15 @@ test('typedMap converts arrays, objects, strings and numbers', () => {
 
 test('typedMap handles circular structures', () => {
   const { typedMap } = require('../Bugsnag')
-  const objA = {};
-  objA.ref = objA;
+  const objA = {}
+  objA.ref = objA
 
   // this tests the top level object being referred to as a node
   expect(typedMap(objA)).toEqual({ ref: { type: 'string', value: '[circular]' } })
 
-  const objB = {};
-  objB.leafA = {};
-  objB.leafB = {};
+  const objB = {}
+  objB.leafA = {}
+  objB.leafB = {}
   objB.leafA.ref = objB.leafB
   objB.leafB.ref = objB.leafA
 
@@ -436,7 +437,7 @@ test('typedMap handles deep nesting', () => {
         }
       }
     }
-  };
+  }
   expect(typedMap(nesty)).toEqual({
     zero: {
       type: 'map',

@@ -4,7 +4,7 @@ jobs:
       sudo: false
       language: javascript
       install: npm install
-      script: npm run test:unit:js && npm run test:smoke:typescript
+      script: npm run test:lint:js && npm run test:unit:js && npm run test:smoke:typescript
     - stage: build android
       language: android
       sudo: false
@@ -32,7 +32,7 @@ jobs:
         - cd android
         - ./gradlew assembleRelease
       licenses:
-        - 
+        -
     - stage: build cocoa
       language: objective-c
       osx-image: xcode7.3

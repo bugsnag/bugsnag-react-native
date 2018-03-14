@@ -1,2 +1,2 @@
 'use strict'
-module.exports = require('./lib/Bugsnag');
+module.exports = require('./lib/Bugsnag')
