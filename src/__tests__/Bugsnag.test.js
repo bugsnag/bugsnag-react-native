@@ -273,6 +273,25 @@ test('leaveBreadcrumb(): calls the native leaveBreadcrumb method correctly', () 
   mockLeaveBreadcrumb.mockClear()
 })
 
+test('leaveBreadcrumb(): support setting "type" via metadata', () => {
+  const mockLeaveBreadcrumb = jest.fn()
+  jest.mock('react-native', () => ({
+    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn(), leaveBreadcrumb: mockLeaveBreadcrumb } }
+  }), { virtual: true })
+
+  const { Client, Configuration } = require('../Bugsnag')
+  const config = new Configuration('API_KEY')
+  const c = new Client(config)
+
+  c.leaveBreadcrumb('menu_expand', { type: 'UI', buttonClass: 'submit' })
+  expect(mockLeaveBreadcrumb).toHaveBeenCalledWith({
+    name: 'menu_expand',
+    type: 'UI',
+    metadata: { buttonClass: { type: 'string', value: 'submit' } }
+  })
+  mockLeaveBreadcrumb.mockClear()
+})
+
 test('{enable|disable}ConsoleBreadCrumbs(): wraps/unwraps console methods and calls leaveBreadcrumb appropriately', () => {
   const mockLeaveBreadcrumb = jest.fn()
   jest.mock('react-native', () => ({
