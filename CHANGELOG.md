@@ -1,5 +1,14 @@
 Changelog
 =========
+
+## 2.9.2 (2018-03-15)
+
+* Add standardJS linter [#223](https://github.com/bugsnag/bugsnag-react-native/pull/223) [Ben Gourley](https://github.com/bengourley)
+* Rework construction of breadcrumbMetaData [224](https://github.com/bugsnag/bugsnag-react-native/pull/224) [bramus](https://github.com/bramus)
+* Refactor(typedMap): Extract and rename typedMap function into NativeSerializer module [#225](https://github.com/bugsnag/bugsnag-react-native/pull/225) [Ben Gourley](https://github.com/bengourley)
+* Loosen react native dependency version for Android [#220](https://github.com/bugsnag/bugsnag-react-native/pull/220) [Jamie Lynch](https://github.com/fractalwrench)
+
+
 ## 2.9.1 (2018-01-29)
 
 - Adds missing bundle ID in iOS example project
