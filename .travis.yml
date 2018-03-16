@@ -25,9 +25,14 @@ jobs:
       install:
         - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
         - sudo apt-get install -y nodejs
+      before_script:
+        - npm install
+        - npm install babel-cli
+        - PATH="node_modules/bin:$PATH" && npm pack
       script:
         - cd examples/plain
-        - npm install
+        - yarn add ../../bugsnag-react-native-*.tgz
+        - yarn install
         - ./node_modules/.bin/react-native link
         - cd android
         - ./gradlew assembleRelease
@@ -40,10 +45,15 @@ jobs:
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
       xcode_scheme: BugsnagReactNative
       install:
-        - brew install node
+        - brew install node yarn
+      before_script:
+        - npm install
+        - npm install babel-cli
+        - PATH="node_modules/bin:$PATH" && npm pack
       script:
         - cd examples/plain
-        - npm install
+        - yarn add ../../bugsnag-react-native-*.tgz
+        - yarn install
         - ./node_modules/.bin/react-native link
         - cd ios
         - xcodebuild -project BugsnagReactNativeExample.xcodeproj -scheme BugsnagReactNativeExample build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -quiet
