@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 2.9.3 (2018-03-16)
+
+### Bug Fixes
+
+* Add NativeSerializer to packaging step [#227](https://github.com/bugsnag/bugsnag-react-native/pull/227)
+[Ben Gourley](https://github.com/bengourley)
+
 ## 2.9.2 (2018-03-15)
 
 * Add standardJS linter [#223](https://github.com/bugsnag/bugsnag-react-native/pull/223) [Ben Gourley](https://github.com/bengourley)
