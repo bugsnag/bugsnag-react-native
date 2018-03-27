@@ -65,6 +65,8 @@ make ANDROID_VERSION=X IOS_VERSION=X upgrade_vendor
 - [ ] Do the installation instructions work when creating an example app from scratch?
 - [ ] Have the installation instructions been updated on the [dashboard](https://github.com/bugsnag/bugsnag-website/tree/master/app/views/dashboard/projects/install) as well as the [docs site](https://github.com/bugsnag/docs.bugsnag.com)?
 
+Note: the manual installation instructions for React Native are in a [separate section of the Docs](https://docs.bugsnag.com/platforms/react-native/manual-linking-guide/) and should also be updated if necessary.
+
 #### Making the release
 
 1. Update the changelog with new features and fixes. Any changes to the native interface requires a minor version bump.
