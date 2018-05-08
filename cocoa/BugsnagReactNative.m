@@ -215,7 +215,11 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     NSString *appVersion = [RCTConvert NSString:options[@"appVersion"]];
     NSString *codeBundleId = [RCTConvert NSString:options[@"codeBundleId"]];
     BugsnagConfiguration* config = [Bugsnag bugsnagStarted] ? [Bugsnag configuration] : [BugsnagConfiguration new];
-    config.apiKey = apiKey;
+
+    if (apiKey != nil && apiKey.length > 0) {
+        config.apiKey = apiKey;
+    }
+
     config.releaseStage = releaseStage;
     config.notifyReleaseStages = notifyReleaseStages;
     config.autoNotify = [RCTConvert BOOL:options[@"autoNotify"]];
