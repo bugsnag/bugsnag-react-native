@@ -5,6 +5,17 @@ e.g. "When initializing the Bugsnag client, it is currently difficult to (...)
       this change simplifies the process by (...)"
 
      "Improves the performance of data filtering"
+
+     "Adds additional test coverage to multi-threaded use of Configuration
+      objects"
+-->
+
+<!-- For new features, include design documentation:
+
+## Design
+
+Why was this approach to the goal used?
+
 -->
 
 ## Changeset
@@ -68,5 +79,6 @@ For the pull request reviewer(s), this changeset has been reviewed for:
 - [ ] Internal consistency with the rest of the library - is there any overlap between existing interfaces and any which have been added?
 - [ ] Usage friction - is the proposed change in usage cumbersome or complicated?
 - [ ] Performance and complexity - are there any cases of unexpected O(n^3) when iterating, recursing, flat mapping, etc?
+- [ ] Concurrency concerns - if components are accessed asynchronously, what issues will arise
 - [ ] Thoroughness of added tests and any missing edge cases
 - [ ] Idiomatic use of the language
