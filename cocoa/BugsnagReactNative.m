@@ -216,7 +216,7 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     NSString *codeBundleId = [RCTConvert NSString:options[@"codeBundleId"]];
     BugsnagConfiguration* config = [Bugsnag bugsnagStarted] ? [Bugsnag configuration] : [BugsnagConfiguration new];
 
-    if (apiKey != nil && apiKey.length > 0) {
+    if (apiKey.length > 0) {
         config.apiKey = apiKey;
     }
 

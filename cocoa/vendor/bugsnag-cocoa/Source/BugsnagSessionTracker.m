@@ -58,7 +58,7 @@
 - (void)trackSession {
     [self.sessionStore write:self.currentSession];
     self.trackedFirstSession = YES;
-    
+
     if (self.callback) {
         self.callback(self.currentSession);
     }
@@ -96,7 +96,7 @@
         }
         BugsnagSessionTrackingPayload *payload = [[BugsnagSessionTrackingPayload alloc] initWithSessions:sessions];
 
-        if (payload.sessions.count > 0) {
+        if (payload.sessions.count > 0 && self.config.apiKey.length > 0) {
             [self.apiClient sendData:payload
                          withPayload:[payload toJson]
                                toURL:self.config.sessionURL

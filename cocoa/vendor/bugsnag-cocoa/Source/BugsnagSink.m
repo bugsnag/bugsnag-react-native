@@ -95,7 +95,7 @@
     }
 #pragma clang diagnostic pop
 
-    if (reportData == nil) {
+    if (reportData == nil || [reportData count] <= 0) {
         if (onCompletion) {
             onCompletion(@[], YES, nil);
         }
@@ -113,17 +113,20 @@
 // Generates the payload for notifying Bugsnag
 - (NSDictionary *)getBodyFromReports:(NSArray *)reports {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-    BSGDictSetSafeObject(data, [Bugsnag notifier].details, BSGKeyNotifier);
-    BSGDictSetSafeObject(data, [Bugsnag notifier].configuration.apiKey, BSGKeyApiKey);
 
-    NSMutableArray *formatted =
-            [[NSMutableArray alloc] initWithCapacity:[reports count]];
+    if ([Bugsnag notifier].configuration.apiKey.length > 0) {
+        BSGDictSetSafeObject(data, [Bugsnag notifier].details, BSGKeyNotifier);
+        BSGDictSetSafeObject(data, [Bugsnag notifier].configuration.apiKey, BSGKeyApiKey);
 
-    for (BugsnagCrashReport *report in reports) {
-        BSGArrayAddSafeObject(formatted, [report toJson]);
+        NSMutableArray *formatted =
+                [[NSMutableArray alloc] initWithCapacity:[reports count]];
+
+        for (BugsnagCrashReport *report in reports) {
+            BSGArrayAddSafeObject(formatted, [report toJson]);
+        }
+
+        BSGDictSetSafeObject(data, formatted, BSGKeyEvents);
     }
-
-    BSGDictSetSafeObject(data, formatted, BSGKeyEvents);
     return data;
 }
 
