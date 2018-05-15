@@ -9,7 +9,7 @@
   "dependencies": {
     "bugsnag-react-native": "^2.9.3",
     "react": "16.0.0",
-    "react-native": "^0.50.4"
+    "react-native": "0.50.4"
   },
   "jest": {
     "preset": "jest-react-native"
@@ -22,6 +22,6 @@
     "eslint-plugin-babel": "^4.0.0",
     "jest": "17.0.0",
     "jest-react-native": "17.0.0",
-    "react-test-renderer": "16.0.0-alpha.12"
+    "react-test-renderer": "16.0.0"
   }
 }
