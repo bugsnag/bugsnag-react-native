@@ -144,4 +144,8 @@ test('serializeForNativeLayer handles error objects', () => {
   })
   expect(serialized['stack']['type']).toEqual('string')
   expect(serialized['stack']['value'].length).toBeGreaterThan(0)
+  expect(serialized['name']).toEqual({
+    type: 'string',
+    value: 'Error'
+  })
 })
