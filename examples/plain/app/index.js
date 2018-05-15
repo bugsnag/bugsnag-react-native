@@ -1,101 +1,109 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
-// import { View, StatusBar, StyleSheet } from 'react-native';
-// import { Navigator } from 'react-native-deprecated-custom-components';
-import bugsnag from 'lib/bugsnag';
-// import NavigationBarRouteMapper from './components/navigation_bar_route_mapper';
-// import Main from './components/scenes/main';
-// import Repos from './components/scenes/repos';
-// import Crashy from './components/scenes/crashy';
-// import Register from './components/scenes/register';
+import { View, Text, Button, ScrollView, StyleSheet, Platform } from 'react-native';
 
-// -----------------------------------------------------------------------------------------------
-// App component. (root)
-//
-// Simple Navigator based app that will notify Bugsnag if an invalid route is used.
-// Will also leave breadcrumbs for each navigation change.
-// -----------------------------------------------------------------------------------------------
-// const styles = StyleSheet.create({
-//   container: {
-//     paddingTop: Navigator.NavigationBar.Styles.General.TotalNavHeight,
-//     flex: 1,
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#eeeeee',
-//   },
-//
-//   navBar: {
-//     backgroundColor: '#212129',
-//     alignItems: 'center',
-//   },
-// })
+import bugsnag from 'lib/bugsnag';
+import NativeCrash from 'lib/native_crash';
+
+function triggerException() {
+  bogusFunction(); // eslint-disable-line no-undef
+}
+
+function triggerNativeException() {
+  NativeCrash.generateCrash()
+}
 
 export default class App extends Component {
   render() {
     return (
-      <View style={{
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Text>"Hello World"</Text>
+      <View style={styles.container}>
+        <Text style= {{
+          paddingTop: 40,
+          margin: 20,
+        }}>Press the buttons below to test examples of Bugsnag functionality. Make sure you have changed the API key in Info.plist or AndroidManifest.xml.</Text>
+        <ScrollView>
+          <View style={styles.buttonContainer}>
+
+            <Button
+              title="Trigger JS Exception"
+              onPress={triggerException} />
+            <Text style={styles.info}>
+            Tap this button to send a JS crash to Bugsnag
+            </Text>
+
+            <Button
+              title="Trigger Native Exception"
+              onPress={triggerNativeException} />
+            <Text style={styles.info}>
+              Tap this button to send a native {Platform.OS} crash to Bugsnag
+            </Text>
+
+            <Button
+              title="Send Handled JS Exception"
+              onPress={() => {
+                try { // execute crashy code
+                  triggerException();
+                } catch (error) {
+                  bugsnag.notify(error);
+                }
+              }} />
+            <Text style={styles.info}>
+              Tap this button to send a handled error to Bugsnag
+            </Text>
+
+            <Button
+              title="Set user"
+              onPress={() => {
+                try { // execute crashy code
+                  triggerException();
+                } catch (error) {
+                  bugsnag.setUser("user-5fab67", "John Smith", "john@example.com");
+                  bugsnag.notify(error);
+                }
+              }} />
+            <Text style={styles.info}>
+              Tap this button to send a handled error with user information to Bugsnag
+            </Text>
+
+            <Button
+              title="Leave breadcrumbs"
+              onPress={() => {
+                // log a breadcrumb, which will be attached to the error report
+                bugsnag.leaveBreadcrumb('About to execute crashy code', {
+                  type: 'user'
+                });
+
+                try { // execute crashy code
+                  triggerException();
+                } catch (error) {
+                  bugsnag.notify(error);
+                }
+              }} />
+            <Text style={styles.info}>
+              Tap this button to send a handled error with manual breadcrumbs
+            </Text>
+
+          </View>
+        </ScrollView>
       </View>
-      // <Navigator
-      //   initialRoute={{id: 'Main', title: 'Bugsnag React Native Example'}}
-      //   renderScene={this._renderScene}
-      //   onWillFocus={leaveNavigationBreadcrumb}
-      //   navigationBar={
-      //     <Navigator.NavigationBar style={styles.navBar}
-      //       routeMapper={NavigationBarRouteMapper} />
-      //   }
-      // />
     );
   }
-
-  // _renderScene(route, navigator) {
-  //   // pick the scene based on the route.id
-  //   const scene = (() => {
-  //     switch (route.id) {
-  //       case 'Main':   return <Main navigator={navigator} />;
-  //       case 'Repos':  return <Repos navigator={navigator} />;
-  //       case 'Crashy': return <Crashy navigator={navigator} />;
-  //       case 'Register': return <Register onSuccess={navigator.pop} />;
-  //       default:
-  //         // With missing route we can just log the error and go back to the main page
-  //         bugsnag.notify(new Error(`invalid route used: ${route.id}`));
-  //         // Render the main page I guess, maybe we should have some sort of reassuring
-  //         // error screen? ¯\_(ツ)_/¯
-  //         return <Main navigator={navigator} />;
-  //     }
-  //   })();
-  //
-  //   return (
-  //     <View style={styles.container}>
-  //       <StatusBar
-  //         barStyle="light-content"
-  //       />
-  //       {scene}
-  //     </View>
-  //   );
-  // }
 }
 
-//
-// //-------------------------------------------------------------------------------------------------
-// // Navigation handler that logs a bugsnag breadcrumb of type 'navigation'
-// //-------------------------------------------------------------------------------------------------
-// //
-// // hooks into the onWillFocus callback of the react native Navigator
-// // https://facebook.github.io/react-native/docs/navigator.html#onwillfocus
-// function leaveNavigationBreadcrumb(route) {
-//   // We want the breadcrumb message to say "Navigation [Main]" or "Navigation [Repo Screen]" etc...
-//   const message = `Navigation [${route.id}]`
-//   const metadata = {
-//     type: 'navigation', // this really just gives us the nice navigation icon in the UI.
-//     ...route, // Include all route information in the metadata.
-//   };
-//
-//   bugsnag.leaveBreadcrumb(message, metadata);
-// }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#eeeeee',
+  },
+  buttonContainer: {
+    margin: 20
+  },
+  info: {
+    textAlign: 'center',
+    color: '#666',
+    fontSize: 11,
+    marginBottom: 20
+  }
+})
