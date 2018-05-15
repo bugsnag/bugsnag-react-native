@@ -134,3 +134,14 @@ test('serializeForNativeLayer handles deep nesting', () => {
     }
   })
 })
+
+test('serializeForNativeLayer handles error objects', () => {
+  const err = new Error('Oh no')
+  const serialized = serializeForNativeLayer(err)
+  expect(serialized['message']).toEqual({
+    type: 'string',
+    value: 'Oh no'
+  })
+  expect(serialized['stack']['type']).toEqual('string')
+  expect(serialized['stack']['value'].length).toBeGreaterThan(0)
+})
