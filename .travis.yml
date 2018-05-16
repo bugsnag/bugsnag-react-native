@@ -1,11 +1,11 @@
 jobs:
   include:
-    - stage: test
+    - stage: build
       sudo: false
       language: javascript
       install: npm install
       script: npm run test:lint:js && npm run test:unit:js && npm run test:smoke:typescript
-    - stage: build android
+    - stage: build
       language: android
       sudo: false
       android:
@@ -38,7 +38,7 @@ jobs:
         - ./gradlew assembleRelease
       licenses:
         -
-    - stage: build cocoa
+    - stage: build
       language: objective-c
       osx_image: xcode9.3
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
