@@ -1,3 +1,5 @@
+const isError = require('iserror')
+
 const allowedMapObjectTypes = [ 'string', 'number', 'boolean' ]
 
 /**
@@ -7,6 +9,9 @@ const allowedMapObjectTypes = [ 'string', 'number', 'boolean' ]
 const serializeForNativeLayer = (map, maxDepth = 10, depth = 0, seen = new Set()) => {
   seen.add(map)
   const output = {}
+  if (isError(map)) {
+    map = extractErrorDetails(map)
+  }
   for (const key in map) {
     if (!{}.hasOwnProperty.call(map, key)) continue
 
@@ -35,4 +40,9 @@ const serializeForNativeLayer = (map, maxDepth = 10, depth = 0, seen = new Set()
   return output
 }
 
-export default serializeForNativeLayer
+const extractErrorDetails = (err) => {
+  const { message, stack, name } = err
+  return { message, stack, name }
+}
+
+module.exports = serializeForNativeLayer

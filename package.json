@@ -9,6 +9,7 @@
   "types": "index.d.ts",
   "nativePackage": true,
   "dependencies": {
+    "iserror": "^0.0.2",
     "promise": "^7",
     "prop-types": "^15.6.0"
   },
