@@ -1,11 +1,11 @@
 jobs:
   include:
-    - stage: build
+    - stage: test
       sudo: false
       language: javascript
       install: npm install
       script: npm run test:lint:js && npm run test:unit:js && npm run test:smoke:typescript
-    - stage: build
+    - stage: build android
       language: android
       sudo: false
       android:
@@ -38,7 +38,7 @@ jobs:
         - ./gradlew assembleRelease
       licenses:
         -
-    - stage: build
+    - stage: build cocoa
       language: objective-c
       matrix:
         include:
