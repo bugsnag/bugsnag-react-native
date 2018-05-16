@@ -45,7 +45,7 @@ jobs:
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
       xcode_scheme: BugsnagReactNative
       install:
-        - brew install node yarn
+        - brew install yarn
       before_script:
         - npm install
         - npm install babel-cli
