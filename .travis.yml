@@ -40,8 +40,8 @@ jobs:
         -
     - stage: build cocoa
       language: objective-c
-      osx-image: xcode7.3
-      env: SDK=macosx10.11 BUILD_OSX=9
+      osx-image: xcode9.2
+      env: SDK=macosx10.12 BUILD_OSX=9
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
       xcode_scheme: BugsnagReactNative
       install:
