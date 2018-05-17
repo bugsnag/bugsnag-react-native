@@ -24,7 +24,8 @@ Automatic [React Native crash reporting](https://www.bugsnag.com/platforms/react
 
 * [Read the integration guide](https://docs.bugsnag.com/platforms/react-native/) or [configuration options documentation](https://docs.bugsnag.com/platforms/react-native/configuration-options/)
 * [Search open and closed issues](https://github.com/bugsnag/bugsnag-react-native/issues?utf8=✓&q=is%3Aissue) for similar problems
-* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-react-native/issues/new)
+* Having trouble getting started? Please [contact support](mailto:support@bugsnag.com)
+* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-react-native/issues/new/choose)
 
 
 ## Contributing
