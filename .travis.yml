@@ -40,12 +40,12 @@ jobs:
         -
     - stage: build cocoa
       language: objective-c
-      osx-image: xcode7.3
-      env: SDK=macosx10.11 BUILD_OSX=9
+      os: osx
+      osx_image: xcode9.3
       xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
       xcode_scheme: BugsnagReactNative
       install:
-        - brew install node yarn
+        - brew install yarn
       before_script:
         - npm install
         - npm install babel-cli

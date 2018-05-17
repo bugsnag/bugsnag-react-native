@@ -45,11 +45,10 @@ A robust example of how to make best use of the Bugsnag React Native notifier.
 
 1. Run the app
    ```
-   react-native run-ios
+   react-native run-ios --configuration Release
    ```
 
    or
    ```
-   react-native run-android
+   react-native run-android --variant=release
    ```
-
