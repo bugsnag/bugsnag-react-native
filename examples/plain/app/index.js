@@ -8,6 +8,10 @@ function triggerException() {
   bogusFunction(); // eslint-disable-line no-undef
 }
 
+function triggerHandledException() {
+  bogusHandledFunction(); // eslint-disable-line no-undef
+}
+
 function triggerNativeException() {
   NativeCrash.generateCrash()
 }
@@ -41,7 +45,7 @@ export default class App extends Component {
               title="Send Handled JS Exception"
               onPress={() => {
                 try { // execute crashy code
-                  triggerException();
+                  triggerHandledException();
                 } catch (error) {
                   bugsnag.notify(error);
                 }
@@ -54,7 +58,7 @@ export default class App extends Component {
               title="Set user"
               onPress={() => {
                 try { // execute crashy code
-                  triggerException();
+                  throw new Error("Error with user");
                 } catch (error) {
                   bugsnag.setUser("user-5fab67", "John Smith", "john@example.com");
                   bugsnag.notify(error);
@@ -73,7 +77,7 @@ export default class App extends Component {
                 });
 
                 try { // execute crashy code
-                  triggerException();
+                  throw new Error("Error with breadcrumbs");
                 } catch (error) {
                   bugsnag.notify(error);
                 }
