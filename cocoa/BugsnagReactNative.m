@@ -137,6 +137,10 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
+    if (![Bugsnag bugsnagStarted]) {
+        return;
+    }
+
     NSString *const EXCEPTION_TYPE = @"browserjs";
     NSException *exception = [NSException
                               exceptionWithName:[RCTConvert NSString:options[@"errorClass"]]
@@ -181,6 +185,9 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
 }
 
 RCT_EXPORT_METHOD(setUser:(NSDictionary *)userInfo) {
+    if (![Bugsnag bugsnagStarted]) {
+        return;
+    }
     NSString *identifier = userInfo[@"id"] ? [RCTConvert NSString:userInfo[@"id"]] : nil;
     NSString *name = userInfo[@"name"] ? [RCTConvert NSString:userInfo[@"name"]] : nil;
     NSString *email = userInfo[@"email"] ? [RCTConvert NSString:userInfo[@"email"]] : nil;
@@ -188,14 +195,23 @@ RCT_EXPORT_METHOD(setUser:(NSDictionary *)userInfo) {
 }
 
 RCT_EXPORT_METHOD(startSession) {
+    if (![Bugsnag bugsnagStarted]) {
+        return;
+    }
     [Bugsnag startSession];
 }
 
 RCT_EXPORT_METHOD(clearUser) {
+    if (![Bugsnag bugsnagStarted]) {
+        return;
+    }
     [[Bugsnag configuration] setUser:nil withName:nil andEmail:nil];
 }
 
 RCT_EXPORT_METHOD(leaveBreadcrumb:(NSDictionary *)options) {
+    if (![Bugsnag bugsnagStarted]) {
+        return;
+    }
     [Bugsnag leaveBreadcrumbWithBlock:^(BugsnagBreadcrumb *crumb) {
         crumb.name = [RCTConvert NSString:options[@"name"]];
         crumb.type = BreadcrumbTypeFromString([RCTConvert NSString:options[@"type"]]);
@@ -258,6 +274,9 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
 }
 
 - (void)setNotifierDetails:(NSString *)packageVersion {
+    if (![Bugsnag bugsnagStarted]) {
+        return;
+    }
     id notifier = [Bugsnag notifier];
     NSDictionary *details = [notifier valueForKey:@"details"];
     NSString *version;
