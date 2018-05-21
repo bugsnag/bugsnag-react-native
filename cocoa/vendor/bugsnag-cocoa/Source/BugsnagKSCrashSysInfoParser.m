@@ -13,6 +13,8 @@
 #import "BugsnagConfiguration.h"
 #import "BugsnagLogger.h"
 
+#define PLATFORM_WORD_SIZE sizeof(void*)*8
+
 NSDictionary *BSGParseDevice(NSDictionary *report) {
     NSMutableDictionary *device =
     [[report valueForKeyPath:@"user.state.deviceState"] mutableCopy];
@@ -22,7 +24,7 @@ NSDictionary *BSGParseDevice(NSDictionary *report) {
     BSGDictSetSafeObject(device, [[NSLocale currentLocale] localeIdentifier],
                          @"locale");
     
-    BSGDictSetSafeObject(device, report[@"time_zone"], @"timezone");
+    BSGDictSetSafeObject(device, [report valueForKeyPath:@"system.time_zone"], @"timezone");
     BSGDictSetSafeObject(device, [report valueForKeyPath:@"system.memory.usable"],
                          @"totalMemory");
     
@@ -47,6 +49,13 @@ NSDictionary *BSGParseDevice(NSDictionary *report) {
     NSNumber *freeBytes = [fileSystemAttrs objectForKey:NSFileSystemFreeSize];
     BSGDictSetSafeObject(device, freeBytes, @"freeDisk");
     BSGDictSetSafeObject(device, report[@"system"][@"device_app_hash"], @"id");
+
+#if TARGET_OS_SIMULATOR
+    BSGDictSetSafeObject(device, @YES, @"simulator");
+#elif TARGET_OS_IPHONE || TARGET_OS_TV
+    BSGDictSetSafeObject(device, @NO, @"simulator");
+#endif
+
     return device;
 }
 
@@ -62,6 +71,8 @@ NSDictionary *BSGParseApp(NSDictionary *report) {
     
     BSGDictSetSafeObject(appState, @(activeTimeSinceLaunch),
                          @"durationInForeground");
+
+    BSGDictSetSafeObject(appState, report[BSGKeyExecutableName], BSGKeyName);
     BSGDictSetSafeObject(appState,
                          @(activeTimeSinceLaunch + backgroundTimeSinceLaunch),
                          @"duration");
@@ -103,6 +114,7 @@ NSDictionary *BSGParseDeviceState(NSDictionary *report) {
     BSGDictSetSafeObject(deviceState, report[@"machine"], @"model");
     BSGDictSetSafeObject(deviceState, report[@"system_name"], @"osName");
     BSGDictSetSafeObject(deviceState, report[@"system_version"], @"osVersion");
+    BSGDictSetSafeObject(deviceState, @(PLATFORM_WORD_SIZE), @"wordSize");
     BSGDictSetSafeObject(deviceState, @"Apple", @"manufacturer");
     BSGDictSetSafeObject(deviceState, report[@"jailbroken"], @"jailbroken");
     return deviceState;
