@@ -3,6 +3,8 @@ Changelog
 
 ## 2.9.4 (2018-05-02)
 
+* Enable nativeSerializer to handle Error objects by extracting the stack and message from a given Error class before serialising it. [#239](https://github.com/bugsnag/bugsnag-react-native/issues/239) [#240](https://github.com/bugsnag/bugsnag-react-native/pull/240) [daisy1754](https://github.com/daisy1754) [Cawllec](https://github.com/Cawllec)
+
 * Upgrade bugsnag-android to v4.3.4:
   - *Bug Fixes:*
     - Avoid adding extra comma separator in JSON if File input is empty or null [#284](https://github.com/bugsnag/bugsnag-android/pull/284)
