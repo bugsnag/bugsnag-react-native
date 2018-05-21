@@ -74,6 +74,8 @@ open coverage/lcov-report/index.html
 Run `npm install`, then use `react-native run-android` or `react-native run-ios`
 to run the example projects.
 
+If you wish to run in release mode, specify `--configuration Release` for iOS, or `--variant=release` for Android.
+
 ## Releasing
 
 ### Upgrading the vendored libraries
