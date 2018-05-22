@@ -1,6 +1,37 @@
 Changelog
 =========
 
+## 2.9.4 (2018-05-02)
+
+* Enable nativeSerializer to handle Error objects by extracting the stack and message from a given Error class before serialising it. [#239](https://github.com/bugsnag/bugsnag-react-native/issues/239) [#240](https://github.com/bugsnag/bugsnag-react-native/pull/240) [daisy1754](https://github.com/daisy1754) [Cawllec](https://github.com/Cawllec)
+
+* Upgrade bugsnag-android to v4.3.4:
+  - *Bug Fixes:*
+    - Avoid adding extra comma separator in JSON if File input is empty or null [#284](https://github.com/bugsnag/bugsnag-android/pull/284)
+    - Thread safety fixes to JSON file serialisation [#295](https://github.com/bugsnag/bugsnag-android/pull/295)
+    - Prevent potential automatic activity lifecycle breadcrumb crash [#300](https://github.com/bugsnag/bugsnag-android/pull/300)
+    - Fix serialisation issue with leading to incorrect dashboard display of breadcrumbs [#306](https://github.com/bugsnag/bugsnag-android/pull/306)
+    - Prevent duplicate reports being delivered in low connectivity situations [#270](https://github.com/bugsnag/bugsnag-android/pull/270)
+    - Fix possible NPE when reading default metadata filters [#263](https://github.com/bugsnag/bugsnag-android/pull/263)
+    - Prevent ConcurrentModificationException in Before notify/breadcrumb callbacks [#266](https://github.com/bugsnag/bugsnag-android/pull/266)
+    - Ensure that exception message is never null [#256](https://github.com/bugsnag/bugsnag-android/pull/256)
+    - Add payload version to JSON body [#244](https://github.com/bugsnag/bugsnag-android/pull/244)
+    - Update context tracking to use lifecycle callbacks rather than ActivityManager [#238](https://github.com/bugsnag/bugsnag-android/pull/238)
+  - *Enhancements:*
+    - Detect whether running on emulator [#245](https://github.com/bugsnag/bugsnag-android/pull/245)
+    - Add a callback for filtering breadcrumbs [#237](https://github.com/bugsnag/bugsnag-android/pull/237)
+* Upgrade bugsnag-cocoa to v5.15.5:
+  - *Bug Fixes:*
+    - Changes report generation so that when a minimal or incomplete crash is recorded, essential app/device information is included in the report on the next application launch. [#239](https://github.com/bugsnag/bugsnag-cocoa/pull/239)
+  [#250](https://github.com/bugsnag/bugsnag-cocoa/pull/250)
+    - Ensure timezone is serialised in report payload.
+  [#248](https://github.com/bugsnag/bugsnag-cocoa/pull/248)
+    - Ensure error class and message are persisted when thread tracing is disabled [#245](https://github.com/bugsnag/bugsnag-cocoa/pull/245)
+    - Re-addapp name to the app tab of reports [#244](https://github.com/bugsnag/bugsnag-cocoa/pull/244)
+    - Add payload version to report body to preserve backwards compatibility with older versions of the error reporting API [#241](https://github.com/bugsnag/bugsnag-cocoa/pull/241)
+  - *Enhancements:*
+    -This release adds additional device metadata for filtering by whether an error occurred in a simulator ([#242](https://github.com/bugsnag/bugsnag-cocoa/pull/242)) and by processor word size ([#228](https://github.com/bugsnag/bugsnag-cocoa/pull/228)).
+
 ## 2.9.3 (2018-03-16)
 
 ### Bug Fixes

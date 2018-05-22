@@ -2084,9 +2084,9 @@ void bsg_kscrashreport_writeStandardReport(
                     crashContext->config.introspectionRules.enabled,
                     crashContext->config.searchThreadNames,
                     crashContext->config.searchQueueNames);
-                bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,
-                                       &crashContext->crash);
             }
+            bsg_kscrw_i_writeError(writer, BSG_KSCrashField_Error,
+                    &crashContext->crash);
         }
         writer->endContainer(writer);
 
