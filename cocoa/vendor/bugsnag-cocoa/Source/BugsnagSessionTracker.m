@@ -58,7 +58,7 @@
 - (void)trackSession {
     [self.sessionStore write:self.currentSession];
     self.trackedFirstSession = YES;
-    
+
     if (self.callback) {
         self.callback(self.currentSession);
     }
