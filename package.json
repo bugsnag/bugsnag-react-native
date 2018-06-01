@@ -3,7 +3,7 @@
   "homepage": "https://www.bugsnag.com/platforms/react-native-error-reporting/",
   "repository": "https://github.com/bugsnag/bugsnag-react-native.git",
   "bugs": "https://github.com/bugsnag/bugsnag-react-native/issues",
-  "version": "2.9.4",
+  "version": "2.9.5",
   "license": "MIT",
   "main": "index.js",
   "types": "index.d.ts",
