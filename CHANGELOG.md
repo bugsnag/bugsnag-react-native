@@ -1,6 +1,23 @@
 Changelog
 =========
 
+## 2.9.5 (2018-05-31)
+
+### Bug fixes
+
+* (android) Upgrade bugsnag-android dependency to v4.4.1:
+  * Refine automatically collected breadcrumbs to a commonly useful set by default
+    [bugsnag-android#321](https://github.com/bugsnag/bugsnag-android/pull/321)
+  * Ensure that unhandled error reports are always sent immediately on launch for Android P and in situations with no connectivity.
+    [bugsnag-android#319](https://github.com/bugsnag/bugsnag-android/pull/319)
+
+* (iOS) Upgrade bugsnag-cocoa dependency to v5.15.6:
+  * Ensure device data is attached to minimal reports
+    [bugsnag-cocoa#279](https://github.com/bugsnag/bugsnag-cocoa/pull/279)
+  * Enforce requiring API key to initialise notifier
+    [bugsnag-cocoa#280](https://github.com/bugsnag/bugsnag-cocoa/pull/280)
+
+
 ## 2.9.4 (2018-05-02)
 
 * Enable nativeSerializer to handle Error objects by extracting the stack and message from a given Error class before serialising it. [#239](https://github.com/bugsnag/bugsnag-react-native/issues/239) [#240](https://github.com/bugsnag/bugsnag-react-native/pull/240) [daisy1754](https://github.com/daisy1754) [Cawllec](https://github.com/Cawllec)

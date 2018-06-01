@@ -8,11 +8,11 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 4
-        versionName '2.9.4'
+        versionName '2.9.5'
     }
 }
 
 dependencies {
-    compile 'com.bugsnag:bugsnag-android:4.3.4'
+    compile 'com.bugsnag:bugsnag-android:4.4.1'
     compile 'com.facebook.react:react-native:+'
 }
