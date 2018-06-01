@@ -1,6 +1,17 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* (iOS) Upgrade bugsnag-cocoa dependency to v5.15.6:
+  * Ensure device data is attached to minimal reports
+    [bugsnag-cocoa#279](https://github.com/bugsnag/bugsnag-cocoa/pull/279)
+  * Enforce requiring API key to initialise notifier
+    [bugsnag-cocoa#280](https://github.com/bugsnag/bugsnag-cocoa/pull/280)
+
+
 ## 2.9.4 (2018-05-02)
 
 * Enable nativeSerializer to handle Error objects by extracting the stack and message from a given Error class before serialising it. [#239](https://github.com/bugsnag/bugsnag-react-native/issues/239) [#240](https://github.com/bugsnag/bugsnag-react-native/pull/240) [daisy1754](https://github.com/daisy1754) [Cawllec](https://github.com/Cawllec)
