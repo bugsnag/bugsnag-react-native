@@ -89,7 +89,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   @ReactMethod
   public void leaveBreadcrumb(ReadableMap options) {
       String name = options.getString("name");
-      logger.info(String.format("Leaving breadcrumb '%s'", name));
       Bugsnag.leaveBreadcrumb(name,
                               parseBreadcrumbType(options.getString("type")),
                               readStringMap(options.getMap("metadata")));
@@ -130,10 +129,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       map.put("severity", severity);
       map.put("severityReason", severityReason);
 
-      logger.info("Notifying native client, severity = " + severity +
-              ", severityReason = " + severityReason);
       Bugsnag.internalClientNotify(exc, map, blocking, handler);
-      logger.info("Notified native client");
 
       if (callback != null)
         callback.invoke();
@@ -141,7 +137,6 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setUser(ReadableMap userInfo) {
-      logger.info("Setting user data");
       String userId = userInfo.hasKey("id") ? userInfo.getString("id") : null;
       String email = userInfo.hasKey("email") ? userInfo.getString("email") : null;
       String name = userInfo.hasKey("name") ? userInfo.getString("name") : null;
@@ -406,7 +401,6 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
     }
 
     public void toStream(JsonStream writer) throws IOException {
-        BugsnagReactNative.logger.info("Serializing exception");
         writer.beginObject();
         writer.name("errorClass").value(name);
         writer.name("message").value(getLocalizedMessage());

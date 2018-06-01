@@ -39,6 +39,6 @@ ifeq ($(IOS_VERSION),)
 endif
 	@git -C ../bugsnag-cocoa fetch
 	@git -C ../bugsnag-cocoa checkout v$(IOS_VERSION)
-	@rsync --delete -al ../bugsnag-cocoa/Source cocoa/vendor/bugsnag-cocoa/Source
-	@rsync --delete -al ../bugsnag-cocoa/iOS cocoa/vendor/bugsnag-cocoa/iOS
+	@rsync --delete -al ../bugsnag-cocoa/Source/ cocoa/vendor/bugsnag-cocoa/Source/
+	@rsync --delete -al ../bugsnag-cocoa/iOS/ cocoa/vendor/bugsnag-cocoa/iOS/
 	@git status
