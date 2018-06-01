@@ -235,10 +235,6 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
         }
         _binaryImages = report[@"binary_images"];
         _breadcrumbs = BSGParseBreadcrumbs(report);
-        _severity = BSGParseSeverity(
-            [report valueForKeyPath:@"user.state.crash.severity"]);
-        _depth = [[report valueForKeyPath:@"user.state.crash.depth"]
-            unsignedIntegerValue];
         _dsymUUID = [report valueForKeyPath:@"system.app_uuid"];
         _deviceAppHash = [report valueForKeyPath:@"system.device_app_hash"];
         _metaData =
@@ -259,6 +255,10 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
         if (recordedState) {
             _handledState =
                 [[BugsnagHandledState alloc] initWithDictionary:recordedState];
+
+            // only makes sense to use serialised value for handled exceptions
+            _depth = [[report valueForKeyPath:@"user.state.crash.depth"]
+                    unsignedIntegerValue];
         } else { // the event was unhandled.
             BOOL isSignal = [BSGKeySignal isEqualToString:_errorType];
             SeverityReasonType severityReason =
@@ -267,6 +267,7 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
                 handledStateWithSeverityReason:severityReason
                                       severity:BSGSeverityError
                                      attrValue:_errorClass];
+            _depth = 0;
         }
         _severity = _handledState.currentSeverity;
 

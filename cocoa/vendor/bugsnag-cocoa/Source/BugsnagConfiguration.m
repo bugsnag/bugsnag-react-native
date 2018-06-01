@@ -31,6 +31,7 @@
 #import "BSG_RFC3339DateTool.h"
 #import "BugsnagUser.h"
 #import "BugsnagSessionTracker.h"
+#import "BugsnagLogger.h"
 
 static NSString *const kHeaderApiPayloadVersion = @"Bugsnag-Payload-Version";
 static NSString *const kHeaderApiKey = @"Bugsnag-Api-Key";
@@ -199,6 +200,22 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
     }
 }
 
+@synthesize apiKey = _apiKey;
+
+- (NSString *)apiKey {
+    return _apiKey;
+}
+
+- (void)setApiKey:(NSString *)apiKey {
+    if ([apiKey length] > 0) {
+        [self willChangeValueForKey:NSStringFromSelector(@selector(apiKey))];
+        _apiKey = apiKey;
+        [self didChangeValueForKey:NSStringFromSelector(@selector(apiKey))];
+    } else {
+        bsg_log_err(@"Attempted to override non-null API key with nil - ignoring.");
+    }
+}
+
 @synthesize shouldAutoCaptureSessions = _shouldAutoCaptureSessions;
 
 - (BOOL)shouldAutoCaptureSessions {
@@ -231,4 +248,9 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
              kHeaderApiSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
              };
 }
+
+- (BOOL)hasValidApiKey {
+    return [_apiKey length] > 0;
+}
+
 @end
