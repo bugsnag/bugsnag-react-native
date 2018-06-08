@@ -224,7 +224,7 @@ export class Configuration {
     this.releaseStage = undefined
     this.appVersion = undefined
     this.codeBundleId = undefined
-    this.autoCaptureSessions = false
+    this.autoCaptureSessions = true
     this.autoNotify = true
     this.handlePromiseRejections = !__DEV__ // prefer banner in dev mode
     this.consoleBreadcrumbsEnabled = false
