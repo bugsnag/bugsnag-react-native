@@ -213,15 +213,14 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       }
 
       if (options.hasKey("endpoint")) {
-          String endpoint = options.getString("endpoint");
-          if (endpoint != null && endpoint.length() > 0)
-              client.setEndpoint(endpoint);
-      }
+          String notify = options.getString("endpoint");
 
-      if (options.hasKey("sessionsEndpoint")) {
-          String endpoint = options.getString("sessionsEndpoint");
-          if (endpoint != null && endpoint.length() > 0)
-              config.setSessionEndpoint(endpoint);
+          if (notify != null && notify.length() > 0) {
+              if (options.hasKey("sessionsEndpoint")) {
+                  String sessions = options.getString("sessionsEndpoint");
+                  config.setEndpoints(notify, sessions);
+              }
+          }
       }
 
       if (options.hasKey("releaseStage")) {
