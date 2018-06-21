@@ -630,9 +630,16 @@ initWithErrorName:(NSString *_Nonnull)name
             }
             NSString *contentValue = data[@"value"];
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCDFAInspection"
+            if (contentValue == nil || ![contentValue isKindOfClass:[NSString class]]) {
+                continue;
+            }
+#pragma clang diagnostic pop
+
             if ([self isReservedWord:contentValue]) {
                 reservedWord = contentValue;
-            } else if (!([[contentValue componentsSeparatedByString:@"/"] count] > 2)) {
+            } else if ([[contentValue componentsSeparatedByString:@"/"] count] <= 2) {
                 // must be a string that isn't a reserved word and isn't a filepath
                 [interestingValues addObject:contentValue];
             }

@@ -216,9 +216,6 @@ void BSSerializeJSONDictionary(NSDictionary *dictionary, char **destination) {
                                                                        hasRecordedSessions = true;
                                                                    }];
 
-        
-        [self.sessionTracker startNewSession:[NSDate date] withUser:nil autoCaptured:YES];
-
         [self metaDataChanged:self.configuration.metaData];
         [self metaDataChanged:self.configuration.config];
         [self metaDataChanged:self.state];
@@ -356,9 +353,10 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                  object:nil];
 #endif
 
+    _started = YES;
+
     // notification not received in time on initial startup, so trigger manually
     [self willEnterForeground:self];
-    _started = YES;
 }
 
 - (void)watchLifecycleEvents:(NSNotificationCenter *)center {
