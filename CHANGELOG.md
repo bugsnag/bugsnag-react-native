@@ -1,6 +1,14 @@
 Changelog
 =========
 
+
+## TBD
+
+### Bug fixes
+
+* (android) Reduce gratutious android logging
+  [#245](https://github.com/bugsnag/bugsnag-react-native/issues/245)
+
 ## 2.9.5 (2018-05-31)
 
 ### Bug fixes
@@ -16,7 +24,6 @@ Changelog
     [bugsnag-cocoa#279](https://github.com/bugsnag/bugsnag-cocoa/pull/279)
   * Enforce requiring API key to initialise notifier
     [bugsnag-cocoa#280](https://github.com/bugsnag/bugsnag-cocoa/pull/280)
-
 
 ## 2.9.4 (2018-05-02)
 
