@@ -1,8 +1,34 @@
 Changelog
 =========
 
+## 2.10.0 (2018-07-03)
 
-## TBD
+This release alters the behaviour of the notifier to track sessions automatically.
+A session will be automatically captured on each app launch and sent to [https://sessions.bugsnag.com](https://sessions.bugsnag.com).
+
+If you use Bugsnag On-Premise, it is recommended that you set your notify and session endpoints
+via `config.setEndpoints(String notify, String sessions)` on Android, and `config.setEndpoints(notify:sessions:)` on iOS. You should also initialise the Android/iOS components by passing a `config` parameter:
+
+```java
+Configuration config = new Configuration("your-api-key-here");
+config.setEndpoints("https://notify.example.com", "https://sessions.example.com");
+BugsnagReactNative.start(this, config);
+```
+
+```objc
+BugsnagConfiguration *config = [BugsnagConfiguration new];
+[config setEndpointsForNotify:@"http://notify.example.com"
+                     sessions:@"http://sessions.example.com"];
+[BugsnagReactNative startWithConfiguration:config];
+```
+
+* Upgrade bugsnag-android to v4.5.0:
+  * Enable automatic session tracking by default [#314](https://github.com/bugsnag/bugsnag-android/pull/314)
+  * Trim long stacktraces to max limit of 200 [#324](https://github.com/bugsnag/bugsnag-android/pull/324)
+
+* Upgrade bugsnag-cocoa to v5.16.0:
+  * Enable automatic session tracking by default [#286](https://github.com/bugsnag/bugsnag-cocoa/pull/286)
+  * Handle potential nil content value in RegisterErrorData class [#289](https://github.com/bugsnag/bugsnag-cocoa/pull/289)
 
 ### Bug fixes
 

@@ -207,17 +207,22 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
               client.setAppVersion(version);
       }
 
+      String notify = null;
+      String sessions = null;
+
       if (options.hasKey("endpoint")) {
-          String endpoint = options.getString("endpoint");
-          if (endpoint != null && endpoint.length() > 0)
-              client.setEndpoint(endpoint);
+          notify = options.getString("endpoint");
+      }
+      if (options.hasKey("sessionsEndpoint")) {
+          sessions = options.getString("sessionsEndpoint");
       }
 
-      if (options.hasKey("sessionsEndpoint")) {
-          String endpoint = options.getString("sessionsEndpoint");
-          if (endpoint != null && endpoint.length() > 0)
-              config.setSessionEndpoint(endpoint);
+      if (notify != null && notify.length() > 0) {
+          config.setEndpoints(notify, sessions);
+      } else if (sessions != null && sessions.length() > 0) {
+          logger.warning("The session tracking endpoint should not be set without the error reporting endpoint.");
       }
+
 
       if (options.hasKey("releaseStage")) {
           String releaseStage = options.getString("releaseStage");
