@@ -247,16 +247,12 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
         return !([report.errorClass hasPrefix:@"RCTFatalException"]
                  && [report.errorMessage hasPrefix:@"Unhandled JS Exception"]);
     }];
-    if (sessionURLPath.length > 0) {
-        NSURL *sessionURL = [NSURL URLWithString:sessionURLPath];
-        if (sessionURL)
-            config.sessionURL = sessionURL;
-    }
+
     if (notifyURLPath.length > 0) {
-        NSURL *notifyURL = [NSURL URLWithString:notifyURLPath];
-        if (notifyURL)
-            config.notifyURL = notifyURL;
+        [config setEndpointsForNotify:notifyURLPath
+                             sessions:sessionURLPath];
     }
+
     if (appVersion.length > 0) {
         config.appVersion = appVersion;
     }

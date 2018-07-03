@@ -65,6 +65,8 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
         _notifyReleaseStages = nil;
         _breadcrumbs = [BugsnagBreadcrumbs new];
         _automaticallyCollectBreadcrumbs = YES;
+        _shouldAutoCaptureSessions = YES;
+
         if ([NSURLSession class]) {
             _session = [NSURLSession
                 sessionWithConfiguration:[NSURLSessionConfiguration
@@ -87,7 +89,7 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
 - (void)setUser:(NSString *)userId
        withName:(NSString *)userName
        andEmail:(NSString *)userEmail {
-    
+
     self.currentUser = [[BugsnagUser alloc] initWithUserId:userId name:userName emailAddress:userEmail];
 
     [self.metaData addAttribute:BSGKeyId withValue:userId toTabWithName:BSGKeyUser];
@@ -225,7 +227,7 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
 - (void)setShouldAutoCaptureSessions:(BOOL)shouldAutoCaptureSessions {
     @synchronized (self) {
         _shouldAutoCaptureSessions = shouldAutoCaptureSessions;
-        
+
         if (shouldAutoCaptureSessions) { // track any existing sessions
             BugsnagSessionTracker *sessionTracker = [Bugsnag notifier].sessionTracker;
             [sessionTracker onAutoCaptureEnabled];
@@ -248,6 +250,22 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
              kHeaderApiSentAt: [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
              };
 }
+
+- (void)setEndpointsForNotify:(NSString *_Nonnull)notify sessions:(NSString *_Nonnull)sessions {
+    _notifyURL = [NSURL URLWithString:notify];
+    _sessionURL = [NSURL URLWithString:sessions];
+
+    NSAssert([self isValidUrl:_notifyURL], @"Invalid URL supplied for notify endpoint");
+
+    if (![self isValidUrl:_sessionURL]) {
+        _sessionURL = nil;
+    }
+}
+
+- (BOOL)isValidUrl:(NSURL *)url {
+    return url != nil && url.scheme != nil && url.host != nil;
+}
+
 
 - (BOOL)hasValidApiKey {
     return [_apiKey length] > 0;
