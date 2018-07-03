@@ -225,7 +225,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       if (notify != null && notify.length() > 0) {
           config.setEndpoints(notify, sessions);
       } else if (sessions != null && sessions.length() > 0) {
-          BugsnagReactNative.logger.warn("The session tracking endpoint should not be set without the error reporting endpoint.")
+          BugsnagReactNative.logger.warn("The session tracking endpoint should not be set without the error reporting endpoint.");
       }
 
 
