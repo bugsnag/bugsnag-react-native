@@ -57,6 +57,7 @@ jobs:
       xcode_scheme: BugsnagReactNative
       install:
         - brew install yarn
+        - brew upgrade node
       before_script:
         - npm install
         - npm install babel-cli
