@@ -369,7 +369,6 @@ class DiagnosticsCallback implements Callback {
         return output;
     }
 
-    @SuppressWarnings("unchecked") // ignore type erasure when casting Map
     @Override
     public void beforeNotify(Report report) {
         report.setNotifierName(NOTIFIER_NAME);
@@ -386,8 +385,11 @@ class DiagnosticsCallback implements Callback {
             MetaData reportMetadata = report.getError().getMetaData();
             for (String tab : metadata.keySet()) {
                 Object value = metadata.get(tab);
+
                 if (value instanceof Map) {
+                    @SuppressWarnings("unchecked") // ignore type erasure when casting Map
                     Map<String, Object> values = (Map<String, Object>) value;
+
                     for (String key : values.keySet()) {
                         reportMetadata.addToTab(tab, key, values.get(key));
                     }
