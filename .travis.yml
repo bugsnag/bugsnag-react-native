@@ -59,6 +59,7 @@ jobs:
       install:
         - brew install yarn
       before_script:
+        - nvm install 8
         - npm install
         - npm install babel-cli
         - PATH="node_modules/bin:$PATH" && npm pack
