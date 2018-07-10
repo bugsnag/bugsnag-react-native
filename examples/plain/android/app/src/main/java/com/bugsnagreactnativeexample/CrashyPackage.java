@@ -16,6 +16,7 @@ class CrashyPackage implements ReactPackage {
     return Collections.emptyList();
   }
 
+  @SuppressWarnings("rawtypes") // the ReactPackage interface uses a raw type, ignore it
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
     return Collections.emptyList();

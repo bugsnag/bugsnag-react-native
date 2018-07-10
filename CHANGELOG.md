@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 2.X.X (TBD)
+
+### Bug fixes
+
+* (android) Address javac compiler warnings and intellij inspections
+  [#250](https://github.com/bugsnag/bugsnag-react-native/issues/250)
+
 ## 2.10.0 (2018-07-03)
 
 This release alters the behaviour of the notifier to track sessions automatically.
