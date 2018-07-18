@@ -8,6 +8,12 @@ Changelog
 * (android) Address javac compiler warnings and intellij inspections
   [#250](https://github.com/bugsnag/bugsnag-react-native/issues/250)
 
+* (cocoa) Upgrade bugsnag-cocoa to v5.16.2:
+  * Fix a regression in session tracking which caused the first session HTTP
+    request to be delivered on the calling thread when automatic session tracking
+    is enabled
+    [#295](https://github.com/bugsnag/bugsnag-cocoa/pull/295)
+
 ## 2.10.0 (2018-07-03)
 
 This release alters the behaviour of the notifier to track sessions automatically.
