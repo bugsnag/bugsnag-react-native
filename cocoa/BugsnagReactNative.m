@@ -131,6 +131,11 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
     if (config.apiKey.length == 0)
         config.apiKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:BSGInfoPlistKey];
 
+    // The first session starts during JS initialization
+    // Applications which have specific components in RN instead of the primary
+    // way to interact with the application should instead leverage startSession
+    // manually.
+    config.shouldAutoCaptureSessions = NO;
     [Bugsnag startBugsnagWithConfiguration:config];
 }
 
@@ -230,6 +235,7 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     NSString *sessionURLPath = [RCTConvert NSString:options[@"sessionsEndpoint"]];
     NSString *appVersion = [RCTConvert NSString:options[@"appVersion"]];
     NSString *codeBundleId = [RCTConvert NSString:options[@"codeBundleId"]];
+
     BugsnagConfiguration* config = [Bugsnag bugsnagStarted] ? [Bugsnag configuration] : [BugsnagConfiguration new];
 
     if (apiKey.length > 0) {
@@ -267,6 +273,12 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
         [Bugsnag startBugsnagWithConfiguration:config];
     }
     [self setNotifierDetails:[RCTConvert NSString:options[@"version"]]];
+    if (config.shouldAutoCaptureSessions) {
+        // The launch event session is skipped because shouldAutoCaptureSessions
+        // was not set when Bugsnag was first initialized. Manually sending a
+        // session to compensate.
+        [Bugsnag startSession];
+    }
 }
 
 - (void)setNotifierDetails:(NSString *)packageVersion {

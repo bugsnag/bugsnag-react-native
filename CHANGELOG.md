@@ -5,6 +5,11 @@ Changelog
 
 ### Bug fixes
 
+* Fix possible mismatch between session release stage and error report release
+  stage, which could result in inconsistent crash rates on the Releases
+  dashboard as a session was assigned to an incorrect release stage.
+  [#260](https://github.com/bugsnag/bugsnag-react-native/issues/260)
+
 * (android) Address javac compiler warnings and intellij inspections
   [#250](https://github.com/bugsnag/bugsnag-react-native/issues/250)
 
