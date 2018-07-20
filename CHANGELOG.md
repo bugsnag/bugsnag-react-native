@@ -3,10 +3,33 @@ Changelog
 
 ## 2.X.X (TBD)
 
+This release simplies the installation and quick setup process to do all
+configuration in JavaScript, provided that React Native is the primary way to
+interact with your app (rather than having React Native components as a part of
+a larger native app). [See the integration guide updated configuration
+instructions](https://docs.bugsnag.com/platforms/react-native/#basic-configuration).
+
+For applications using React Native to serve a few components (but not the whole
+app), there is a new [Native integration
+guide](https://docs.bugsnag.com/platforms/react-native/native-integration-guide/)
+with additional configuration steps to ensure every crash is captured and
+reported.
+
 ### Bug fixes
+
+* Fix possible mismatch between session release stage and error report release
+  stage, which could result in inconsistent crash rates on the Releases
+  dashboard as a session was assigned to an incorrect release stage.
+  [#260](https://github.com/bugsnag/bugsnag-react-native/issues/260)
 
 * (android) Address javac compiler warnings and intellij inspections
   [#250](https://github.com/bugsnag/bugsnag-react-native/issues/250)
+
+* (cocoa) Upgrade bugsnag-cocoa to v5.16.2:
+  * Fix a regression in session tracking which caused the first session HTTP
+    request to be delivered on the calling thread when automatic session tracking
+    is enabled
+    [#295](https://github.com/bugsnag/bugsnag-cocoa/pull/295)
 
 ## 2.10.0 (2018-07-03)
 

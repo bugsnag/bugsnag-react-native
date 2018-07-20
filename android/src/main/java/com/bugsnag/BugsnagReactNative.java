@@ -46,14 +46,23 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   }
 
   public static Client start(Context context) {
-    return Bugsnag.init(context);
+    Client client = Bugsnag.init(context);
+    // The first session starts during JS initialization
+    // Applications which have specific components in RN instead of the primary
+    // way to interact with the application should instead leverage startSession
+    // manually.
+    client.setAutoCaptureSessions(false);
+    return client;
   }
 
   public static Client startWithApiKey(Context context, String APIKey) {
-    return Bugsnag.init(context, APIKey);
+    Client client = Bugsnag.init(context, APIKey);
+    client.setAutoCaptureSessions(false);
+    return client;
   }
 
   public static Client startWithConfiguration(Context context, Configuration config) {
+    config.setAutoCaptureSessions(false);
     return Bugsnag.init(context, config);
   }
 
@@ -267,10 +276,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       if (options.hasKey("autoCaptureSessions")) {
           boolean autoCapture = options.getBoolean("autoCaptureSessions");
           config.setAutoCaptureSessions(autoCapture);
-          Activity activity = getCurrentActivity();
-
-          if (activity != null) {
-              client.startFirstSession(getCurrentActivity());
+          if (autoCapture) {
+              // The launch event session is skipped because autoCaptureSessions
+              // was not set when Bugsnag was first initialized. Manually sending a
+              // session to compensate.
+              client.startSession();
           }
       }
   }
