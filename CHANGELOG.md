@@ -3,6 +3,18 @@ Changelog
 
 ## 2.X.X (TBD)
 
+This release simplies the installation and quick setup process to do all
+configuration in JavaScript, provided that React Native is the primary way to
+interact with your app (rather than having React Native components as a part of
+a larger native app). [See the integration guide updated configuration
+instructions](https://docs.bugsnag.com/platforms/react-native/#basic-configuration).
+
+For applications using React Native to serve a few components (but not the whole
+app), there is a new [Native integration
+guide](https://docs.bugsnag.com/platforms/react-native/native-integration-guide/)
+with additional configuration steps to ensure every crash is captured and
+reported.
+
 ### Bug fixes
 
 * Fix possible mismatch between session release stage and error report release
