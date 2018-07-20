@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 2.X.X (TBD)
+## 2.10.1 (2018-07-20)
 
 This release simplies the installation and quick setup process to do all
 configuration in JavaScript, provided that React Native is the primary way to
@@ -10,8 +10,8 @@ a larger native app). [See the integration guide updated configuration
 instructions](https://docs.bugsnag.com/platforms/react-native/#basic-configuration).
 
 For applications using React Native to serve a few components (but not the whole
-app), there is a new [Native integration
-guide](https://docs.bugsnag.com/platforms/react-native/native-integration-guide/)
+app), there is a new [Enhanced native integration
+guide](https://docs.bugsnag.com/platforms/react-native/enhanced-native-integration/)
 with additional configuration steps to ensure every crash is captured and
 reported.
 
