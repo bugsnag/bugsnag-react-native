@@ -1,2 +1,9 @@
-examples
+*.tgz
+/examples
 /src
+/coverage
+/.github
+/yarn.lock
+/test
+/test-harness
+/.travis.yml
