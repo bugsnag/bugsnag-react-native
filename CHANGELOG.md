@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.10.2 (2018-07-27)
+
+This release reduces the size of the npm package compared to v2.10.1, which was ~20Mb due to the inadvertant inclusion of build files.
+
 ## 2.10.1 (2018-07-20)
 
 This release simplies the installation and quick setup process to do all
