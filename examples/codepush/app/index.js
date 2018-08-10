@@ -33,7 +33,7 @@ class BugsnagReactNativeExample extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Bugsnag + React Native
+          Bugsnag + React Native + Code push
         </Text>
         <Text style={styles.instructions}>
           To get started, click one of the options below:

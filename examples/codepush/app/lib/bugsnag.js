@@ -3,7 +3,10 @@
 // anywhere.
 //-------------------------------------------------------------------------------------------------
 // https://docs.bugsnag.com/platforms/react-native/#basic-configuration
-import { Client } from 'bugsnag-react-native';
-const client = new Client();
+import { Client, Configuration } from 'bugsnag-react-native';
+
+const config = new Configuration('YOUR_API_KEY_HERE');
+config.codeBundleId = '1.0.0-b12'
+const client = new Client(config);
 //-------------------------------------------------------------------------------------------------
 export default client;

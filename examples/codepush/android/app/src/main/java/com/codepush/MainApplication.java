@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.facebook.react.ReactApplication;
-// import com.microsoft.codepush.react.CodePush;
+import com.microsoft.codepush.react.CodePush;
 import com.bugsnag.BugsnagReactNative;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -22,11 +22,11 @@ public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
-    // @Override
-    // protected String getJSBundleFile() {
-      // return CodePush.getJSBundleFile();
-    // }
-
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
+    }
+    
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
@@ -44,7 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
       }
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-          // new CodePush(codePushDeploymentKey, appContext, BuildConfig.DEBUG),
+            new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
           new CrashyPackage(),
           BugsnagReactNative.getPackage()
       );
