@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "release": "./release.sh"
   },
   "dependencies": {
+    "bugsnag-react-native": "^2.10.2",
     "react": "16.4.1",
     "react-native": "0.56.0"
   },
