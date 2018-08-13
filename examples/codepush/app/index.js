@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import CodePush from 'react-native-code-push';
+import CodePush from 'react-native-code-push';
 import bugsnag from 'lib/bugsnag';
 import NativeCrash from 'lib/native_crash';
 import {
@@ -32,9 +32,6 @@ class BugsnagReactNativeExample extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Bugsnag + React Native + Code push
-        </Text>
         <Text style={styles.instructions}>
           To get started, click one of the options below:
         </Text>
@@ -80,7 +77,7 @@ class BugsnagReactNativeExample extends Component {
   }
 };
 
-// let codePushOptions = { checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME };
-// BugsnagReactNativeExample = CodePush(codePushOptions)(BugsnagReactNativeExample);
+let codePushOptions = { checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME };
+BugsnagReactNativeExample = CodePush(codePushOptions)(BugsnagReactNativeExample);
 
 export default BugsnagReactNativeExample;
