@@ -25,6 +25,12 @@ A sample application demonstrating using Bugsnag with React Native and CodePush.
               android:value="YOUR-BUGSNAG-API-KEY" />
    ```
 
-2. Run the application, deploying new bundles as needed using
+2. Add your Bugsnag API key in `bugsnag.js`:
+
+    ```js
+    const config = new Configuration('YOUR_API_KEY_HERE');
+    ```
+
+3. Run the application, deploying new bundles as needed using
    `npm run release -- [version number]`. Feel free to customize and reuse the
    release script ([release.sh](release.sh)) to your needs.
