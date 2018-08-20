@@ -101,6 +101,7 @@ make ANDROID_VERSION=X IOS_VERSION=X upgrade_vendor
   - [ ] Ensure the example app sends the correct error for each type on iOS and Android
   - [ ] Archive the iOS app and validate the bundle type
   - [ ] Generate a signed APK for Android
+- [ ] On a throttled network, is the request timeout reasonable, and the main thread not blocked by any visible UI freeze? (Throttling can be achieved by setting both endpoints to "https://httpstat.us/200?sleep=5000")
 - [ ] Do the installation instructions work when creating an example app from scratch?
 - [ ] Have the installation instructions been updated on the [dashboard](https://github.com/bugsnag/bugsnag-website/tree/master/app/views/dashboard/projects/install) as well as the [docs site](https://github.com/bugsnag/docs.bugsnag.com)?
 
