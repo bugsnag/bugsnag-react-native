@@ -6,6 +6,9 @@
 import { Client, Configuration } from 'bugsnag-react-native';
 
 const config = new Configuration('YOUR_API_KEY_HERE');
+
+// The codeBundleId should be set to a unique string for each JavaScript code deployment
+// made via CodePush. Further reading: https://docs.bugsnag.com/platforms/react-native/configuration-options/#codebundleid
 config.codeBundleId = '1.0.0-b12'
 const client = new Client(config);
 //-------------------------------------------------------------------------------------------------
