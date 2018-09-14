@@ -1,6 +1,27 @@
 Changelog
 =========
 
+## TBD
+
+### Bug Fixes
+
+* (iOS) Upgrade bugsnag-cocoa dependency to v5.16.4:
+  * Deregister notification observers and listeners before application
+    termination [#301](https://github.com/bugsnag/bugsnag-cocoa/pull/301)
+
+  * Ensure NSException is captured when handler is overridden
+    [#313](https://github.com/bugsnag/bugsnag-cocoa/pull/313)
+
+  * Fix mach handler declaration and imports. This resolves an issue where
+    signal codes were less specific than is possible.
+    [#314](https://github.com/bugsnag/bugsnag-cocoa/pull/314)
+
+  * Only call previously installed C++ termination handler if non-null. Fixes an
+    unexpected termination if you override the handler with null before
+    initializing Bugsnag and then throw a C++ exception and would like the app
+    to continue after Bugsnag completes exception reporting.
+
+
 ## 2.10.2 (2018-07-27)
 
 This release reduces the size of the npm package compared to v2.10.1, which was ~20Mb due to the inadvertant inclusion of build files.
