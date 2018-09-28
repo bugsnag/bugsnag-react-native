@@ -381,9 +381,9 @@ class DiagnosticsCallback implements Callback {
 
     @Override
     public void beforeNotify(Report report) {
-        report.setNotifierName(NOTIFIER_NAME);
-        report.setNotifierURL(NOTIFIER_URL);
-        report.setNotifierVersion(String.format("%s (Android %s)",
+        report.getNotifier().setName(NOTIFIER_NAME);
+        report.getNotifier().setURL(NOTIFIER_URL);
+        report.getNotifier().setVersion(String.format("%s (Android %s)",
                                                 libraryVersion,
                                                 bugsnagAndroidVersion));
 
