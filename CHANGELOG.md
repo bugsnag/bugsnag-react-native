@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## TBD
+## 2.11.0 (2018-09-28)
 
 ### Enhancements
 

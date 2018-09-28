@@ -6,6 +6,7 @@ endif
 	@sed -i '' "s/\"version\": \".*\",/\"version\": \"$(VERSION)\",/" package.json
 	@sed -i '' "s/documentation-.*-blue.svg/documentation-$(VERSION)-blue.svg/" README.md
 	@sed -i '' "s/versionName \'.*\'/versionName \'$(VERSION)\'/" android/build.gradle
+	@sed -i '' "s/## TBD/## $(VERSION) ($(shell date '+%Y-%m-%d'))/" CHANGELOG.md
 
 
 # Makes a release and pushes to github/npm
