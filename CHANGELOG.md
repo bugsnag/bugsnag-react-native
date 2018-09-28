@@ -1,6 +1,21 @@
 Changelog
 =========
 
+## TBD
+
+### Enhancements
+
+* (iOS) Upgrade to bugsnag-cocoa v5.17.0
+  * Capture trace of error reporting thread and identify with boolean flag
+    [#303](https://github.com/bugsnag/bugsnag-cocoa/pull/303)
+  * Prevent potential crash in session delivery during app teardown
+    [#308](https://github.com/bugsnag/bugsnag-cocoa/pull/308)
+* (Android) Upgrade to bugsnag-android v4.8.1
+  * Capture trace of error reporting thread and identify with boolean flag
+    [#355](https://github.com/bugsnag/bugsnag-android/pull/355)
+  * Add compatibility with bugsnag-android-ndk v4.8.1 for C/C++ crash handling support
+    [#369](https://github.com/bugsnag/bugsnag-android/pull/369)
+
 ## 2.10.3 (2018-09-14)
 
 ### Bug Fixes
