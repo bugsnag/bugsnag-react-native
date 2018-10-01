@@ -10,11 +10,19 @@ Changelog
     [#303](https://github.com/bugsnag/bugsnag-cocoa/pull/303)
   * Prevent potential crash in session delivery during app teardown
     [#308](https://github.com/bugsnag/bugsnag-cocoa/pull/308)
-* (Android) Upgrade to bugsnag-android v4.8.1
-  * Capture trace of error reporting thread and identify with boolean flag
-    [#355](https://github.com/bugsnag/bugsnag-android/pull/355)
+* (Android) Upgrade to bugsnag-android v4.8.2
   * Add compatibility with bugsnag-android-ndk v4.8.1 for C/C++ crash handling support
     [#369](https://github.com/bugsnag/bugsnag-android/pull/369)
+  * Add ThreadSafe annotation to com.bugsnag.android, remove infer dependency
+    [#370](https://github.com/bugsnag/bugsnag-android/pull/370)
+    [#366](https://github.com/bugsnag/bugsnag-android/issues/366)
+  * Capture trace of error reporting thread and identify with boolean flag [#355](https://github.com/bugsnag/bugsnag-android/pull/355)
+  * Set maxBreadcrumbs via Configuration rather than Client [#359](https://github.com/bugsnag/bugsnag-android/pull/359)
+  * Catch Exception within DefaultDelivery class [#361](https://github.com/bugsnag/bugsnag-android/pull/361)
+  * Add Null check when accessing system service [#367](https://github.com/bugsnag/bugsnag-android/pull/367)
+  * Android P compatibility fixes - ensure available information on StrictMode violations is collected [#350](https://github.com/bugsnag/bugsnag-android/pull/350)
+  * Disable BuildConfig generation [#343](https://github.com/bugsnag/bugsnag-android/pull/343)
+  * Add consumer proguard rules for automatic ProGuard configuration without the Bugsnag gradle plugin [#345](https://github.com/bugsnag/bugsnag-android/pull/345)
 
 ## 2.10.3 (2018-09-14)
 
