@@ -1,7 +1,7 @@
 export class Client {
   public config: Configuration;
 
-  constructor(apiKeyOrConfig: string | Configuration);
+  constructor(apiKeyOrConfig?: string | Configuration);
 
   public notify(
     error: Error,
