@@ -12,8 +12,7 @@ public class CrashyModule extends ReactContextBaseJavaModule {
 
   public native void doCrash();
 
-//  public native void notifyFromCXX();
-
+  public native void notifyFromCXX();
 
   public CrashyModule(ReactApplicationContext reactContext) {
     super(reactContext);
