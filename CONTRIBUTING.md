@@ -120,3 +120,5 @@ Note: the manual installation instructions for React Native are in a [separate s
 - [ ] Do the installation instructions work using the released artefact?
 - [ ] Can a freshly created example app send an error report from a release build, using the released artefact?
 - [ ] Do the existing example apps send an error report using the released artefact?
+- [ ] *If bugsnag-android has been updated,* update the exact version number of
+      bugsnag-android-ndk to use in the "enhanced native integration" guide.
