@@ -28,7 +28,7 @@
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
       <meta-data android:name="com.bugsnag.android.API_KEY"
-                 android:value="YOUR-API-KEY-HERE" />
+                 android:value="5d1ec8bd39a74caa1267142706a7fb20" />
     </application>
 
 </manifest>

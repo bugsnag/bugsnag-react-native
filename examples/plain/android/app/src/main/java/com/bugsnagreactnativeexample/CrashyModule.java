@@ -5,6 +5,16 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 public class CrashyModule extends ReactContextBaseJavaModule {
+
+  static {
+    System.loadLibrary("entrypoint");
+  }
+
+  public native void doCrash();
+
+//  public native void notifyFromCXX();
+
+
   public CrashyModule(ReactApplicationContext reactContext) {
     super(reactContext);
   }
@@ -16,6 +26,7 @@ public class CrashyModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void generateCrash() throws Exception {
-    throw new Exception("Ooopsy from Java!");
+    doCrash();
+//    throw new Exception("Ooopsy from Java!");
   }
 }
