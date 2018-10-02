@@ -10,7 +10,7 @@ export class Client {
     postSendCallback?: (sent: boolean) => void,
   ): void;
 
-  public setUser(id: string, name: string, email: string): void;
+  public setUser(id?: string, name?: string, email?: string): void;
 
   public clearUser(): void;
 
