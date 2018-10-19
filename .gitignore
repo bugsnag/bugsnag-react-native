@@ -1,4 +1,5 @@
 node_modules
+.externalNativeBuild
 example*/ios/Pods
 /lib
 *.bundle
