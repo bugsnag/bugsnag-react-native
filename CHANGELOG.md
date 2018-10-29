@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## 2.X.X (TBD)
+
+### Bug Fixes
+
+* TypeScript: allow undefined apiKeyOrConfig in Client constructor [#278](https://github.com/bugsnag/bugsnag-android/pull/278)
+
 ## 2.11.0 (2018-09-28)
 
 ### Enhancements
