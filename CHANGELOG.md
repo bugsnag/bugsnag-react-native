@@ -1,11 +1,27 @@
 Changelog
 =========
 
-## 2.X.X (TBD)
+## 2.12.1 (2018-10-31)
 
 ### Bug Fixes
 
 * TypeScript: allow undefined apiKeyOrConfig in Client constructor [#278](https://github.com/bugsnag/bugsnag-android/pull/278)
+
+## 2.12.0 (2018-10-29)
+
+### Enhancements
+
+* (Android) Upgrade to bugsnag-android v4.9.0
+  * Add a callback to allow modifying reports immediately prior to delivery,
+    including fatal crashes from native C/C++ code. For more information, see
+    the [callback reference](https://docs.bugsnag.com/platforms/android/sdk/customizing-error-reports).
+    [bugsnag-android#379](https://github.com/bugsnag/bugsnag-android/pull/379)
+
+### Bug Fixes
+
+* (Android) Upgrade to bugsnag-android v4.9.0
+  * [NDK] Improve stack trace quality for signals raised on ARM32 devices
+    [bugsnag-android#378](https://github.com/bugsnag/bugsnag-android/pull/378)
 
 ## 2.11.0 (2018-09-28)
 
