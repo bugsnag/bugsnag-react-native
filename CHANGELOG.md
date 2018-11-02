@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## TBD
+
+### Bug Fixes
+
+* (Android) Upgrade to bugsnag-android v4.9.1
+  * Allow setting context to null from callbacks
+    [bugsnag-android#381](https://github.com/bugsnag/bugsnag-android/pull/381)
+
 ## 2.12.1 (2018-10-31)
 
 ### Bug Fixes
