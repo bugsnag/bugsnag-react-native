@@ -107,13 +107,9 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                               readStringMap(options.getMap("metadata")));
   }
 
-  @ReactMethod
-  public void notify(ReadableMap payload) {
-      notifyBlocking(payload, false, null);
-  }
 
   @ReactMethod
-  public void notifyBlocking(ReadableMap payload, boolean blocking, com.facebook.react.bridge.Callback callback) {
+  public void notify(ReadableMap payload, com.facebook.react.bridge.Promise promise) {
       if (!payload.hasKey("errorClass")) {
           logger.warning("Bugsnag could not notify: No error class");
           return;
@@ -142,10 +138,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       map.put("severity", severity);
       map.put("severityReason", severityReason);
 
-      Bugsnag.internalClientNotify(exc, map, blocking, handler);
+      //always block 
+      Bugsnag.internalClientNotify(exc, map, true, handler);
 
-      if (callback != null)
-        callback.invoke();
+      if (promise != null)
+        promise.resolve(null);
   }
 
   @ReactMethod

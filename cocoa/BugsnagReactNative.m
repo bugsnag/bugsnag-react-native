@@ -141,7 +141,9 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
+RCT_EXPORT_METHOD(notify:(NSDictionary *)options
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
     if (![Bugsnag bugsnagStarted]) {
         return;
     }
@@ -185,6 +187,8 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options) {
                 targetMetadata[sectionKey] = section;
             }
             report.metaData = targetMetadata;
+
+            resolve(@"");
         }
     }];
 }
