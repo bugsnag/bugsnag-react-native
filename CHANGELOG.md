@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## TBD
+
+### Bug Fixes
+
+* (Android) Restore support for react-native < 0.56 due to regression in 2.12.3
+
 ## 2.12.3 (2018-11-08)
 
 ### Bug Fixes
