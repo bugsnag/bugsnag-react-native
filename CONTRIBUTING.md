@@ -98,6 +98,8 @@ make ANDROID_VERSION=X IOS_VERSION=X upgrade_vendor
 - [ ] Have the changelog and README been updated?
 - [ ] Have all the version numbers been incremented?
 - [ ] Has all new functionality been manually tested on a release build? Use `npm pack` to generate an artifact to install in a new app.
+  - [ ] Install on Android/iOS in an app running the latest version of RN
+  - [ ] Install on Android/iOS in an app < 0.56
   - [ ] Ensure the example app sends the correct error for each type on iOS and Android
   - [ ] Archive the iOS app and validate the bundle type
   - [ ] Generate a signed APK for Android
