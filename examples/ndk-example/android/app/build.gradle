@@ -150,7 +150,7 @@ bugsnag {
 dependencies {
     compile project(path: ':bugsnag-react-native', configuration: 'default')
     //compile project(':bugsnag-react-native')
-    compile "com.bugsnag:bugsnag-android-ndk:4.8.2"
+    compile "com.bugsnag:bugsnag-android-ndk:4.9.2"
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     compile "com.facebook.react:react-native:+"  // From node_modules

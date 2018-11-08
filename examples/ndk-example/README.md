@@ -6,8 +6,8 @@ Dependencies:
 
 * Android Gradle Plugin 3.1.4
 * Gradle 4.4
-* bugsnag-react-native@2.11.0
-* bugsnag-android-ndk@4.8.2
+* bugsnag-react-native@2.12.3
+* bugsnag-android-ndk@4.9.2
 * bugsnag-android-gradle-plugin@3.5.0
 
 ## To Test

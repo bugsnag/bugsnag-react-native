@@ -4,25 +4,24 @@ def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
-gradle.projectsEvaluated {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:all" << "-Werror"
-    }
-}
+//gradle.projectsEvaluated {
+    //tasks.withType(JavaCompile) {
+        //options.compilerArgs << "-Xlint:all" << "-Werror"
+    //}
+//}
 
 android {
-    buildToolsVersion safeExtGet('buildToolsVersion', '26.0.3')
     compileSdkVersion safeExtGet('compileSdkVersion', 26)
 
     defaultConfig {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 26)
         versionCode 4
-        versionName '2.11.0'
+        versionName '2.12.3'
     }
 }
 
 dependencies {
-    compile 'com.bugsnag:bugsnag-android:4.8.2'
+    compile 'com.bugsnag:bugsnag-android:4.9.2'
     compile 'com.facebook.react:react-native:+'
 }
