@@ -187,10 +187,9 @@ RCT_EXPORT_METHOD(notify:(NSDictionary *)options
                 targetMetadata[sectionKey] = section;
             }
             report.metaData = targetMetadata;
-
-            resolve(@"");
         }
     }];
+    resolve(@"");
 }
 
 RCT_EXPORT_METHOD(setUser:(NSDictionary *)userInfo) {
