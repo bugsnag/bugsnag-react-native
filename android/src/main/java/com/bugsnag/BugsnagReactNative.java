@@ -137,9 +137,9 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       String severityReason = payload.getString("severityReason");
       map.put("severity", severity);
       map.put("severityReason", severityReason);
+      boolean blocking = payload.hasKey("blocking") && payload.getBoolean("blocking");
 
-      //always block 
-      Bugsnag.internalClientNotify(exc, map, true, handler);
+      Bugsnag.internalClientNotify(exc, map, blocking, handler);
 
       if (promise != null)
         promise.resolve(null);

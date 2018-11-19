@@ -46,7 +46,7 @@ export class Client {
 
       ErrorUtils.setGlobalHandler((error, isFatal) => {
         if (this.config.autoNotify && this.config.shouldNotify()) {
-          this.notify(error, null, () => {
+          this.notify(error, null, true, () => {
             if (previousHandler) {
               previousHandler(error, isFatal)
             }
@@ -64,7 +64,7 @@ export class Client {
     tracking.enable({
       allRejections: true,
       onUnhandled: function (id, error) {
-        client.notify(error, null, null, new HandledState('error', true, 'unhandledPromiseRejection'))
+        client.notify(error, null, true, null, new HandledState('error', true, 'unhandledPromiseRejection'))
       },
       onHandled: function () {}
     })
@@ -77,7 +77,7 @@ export class Client {
    *                            so additional information can be added
    * @param postSendCallback    Callback invoked after request is queued
    */
-  notify = async (error, beforeSendCallback, postSendCallback, _handledState, callbackDelay = 150) => {
+  notify = async (error, beforeSendCallback, blocking, postSendCallback, _handledState) => {
     if (!(error instanceof Error)) {
       console.warn('Bugsnag could not notify: error must be of type Error')
       if (postSendCallback) { postSendCallback(false) }
@@ -102,15 +102,13 @@ export class Client {
     }
 
     const payload = report.toJSON()
+    payload.blocking = !!blocking
 
     NativeClient.notify(payload).then(() => {
-      //let the native SDK do its thing to persist the error
-      setTimeout(() =>{
-        if(postSendCallback){
-          postSendCallback();
-        }
-      }, callbackDelay);
-    });
+      if (postSendCallback) {
+        postSendCallback()
+      }
+    })
   }
 
   setUser = (id, name, email) => {
