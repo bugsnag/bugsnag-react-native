@@ -7,3 +7,5 @@
 /test
 /test-harness
 /.travis.yml
+/features
+maze_output

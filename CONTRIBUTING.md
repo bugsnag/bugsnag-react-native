@@ -69,6 +69,16 @@ will open the coverage report in your default browser:
 open coverage/lcov-report/index.html
 ```
 
+The integration tests use virtual Android and iOS devices to tests that reports
+are delivered in production applications. To get started:
+
+1. Set and export the `ANDROID_EMULATOR` environment variable the name of an AVD
+   on your system
+2. Set and export the `ANDROID_HOME` environment variable to the location of the
+   Android SDK
+3. Install the testing framework via `bundle install`
+4. `npm run test:e2e:js`
+
 ## Running the examples app
 
 Run `npm install`, then use `react-native run-android` or `react-native run-ios`
@@ -95,6 +105,7 @@ make ANDROID_VERSION=X IOS_VERSION=X upgrade_vendor
 #### Pre-release
 
 - [ ] Does the build pass on the CI server?
+- [ ] Does the integration test suite pass locally (`npm run test:e2e:js`)?
 - [ ] Have the changelog and README been updated?
 - [ ] Have all the version numbers been incremented?
 - [ ] Has all new functionality been manually tested on a release build? Use `npm pack` to generate an artifact to install in a new app.

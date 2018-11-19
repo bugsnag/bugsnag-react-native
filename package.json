@@ -17,6 +17,7 @@
     "prepublish": "mkdir -p lib && babel --source-maps --out-dir='lib' --ignore='__tests__' src",
     "test:unit:js": "jest --coverage src/__tests__",
     "test:lint:js": "standard",
+    "test:e2e:js": "bundle exec bugsnag-maze-runner --verbose",
     "test:smoke:typescript": "tslint index.d.ts && tsc --strict test/app.ts"
   },
   "peerDependencies": {
@@ -40,7 +41,8 @@
       "lib",
       "test",
       "test-harness",
-      "examples"
+      "examples",
+      "features"
     ]
   },
   "devDependencies": {
