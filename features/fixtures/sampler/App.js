@@ -1,6 +1,19 @@
 import React, {Component} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
+function longStackB(index) {
+  if (index < 1200) {
+    return longStackA(index)
+  }
+  throw new TypeError('Forever and a day')
+}
+function longStackA(index) {
+  if (index < 1200) {
+    return longStackB(index + 1)
+  }
+  throw new TypeError('Forever and a day')
+}
+
 type Props = {};
 export default class App extends Component<Props> {
   render () {
@@ -8,7 +21,7 @@ export default class App extends Component<Props> {
     setTimeout(function () {
       switch (scenario.name) {
         case 'uncaughtException':
-          throw new TypeError('For SHAME')
+          longStackA(0);
         case 'unhandledRejection':
           Promise.reject(new SyntaxError('no'))
           break
