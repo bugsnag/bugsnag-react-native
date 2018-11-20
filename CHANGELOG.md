@@ -1,6 +1,22 @@
 Changelog
 =========
 
+## 2.12.4 (2018-11-08)
+
+### Bug Fixes
+
+* (Android) Restore support for react-native < 0.56 due to regression in 2.12.3
+
+## 2.12.3 (2018-11-08)
+
+### Bug Fixes
+
+* (Android) Upgrade to bugsnag-android v4.9.2
+  * [NDK] Fix regression in 4.9.0 which truncated stacktraces on 64-bit devices
+    to a single frame
+    [bugsnag-android#383](https://github.com/bugsnag/bugsnag-android/pull/383)
+
+
 ## 2.12.2 (2018-11-02)
 
 ### Bug Fixes
