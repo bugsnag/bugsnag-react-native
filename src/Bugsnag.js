@@ -48,7 +48,13 @@ export class Client {
         if (this.config.autoNotify && this.config.shouldNotify()) {
           this.notify(error, null, true, () => {
             if (previousHandler) {
-              previousHandler(error, isFatal)
+              // Wait 150ms before terminating app, allowing native processing
+              // to complete, if any. On iOS in particular, there is no
+              // synchronous means ensure a report delivery attempt is
+              // completed before invoking callbacks.
+              setTimeout(() => {
+                previousHandler(error, isFatal)
+              }, 150)
             }
           }, new HandledState('error', true, 'unhandledException'))
         } else if (previousHandler) {
