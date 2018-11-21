@@ -32,7 +32,9 @@
 
 - (void)startWithOptions:(NSDictionary *)options;
 - (void)leaveBreadcrumb:(NSDictionary *)options;
-- (void)notify:(NSDictionary *)payload;
+- (void)notify:(NSDictionary *)payload
+       resolve:(RCTPromiseResolveBlock)resolve
+        reject:(RCTPromiseRejectBlock)reject;
 - (void)setUser:(NSDictionary *)userInfo;
 - (void)clearUser;
 - (void)startSession;
