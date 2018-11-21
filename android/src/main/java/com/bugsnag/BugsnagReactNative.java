@@ -16,6 +16,7 @@ import com.bugsnag.android.Severity;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -109,7 +110,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
 
   @ReactMethod
-  public void notify(ReadableMap payload, com.facebook.react.bridge.Promise promise) {
+  public void notify(ReadableMap payload, Promise promise) {
       if (!payload.hasKey("errorClass")) {
           logger.warning("Bugsnag could not notify: No error class");
           return;
