@@ -1,6 +1,16 @@
 Changelog
 =========
 
+## TBD
+
+### Bug Fixes
+
+* (iOS) Ensure reports requiring complex processing are delivered by delaying
+  termination handler until written to disk.
+    [#290](https://github.com/bugsnag/bugsnag-react-native/pull/290)
+    [#287](https://github.com/bugsnag/bugsnag-react-native/pull/287)
+    [Craig Petzel](https://github.com/cpetzel)
+
 ## 2.12.4 (2018-11-08)
 
 ### Bug Fixes
