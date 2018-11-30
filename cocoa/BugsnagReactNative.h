@@ -2,6 +2,14 @@
 
 #import <React/RCTBridgeModule.h>
 
+#if __has_include(<React/RCTBridge.h>)
+// React Native >= 0.40
+#import <React/RCTBridge.h>
+#else
+// React Native <= 0.39
+#import "RCTBridge.h"
+#endif
+
 @class BugsnagConfiguration;
 
 @interface BugsnagReactNative: NSObject <RCTBridgeModule>
@@ -24,7 +32,9 @@
 
 - (void)startWithOptions:(NSDictionary *)options;
 - (void)leaveBreadcrumb:(NSDictionary *)options;
-- (void)notify:(NSDictionary *)payload;
+- (void)notify:(NSDictionary *)payload
+       resolve:(RCTPromiseResolveBlock)resolve
+        reject:(RCTPromiseRejectBlock)reject;
 - (void)setUser:(NSDictionary *)userInfo;
 - (void)clearUser;
 - (void)startSession;

@@ -46,9 +46,15 @@ export class Client {
 
       ErrorUtils.setGlobalHandler((error, isFatal) => {
         if (this.config.autoNotify && this.config.shouldNotify()) {
-          this.notify(error, null, !!NativeClient.notifyBlocking, (queued) => {
+          this.notify(error, null, true, () => {
             if (previousHandler) {
-              previousHandler(error, isFatal)
+              // Wait 150ms before terminating app, allowing native processing
+              // to complete, if any. On iOS in particular, there is no
+              // synchronous means ensure a report delivery attempt is
+              // completed before invoking callbacks.
+              setTimeout(() => {
+                previousHandler(error, isFatal)
+              }, 150)
             }
           }, new HandledState('error', true, 'unhandledException'))
         } else if (previousHandler) {
@@ -64,7 +70,7 @@ export class Client {
     tracking.enable({
       allRejections: true,
       onUnhandled: function (id, error) {
-        client.notify(error, null, false, null, new HandledState('error', true, 'unhandledPromiseRejection'))
+        client.notify(error, null, true, null, new HandledState('error', true, 'unhandledPromiseRejection'))
       },
       onHandled: function () {}
     })
@@ -75,9 +81,6 @@ export class Client {
    * @param error               The error instance to report
    * @param beforeSendCallback  A callback invoked before the report is sent
    *                            so additional information can be added
-   * @param blocking            When true, blocks the native thread execution
-   *                            until complete. If unspecified, sends the
-   *                            request asynchronously
    * @param postSendCallback    Callback invoked after request is queued
    */
   notify = async (error, beforeSendCallback, blocking, postSendCallback, _handledState) => {
@@ -105,12 +108,13 @@ export class Client {
     }
 
     const payload = report.toJSON()
-    if (blocking && NativeClient.notifyBlocking) {
-      NativeClient.notifyBlocking(payload, blocking, postSendCallback)
-    } else {
-      NativeClient.notify(payload)
-      if (postSendCallback) { postSendCallback(true) }
-    }
+    payload.blocking = !!blocking
+
+    NativeClient.notify(payload).then(() => {
+      if (postSendCallback) {
+        postSendCallback()
+      }
+    })
   }
 
   setUser = (id, name, email) => {

@@ -1,6 +1,40 @@
 Changelog
 =========
 
+## TBD
+
+### Bug Fixes
+
+* (iOS) Ensure reports requiring complex processing are delivered by delaying
+  termination handler until written to disk.
+    [#290](https://github.com/bugsnag/bugsnag-react-native/pull/290)
+    [#287](https://github.com/bugsnag/bugsnag-react-native/pull/287)
+    [Craig Petzel](https://github.com/cpetzel)
+
+## 2.12.4 (2018-11-08)
+
+### Bug Fixes
+
+* (Android) Restore support for react-native < 0.56 due to regression in 2.12.3
+
+## 2.12.3 (2018-11-08)
+
+### Bug Fixes
+
+* (Android) Upgrade to bugsnag-android v4.9.2
+  * [NDK] Fix regression in 4.9.0 which truncated stacktraces on 64-bit devices
+    to a single frame
+    [bugsnag-android#383](https://github.com/bugsnag/bugsnag-android/pull/383)
+
+
+## 2.12.2 (2018-11-02)
+
+### Bug Fixes
+
+* (Android) Upgrade to bugsnag-android v4.9.1
+  * Allow setting context to null from callbacks
+    [bugsnag-android#381](https://github.com/bugsnag/bugsnag-android/pull/381)
+
 ## 2.12.1 (2018-10-31)
 
 ### Bug Fixes

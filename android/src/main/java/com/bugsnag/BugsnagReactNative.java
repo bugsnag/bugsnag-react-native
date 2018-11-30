@@ -16,6 +16,7 @@ import com.bugsnag.android.Severity;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -107,13 +108,9 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                               readStringMap(options.getMap("metadata")));
   }
 
-  @ReactMethod
-  public void notify(ReadableMap payload) {
-      notifyBlocking(payload, false, null);
-  }
 
   @ReactMethod
-  public void notifyBlocking(ReadableMap payload, boolean blocking, com.facebook.react.bridge.Callback callback) {
+  public void notify(ReadableMap payload, Promise promise) {
       if (!payload.hasKey("errorClass")) {
           logger.warning("Bugsnag could not notify: No error class");
           return;
@@ -141,11 +138,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
       String severityReason = payload.getString("severityReason");
       map.put("severity", severity);
       map.put("severityReason", severityReason);
+      boolean blocking = payload.hasKey("blocking") && payload.getBoolean("blocking");
 
       Bugsnag.internalClientNotify(exc, map, blocking, handler);
 
-      if (callback != null)
-        callback.invoke();
+      if (promise != null)
+        promise.resolve(null);
   }
 
   @ReactMethod
