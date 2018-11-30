@@ -18,11 +18,11 @@ android {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 26)
         versionCode 4
-        versionName '2.12.4'
+        versionName '2.12.5'
     }
 }
 
 dependencies {
-    compile 'com.bugsnag:bugsnag-android:4.9.2'
+    compile 'com.bugsnag:bugsnag-android:4.9.3'
     compile 'com.facebook.react:react-native:+'
 }
