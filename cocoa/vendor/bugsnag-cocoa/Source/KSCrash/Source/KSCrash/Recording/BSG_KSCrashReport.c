@@ -983,6 +983,12 @@ bool bsg_kscrw_i_isValidPointer(const uintptr_t address) {
     return true;
 }
 
+/**
+ * Strip higher order bits from addresses which aren't related to the actual
+ * location.
+ */
+#define BSG_ValidPointerMask  0x0000000fffffffff
+
 /** Write the contents of a memory location only if it contains notable data.
  * Also writes meta information about the data.
  *
@@ -990,13 +996,17 @@ bool bsg_kscrw_i_isValidPointer(const uintptr_t address) {
  *
  * @param key The object key, if needed.
  *
- * @param address The memory address.
+ * @param rawAddress The memory address.
  */
 void bsg_kscrw_i_writeMemoryContentsIfNotable(
     const BSG_KSCrashReportWriter *const writer, const char *const key,
-    const uintptr_t address) {
+    const uintptr_t rawAddress) {
+    uintptr_t address = rawAddress;
     if (!bsg_kscrw_i_isValidPointer(address)) {
-        return;
+        address &= BSG_ValidPointerMask;
+        if (!bsg_kscrw_i_isValidPointer(address)) {
+            return;
+        }
     }
 
     const void *object = (const void *)address;
