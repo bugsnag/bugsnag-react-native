@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## TBD
+## 2.12.5 (2018-11-30)
 
 ### Bug Fixes
 
@@ -10,6 +10,18 @@ Changelog
     [#290](https://github.com/bugsnag/bugsnag-react-native/pull/290)
     [#287](https://github.com/bugsnag/bugsnag-react-native/pull/287)
     [Craig Petzel](https://github.com/cpetzel)
+
+* (iOS) Upgrade to bugsnag-cocoa v5.17.1
+  * Fix stack trace resolution on iPhone XS sometimes reporting incorrect
+  addresses
+  [#319](https://github.com/bugsnag/bugsnag-cocoa/pull/319)
+  * Add `fatalError` and other assertion failure messages in reports for
+    Swift 4.2 apps. Note that this only includes messages which are 16
+    characters or longer. See the linked pull request for more information.
+    [#320](https://github.com/bugsnag/bugsnag-cocoa/pull/320)
+* (Android) Upgrade to bugsnag-android v4.9.3
+  * Handle null values in MetaData.mergeMaps, preventing potential NPE
+    [#386](https://github.com/bugsnag/bugsnag-android/pull/386)
 
 ## 2.12.4 (2018-11-08)
 
