@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 2.12.6 (2018-12-05)
+
+### Bug Fixes
+
+* (iOS) Upgrade to bugsnag-cocoa v5.17.2
+  * Add Device time of report capture to JSON payload
+    [#315](https://github.com/bugsnag/bugsnag-cocoa/pull/315)
+
 ## 2.12.5 (2018-11-30)
 
 ### Bug Fixes
