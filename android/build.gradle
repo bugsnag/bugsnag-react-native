@@ -19,6 +19,7 @@ android {
         targetSdkVersion safeExtGet('targetSdkVersion', 26)
         versionCode 4
         versionName '2.12.6'
+        consumerProguardFiles 'proguard-rules.pro'
     }
 }
 
