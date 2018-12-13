@@ -1,13 +1,13 @@
 jobs:
   include:
     - stage: test
-      sudo: false
-      language: javascript
+      language: node_js
+      node_js:
+        - "10"
       install: npm install
       script: npm run test:lint:js && npm run test:unit:js && npm run test:smoke:typescript
     - stage: build
       language: android
-      sudo: false
       android:
         components:
          - tools
