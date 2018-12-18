@@ -14,3 +14,5 @@ Pods/
 test/app.js
 maze_output
 scenario.json
+android/local.properties
+android/android.iml

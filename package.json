@@ -13,6 +13,13 @@
     "promise": "^7",
     "prop-types": "^15.6.0"
   },
+  "files": [
+    "index.js",
+    "lib",
+    "android",
+    "cocoa",
+    "BugsnagReactNative.podspec"
+  ],
   "scripts": {
     "prepublish": "mkdir -p lib && babel --source-maps --out-dir='lib' --ignore='__tests__' src",
     "test:unit:js": "jest --coverage src/__tests__",
