@@ -1,6 +1,82 @@
 Changelog
 =========
 
+## 2.12.6 (2018-12-05)
+
+### Bug Fixes
+
+* (iOS) Upgrade to bugsnag-cocoa v5.17.2
+  * Add Device time of report capture to JSON payload
+    [#315](https://github.com/bugsnag/bugsnag-cocoa/pull/315)
+
+## 2.12.5 (2018-11-30)
+
+### Bug Fixes
+
+* (iOS) Ensure reports requiring complex processing are delivered by delaying
+  termination handler until written to disk.
+    [#290](https://github.com/bugsnag/bugsnag-react-native/pull/290)
+    [#287](https://github.com/bugsnag/bugsnag-react-native/pull/287)
+    [Craig Petzel](https://github.com/cpetzel)
+
+* (iOS) Upgrade to bugsnag-cocoa v5.17.1
+  * Fix stack trace resolution on iPhone XS sometimes reporting incorrect
+  addresses
+  [#319](https://github.com/bugsnag/bugsnag-cocoa/pull/319)
+  * Add `fatalError` and other assertion failure messages in reports for
+    Swift 4.2 apps. Note that this only includes messages which are 16
+    characters or longer. See the linked pull request for more information.
+    [#320](https://github.com/bugsnag/bugsnag-cocoa/pull/320)
+* (Android) Upgrade to bugsnag-android v4.9.3
+  * Handle null values in MetaData.mergeMaps, preventing potential NPE
+    [#386](https://github.com/bugsnag/bugsnag-android/pull/386)
+
+## 2.12.4 (2018-11-08)
+
+### Bug Fixes
+
+* (Android) Restore support for react-native < 0.56 due to regression in 2.12.3
+
+## 2.12.3 (2018-11-08)
+
+### Bug Fixes
+
+* (Android) Upgrade to bugsnag-android v4.9.2
+  * [NDK] Fix regression in 4.9.0 which truncated stacktraces on 64-bit devices
+    to a single frame
+    [bugsnag-android#383](https://github.com/bugsnag/bugsnag-android/pull/383)
+
+
+## 2.12.2 (2018-11-02)
+
+### Bug Fixes
+
+* (Android) Upgrade to bugsnag-android v4.9.1
+  * Allow setting context to null from callbacks
+    [bugsnag-android#381](https://github.com/bugsnag/bugsnag-android/pull/381)
+
+## 2.12.1 (2018-10-31)
+
+### Bug Fixes
+
+* TypeScript: allow undefined apiKeyOrConfig in Client constructor [#278](https://github.com/bugsnag/bugsnag-android/pull/278)
+
+## 2.12.0 (2018-10-29)
+
+### Enhancements
+
+* (Android) Upgrade to bugsnag-android v4.9.0
+  * Add a callback to allow modifying reports immediately prior to delivery,
+    including fatal crashes from native C/C++ code. For more information, see
+    the [callback reference](https://docs.bugsnag.com/platforms/android/sdk/customizing-error-reports).
+    [bugsnag-android#379](https://github.com/bugsnag/bugsnag-android/pull/379)
+
+### Bug Fixes
+
+* (Android) Upgrade to bugsnag-android v4.9.0
+  * [NDK] Improve stack trace quality for signals raised on ARM32 devices
+    [bugsnag-android#378](https://github.com/bugsnag/bugsnag-android/pull/378)
+
 ## 2.11.0 (2018-09-28)
 
 ### Enhancements
