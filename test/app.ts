@@ -7,3 +7,5 @@ import { Client } from '..';
 const client = new Client('API_KEYYY')
 client.notify(new Error('flop'))
 client.setUser('123', 'B. Nag', 'bugs.nag@bugsnag.com')
+client.setUser(undefined, undefined, undefined)
+client.setUser()

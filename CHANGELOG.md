@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## 2.X.X (TBD)
+
+### Bug Fixes
+
+* TypeScript: allow null values in setUser method [#279](https://github.com/bugsnag/bugsnag-android/pull/279)
+
 ## 2.12.6 (2018-12-05)
 
 ### Bug Fixes
