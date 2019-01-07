@@ -24,6 +24,6 @@ android {
 }
 
 dependencies {
-    compile 'com.bugsnag:bugsnag-android:4.9.3'
+    compile 'com.bugsnag:bugsnag-android:4.10.0'
     compile 'com.facebook.react:react-native:+'
 }
