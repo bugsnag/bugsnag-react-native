@@ -1789,20 +1789,6 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
             {
                 writer->addStringElement(writer, BSG_KSCrashField_Name,
                                          crash->userException.name);
-                if (crash->userException.language != NULL) {
-                    writer->addStringElement(writer, BSG_KSCrashField_Language,
-                                             crash->userException.language);
-                }
-                if (crash->userException.lineOfCode != NULL) {
-                    writer->addStringElement(writer,
-                                             BSG_KSCrashField_LineOfCode,
-                                             crash->userException.lineOfCode);
-                }
-                if (crash->userException.customStackTrace != NULL) {
-                    writer->addJSONElement(
-                        writer, BSG_KSCrashField_Backtrace,
-                        crash->userException.customStackTrace);
-                }
             }
             writer->endContainer(writer);
             break;
@@ -2103,7 +2089,32 @@ void bsg_kscrashreport_writeStandardReport(
         writer->endContainer(writer);
 
         if (crashContext->config.onCrashNotify != NULL) {
+            // Write handled exception report info
             writer->beginObject(writer, BSG_KSCrashField_UserAtCrash);
+            if (crashContext->crash.crashType == BSG_KSCrashTypeUserReported) {
+                if (crashContext->crash.userException.overrides != NULL) {
+                   writer->addJSONElement(writer, BSG_KSCrashField_Overrides,
+                                          crashContext->crash.userException.overrides);
+                }
+                if (crashContext->crash.userException.handledState != NULL) {
+                    writer->addJSONElement(writer, BSG_KSCrashField_HandledState,
+                                           crashContext->crash.userException.handledState);
+                }
+                if (crashContext->crash.userException.metadata != NULL) {
+                    writer->addJSONElement(writer, BSG_KSCrashField_Metadata,
+                                           crashContext->crash.userException.metadata);
+                }
+                if (crashContext->crash.userException.state != NULL) {
+                    writer->addJSONElement(writer, BSG_KSCrashField_State,
+                                           crashContext->crash.userException.state);
+                }
+                if (crashContext->crash.userException.config != NULL) {
+                    writer->addJSONElement(writer, BSG_KSCrashField_Config,
+                                           crashContext->crash.userException.config);
+                }
+                writer->addIntegerElement(writer, BSG_KSCrashField_DiscardDepth,
+                                       crashContext->crash.userException.discardDepth);
+            }
             { bsg_kscrw_i_callUserCrashHandler(crashContext, writer); }
             writer->endContainer(writer);
         }
