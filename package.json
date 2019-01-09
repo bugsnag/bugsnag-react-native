@@ -15,6 +15,7 @@
   },
   "files": [
     "index.js",
+    "index.d.ts",
     "lib",
     "android",
     "cocoa",
@@ -25,7 +26,7 @@
     "test:unit:js": "jest --coverage src/__tests__",
     "test:lint:js": "standard",
     "test:e2e:js": "bundle exec bugsnag-maze-runner --verbose",
-    "test:smoke:typescript": "tslint index.d.ts && tsc --strict test/app.ts"
+    "test:smoke:typescript": "./test/types.sh"
   },
   "peerDependencies": {
     "react-native": ">=0.40"

@@ -16,3 +16,4 @@ maze_output
 scenario.json
 android/local.properties
 android/android.iml
+test/tmp

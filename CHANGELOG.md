@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## 2.x.x (TBD)
+
+### Bug Fixes
+
+* TypeScript: ensure types are included in the npm package [#305](https://github.com/bugsnag/bugsnag-android/pull/305)
+
 ## 2.13.0 (2019-01-07)
 
 ### Bug Fixes
