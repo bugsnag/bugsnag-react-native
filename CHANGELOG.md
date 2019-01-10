@@ -5,13 +5,13 @@ Changelog
 
 ### Bug Fixes
 
-* TypeScript: ensure types are included in the npm package [#305](https://github.com/bugsnag/bugsnag-android/pull/305)
+* TypeScript: ensure types are included in the npm package [#305](https://github.com/bugsnag/bugsnag-react-native/pull/305)
 
 ## 2.13.0 (2019-01-07)
 
 ### Bug Fixes
 
-* TypeScript: allow null values in setUser method [#279](https://github.com/bugsnag/bugsnag-android/pull/279)
+* TypeScript: allow null values in setUser method [#279](https://github.com/bugsnag/bugsnag-react-native/pull/279)
 
 * (iOS) Upgrade to bugsnag-cocoa v5.17.3
   * Fix case where notify() causes an unhandled report
@@ -103,7 +103,7 @@ Changelog
 
 ### Bug Fixes
 
-* TypeScript: allow undefined apiKeyOrConfig in Client constructor [#278](https://github.com/bugsnag/bugsnag-android/pull/278)
+* TypeScript: allow undefined apiKeyOrConfig in Client constructor [#278](https://github.com/bugsnag/bugsnag-react-native/pull/278)
 
 ## 2.12.0 (2018-10-29)
 
