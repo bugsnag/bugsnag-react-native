@@ -52,3 +52,11 @@ A robust example of how to make best use of the Bugsnag React Native notifier.
    ```
    react-native run-android --variant=release
    ```
+
+## Deobfuscating stacktraces
+
+This app provides working examples of how to deobfuscate stacktraces for JS, Android, and iOS. For further information, please consult [our React Native documentation](https://docs.bugsnag.com/platforms/react-native/showing-full-stacktraces/).
+
+### Android
+
+The [Bugsnag Gradle Plugin](https://docs.bugsnag.com/build-integrations/gradle/) will automatically upload all the necessary mapping files when `react-native run-android --variant=release` is invoked.
