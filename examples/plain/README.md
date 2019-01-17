@@ -57,6 +57,12 @@ A robust example of how to make best use of the Bugsnag React Native notifier.
 
 This app provides working examples of how to deobfuscate stacktraces for JS, Android, and iOS. For further information, please consult [our React Native documentation](https://docs.bugsnag.com/platforms/react-native/showing-full-stacktraces/).
 
+### JavaScript
+
+You will need to upload source maps to Bugsnag in order to deobfuscate JavaScript stack traces. Example scripts for achieving this on Android/iOS in both debug and release builds can be found [here](scripts).
+
+Please note that if you use Code Push, you should specify `codeBundleId` in your JS configuration, and use that as the value of `app-version` instead. See [the docs](https://docs.bugsnag.com/platforms/react-native/showing-full-stacktraces) for further detail.
+
 ### Android
 
 The [Bugsnag Gradle Plugin](https://docs.bugsnag.com/build-integrations/gradle/) will automatically upload all the necessary mapping files when `react-native run-android --variant=release` is invoked.
