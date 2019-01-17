@@ -60,3 +60,11 @@ This app provides working examples of how to deobfuscate stacktraces for JS, And
 ### Android
 
 The [Bugsnag Gradle Plugin](https://docs.bugsnag.com/build-integrations/gradle/) will automatically upload all the necessary mapping files when `react-native run-android --variant=release` is invoked.
+
+### iOS
+
+If Bitcode is enabled in your project, you will first need to download your dSYMs from XCode or iTunes Connect, then upload them by using our fastlane plugin or bugsnag-dsym-upload. A working example of this can be found [here](ios/upload-react-native-dsyms.sh).
+
+If you are not using Bitcode, you can use our Fastlane or Cocoapods integrations, or add a manual Build phase to upload the dSYMs.
+
+Read the [iOS symbolication guide](https://docs.bugsnag.com/platforms/ios/symbolication-guide) for further details.
