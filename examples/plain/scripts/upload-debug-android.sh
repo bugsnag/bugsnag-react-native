@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-API_KEY=YOUR_API_KEY_HERE # set your own API key here
+API_KEY=YOUR-API-KEY-HERE # set your own API key here
 APP_VERSION=1 # set your own app version here (using the Android versionCode)
 
 # Download debug source maps from Metro bundler
@@ -13,4 +13,5 @@ bugsnag-sourcemaps upload \
     --app-version $APP_VERSION \
     --minified-file android-debug.bundle \
     --source-map android-debug.bundle.map \
-    --minified-url "http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false"
+    --minified-url "http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false" \
+    --overwrite

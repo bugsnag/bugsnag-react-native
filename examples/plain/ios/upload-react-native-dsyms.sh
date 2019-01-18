@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-bugsnag-dsym-upload example-dsyms.zip
+bugsnag-dsym-upload build/Build/Products/Release-iphonesimulator/

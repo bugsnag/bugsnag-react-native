@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-API_KEY=YOUR_API_KEY_HERE # set your own API key here
+API_KEY=YOUR-API-KEY-HERE # set your own API key here
 APP_VERSION=1 # set your own app version here (using the iOS build number)
 
 # Generate source maps using react-native bundler
@@ -19,4 +19,5 @@ bugsnag-sourcemaps upload \
     --minified-file ios-release.bundle \
     --source-map ios-release.bundle.map \
     --minified-url main.jsbundle \
-    --upload-sources
+    --upload-sources \
+    --overwrite

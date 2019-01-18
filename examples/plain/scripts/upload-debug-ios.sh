@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-API_KEY=YOUR_API_KEY_HERE # set your own API key here
+API_KEY=YOUR-API-KEY-HERE # set your own API key here
 APP_VERSION=1 # set your own app version here (using the iOS build number)
 
 # Download debug source maps from Metro bundler
@@ -13,4 +13,5 @@ bugsnag-sourcemaps upload \
     --app-version $APP_VERSION \
     --minified-file ios-debug.bundle \
     --source-map ios-debug.bundle.map \
-    --minified-url "http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false"
+    --minified-url "http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false" \
+    --overwrite

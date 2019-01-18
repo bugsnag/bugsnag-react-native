@@ -59,9 +59,11 @@ This app provides working examples of how to deobfuscate stacktraces for JS, And
 
 ### JavaScript
 
-You will need to upload source maps to Bugsnag in order to deobfuscate JavaScript stack traces. Example scripts for achieving this on Android/iOS in both debug and release builds can be found [here](scripts).
+You will need to upload source maps to Bugsnag in order to deobfuscate JavaScript stack traces. Example scripts for achieving this on Android/iOS in both debug and release builds can be found [here](scripts). The example script requires the installation of [bugsnag-sourcemaps](https://github.com/bugsnag/bugsnag-sourcemaps) to work.
 
 Please note that if you use Code Push, you should specify `codeBundleId` in your JS configuration, and use that as the value of `app-version` instead. See [the docs](https://docs.bugsnag.com/platforms/react-native/showing-full-stacktraces) for further detail.
+
+Note: recent versions of React Native have an [issue](https://github.com/facebook/react-native/issues/6946#issuecomment-405525464) which may result in the failure to apply source maps or incorrect line numbers being mapped.
 
 ### Android
 
@@ -69,7 +71,7 @@ The [Bugsnag Gradle Plugin](https://docs.bugsnag.com/build-integrations/gradle/)
 
 ### iOS
 
-If Bitcode is enabled in your project, you will first need to download your dSYMs from XCode or iTunes Connect, then upload them by using our fastlane plugin or bugsnag-dsym-upload. A working example of this can be found [here](ios/upload-react-native-dsyms.sh).
+If Bitcode is enabled in your project, you will first need to download your dSYMs from XCode or iTunes Connect, then upload them by using our fastlane plugin or bugsnag-dsym-upload. A working example of this can be found [here](ios/upload-react-native-dsyms.sh). The example script requires the installation of [bugsnag-dsym-upload](https://github.com/bugsnag/bugsnag-dsym-upload) to work.
 
 If you are not using Bitcode, you can use our Fastlane or Cocoapods integrations, or add a manual Build phase to upload the dSYMs.
 

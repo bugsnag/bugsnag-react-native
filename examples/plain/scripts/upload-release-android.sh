@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-API_KEY=YOUR_API_KEY_HERE # set your own API key here
+API_KEY=YOUR-API-KEY-HERE # set your own API key here
 APP_VERSION=1 # set your own app version here (using the Android versionCode)
 
 # Generate source maps using react-native bundler
@@ -19,4 +19,5 @@ bugsnag-sourcemaps upload \
     --minified-file android-release.bundle \
     --source-map android-release.bundle.map \
     --minified-url index.android.bundle \
-    --upload-sources
+    --upload-sources \
+    --overwrite
