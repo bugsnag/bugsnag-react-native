@@ -59,7 +59,7 @@ This app provides working examples of how to deobfuscate stacktraces for JS, And
 
 ### JavaScript
 
-You will need to upload source maps to Bugsnag in order to deobfuscate JavaScript stack traces. Example scripts for achieving this on Android/iOS in both debug and release builds can be found [here](scripts). The example script requires the installation of [bugsnag-sourcemaps](https://github.com/bugsnag/bugsnag-sourcemaps) to work. The scripts can also be invoked in this example project using [npm run](https://docs.npmjs.com/cli/run-script.html):
+You will need to upload source maps to Bugsnag in order to deobfuscate JavaScript stack traces. Example scripts for achieving this on Android/iOS in both debug and release builds can be found [here](scripts). The example script requires the installation of [bugsnag-sourcemaps](https://github.com/bugsnag/bugsnag-sourcemaps) to work, which is a dev dependency of this example project. The scripts can also be invoked in this example project using [npm run](https://docs.npmjs.com/cli/run-script.html):
 
 ```bash
 npm run upload-sourcemaps:debug:android

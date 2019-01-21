@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 API_KEY=YOUR-API-KEY-HERE # set your own API key here
 APP_VERSION=1 # set your own app version here (using the iOS build number)
