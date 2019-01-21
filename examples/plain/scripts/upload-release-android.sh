@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-API_KEY=YOUR-API-KEY-HERE # set your own API key here
-APP_VERSION=1 # set your own app version here (using the Android versionCode)
+if [ -z "$API_KEY" ]; then
+    export API_KEY=YOUR-API-KEY-HERE # set your own API key here, or as an environment variable
+fi
+
+if [ -z "$APP_VERSION" ]; then
+    export APP_VERSION=1 # set your own app version here (using the Android versionCode)
+fi
 
 # Generate source maps using react-native bundler
 cd ..
