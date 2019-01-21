@@ -4,7 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "upload-sourcemaps:debug:android": "./scripts/upload-debug-android.sh",
+    "upload-sourcemaps:release:android": "./scripts/upload-release-android.sh",
+    "upload-proguard:release:android": "./android/upload-proguard.sh",
+    "upload-sourcemaps:debug:ios": "./scripts/upload-debug-ios.sh",
+    "upload-sourcemaps:release:ios": "./scripts/upload-release-ios.sh",
+    "upload-dsyms:release:ios": "./ios/upload-react-native-dsyms.sh"
   },
   "dependencies": {
     "bugsnag-react-native": "^2.12.0",
