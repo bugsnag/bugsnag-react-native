@@ -1,6 +1,35 @@
 Changelog
 =========
 
+## 2.14.0 (2019-01-23)
+
+* (Android) Upgrade to bugsnag-android v4.11.0
+  ### Enhancements
+
+  * [NDK] Improve support for C++ exceptions, adding the exception class name
+    and description to reports and improving the stacktrace quality
+    [#412](https://github.com/bugsnag/bugsnag-android/pull/412)
+
+  * Update vendored GSON dependency to latest available version
+  [#415](https://github.com/bugsnag/bugsnag-android/pull/415)
+
+  ### Bug fixes
+
+  * Fix cached error deserialisation where the Throwable has a cause
+    [#418](https://github.com/bugsnag/bugsnag-android/pull/418)
+
+  * Refactor error report deserialisation
+    [#419](https://github.com/bugsnag/bugsnag-android/pull/419)
+
+  * Fix unlikely initialization failure if a device orientation event listener
+    cannot be enabled
+
+  * Cache result of device root check
+    [#411](https://github.com/bugsnag/bugsnag-android/pull/411)
+
+  * Prevent unnecessary free disk calculations on initialisation
+  [#409](https://github.com/bugsnag/bugsnag-android/pull/409)
+
 ## 2.13.1 (2019-01-10)
 
 ### Bug Fixes
