@@ -2,7 +2,7 @@
 set -e
 
 if [ -z "$API_KEY" ]; then
-    export API_KEY=YOUR-API-KEY-HERE # set your own API key here, or as an environment variable
+    export API_KEY=035297f9b1a99e22931db10049fec7ac # set your own API key here, or as an environment variable
 fi
 
 if [ -z "$APP_VERSION" ]; then
