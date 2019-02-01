@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){'use strict';var t=r(d[0]),n=r(d[1]),f=r(d[2]);m.exports=function(s){return'string'==typeof s?{string:s}:s instanceof n?{blob:s.data}:s instanceof f?{formData:s.getParts()}:s instanceof ArrayBuffer||ArrayBuffer.isView(s)?{base64:t(s)}:s}},126,[127,129,132]);

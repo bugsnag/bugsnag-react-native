@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){'use strict';var t=r(d[0]),n={defaultOriginWhitelist:['http://*','https://*'],extractOrigin:function(t){var n=/^[A-Za-z0-9]+:(\/\/)?[^/]*/.exec(t);return null===n?null:n[0]},originWhitelistToRegex:function(n){return t(n).replace(/\\\*/g,'.*')}};m.exports=n},307,[308]);

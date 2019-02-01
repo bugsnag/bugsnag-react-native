@@ -1,0 +1,16 @@
+{
+  "name": "upload-ram",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bugsnag-sourcemaps": "^1.1.0",
+    "glob": "^7.1.3"
+  }
+}

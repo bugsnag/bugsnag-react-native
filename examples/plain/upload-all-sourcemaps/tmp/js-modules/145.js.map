@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/jamielynch/repos/bugsnag-react-native/examples/plain/node_modules/@babel/runtime/regenerator/index.js"],"sourcesContent":["module.exports = require(\"regenerator-runtime\");\n"],"names":["module","exports","require","d"],"mappings":"4BAAAA,EAAOC,QAAUC,EAAOC,EAAA","file":"145.js"}

@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){'use strict';m.exports=function(t){if(!t||!t.stack)return[];for(var s=r(d[0]),o=Array.isArray(t.stack)?t.stack:s.parse(t.stack),f='number'==typeof t.framesToPop?t.framesToPop:0;f--;)o.shift();return o}},102,[103]);

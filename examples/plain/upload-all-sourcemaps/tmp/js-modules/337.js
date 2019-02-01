@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){var n=r(d[0]),o=r(d[1]);m.exports=function(t,f){return'number'!=typeof t&&'window'!==t&&(t=n.findNodeHandle(t)||'window'),o.__takeSnapshot(t,f)}},337,[92,56]);

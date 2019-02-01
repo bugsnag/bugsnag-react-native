@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/jamielynch/repos/bugsnag-react-native/examples/plain/node_modules/stacktrace-parser/index.js"],"sourcesContent":["module.exports = require('./lib/stacktrace-parser.js');\n"],"names":["module","exports","require","d"],"mappings":"4BAAAA,EAAOC,QAAUC,EAAOC,EAAA","file":"105.js"}

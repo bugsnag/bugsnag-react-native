@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/jamielynch/repos/bugsnag-react-native/examples/plain/node_modules/bugsnag-react-native/index.js"],"sourcesContent":["'use strict'\nmodule.exports = require('./lib/Bugsnag')\n"],"names":["module","exports","require","d"],"mappings":"4BAAA,aACAA,EAAOC,QAAUC,EAAOC,EAAA","file":"342.js"}

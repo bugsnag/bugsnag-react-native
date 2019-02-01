@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){'use strict';var s=r(d[0]),h=r(d[1]),o={shadowColor:s,shadowOffset:h.shape({width:h.number,height:h.number}),shadowOpacity:h.number,shadowRadius:h.number};m.exports=o},78,[68,73]);

@@ -1,0 +1,1 @@
+__d(function(g,r,i,a,m,e,d){'use strict';var t=r(d[0]),l={isTVSelectable:t.bool,hasTVPreferredFocus:t.bool,tvParallaxProperties:t.object,tvParallaxShiftDistanceX:t.number,tvParallaxShiftDistanceY:t.number,tvParallaxTiltAngle:t.number,tvParallaxMagnification:t.number};m.exports=l},258,[73]);
