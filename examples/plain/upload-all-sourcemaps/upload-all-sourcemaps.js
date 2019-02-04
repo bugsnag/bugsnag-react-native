@@ -81,8 +81,8 @@ getFile(path.join(jsRoot, 'android-release.bundle.map'))
       } else {
         promise = promise.then(() => uploadSourceMap(
           sections[i].map,
-          `${i + offset}.js`,
-          path.resolve(path.join(jsRoot, 'js-modules', `${i + offset}.js.map`)),
+          `${i + offset - 1}.js`,
+          path.resolve(path.join(jsRoot, 'js-modules', `${i + offset - 1}.js.map`)),
           path.resolve(path.join(jsRoot, 'js-modules', `${i + offset}.js`))
         ));
       }
