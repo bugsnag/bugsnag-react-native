@@ -22,7 +22,7 @@ const jsRoot = path.join(root, './tmp/');
 const appVersion = '1'; // this value was hard coded for testing
 
 // magic offset number. this might change with each RN version. Script was run with RN 0.41
-const offset = 11; 
+// const offset = 11; 
 
 
 function cleanPath(str) {
@@ -49,45 +49,51 @@ function uploadSourceMap(map, fname, mapPath, minJsPath) {
   });
   return writeFile(mapPath, JSON.stringify(fullMap))
     .then(() => console.log(`Uploading ${fname}...`))
-    .then(() => {
-      return pupload({
-        apiKey: apiKey,
-        appVersion: appVersion,
-        minifiedUrl: fname,
-        sourceMap: mapPath,
-        minifiedFile: minJsPath,
-        overwrite: true,
-      });
-    })
+    // .then(() => {
+    //   return pupload({
+    //     apiKey: apiKey,
+    //     appVersion: appVersion,
+    //     minifiedUrl: fname,
+    //     sourceMap: mapPath,
+    //     minifiedFile: minJsPath,
+    //     overwrite: true,
+    //   });
+    // })
     .then(() => console.log(`Uploading ${fname}... DONE`))
     // added this timeout to avoid bugsnag rate limiting
-    .then(() => defer(1500));
+    // .then(() => defer(1500));
 }
 
 getFile(path.join(jsRoot, 'android-release.bundle.map'))
   .then(src => JSON.parse(src))
-  .then(map => map.sections)
-  .then(sections => {
+  .then(map => {
     let promise = Promise.resolve();
-    sections.forEach((section, i) => {
-      if (i === 0) {
-        // the first section of the source map is the main "index" file, and is handled specially.
-        promise = promise.then(() => uploadSourceMap(
-          sections[i].map,
-          'android-release.bundle',
-          path.resolve(path.join(jsRoot, 'android-release.bundle.map')),
-          path.resolve(path.join(jsRoot, 'android-release.bundle'))
-        ));
-      } else {
-        promise = promise.then(() => uploadSourceMap(
-          sections[i].map,
-          `${i + offset - 1}.js`,
-          path.resolve(path.join(jsRoot, 'js-modules', `${i + offset - 1}.js.map`)),
-          path.resolve(path.join(jsRoot, 'js-modules', `${i + offset}.js`))
-        ));
+    let sections = map.sections;
+    let offsets = map.x_facebook_offsets;
+
+    console.log(sections.map((section, i) => {
+      if (!sections[offsets[i] - 1]) return {}
+      return {
+        offset: offsets[i] - 1,
+        map: sections[offsets[i] - 1],
+        sourcesContent: sections[offsets[i] - 1].map.sourcesContent.slice(0, 1000),
+        name: `${offsets[i] - 1}.js.map`,
+        originalJsFile: sections[offsets[i] - 1].map.sources.join(','),
+        bundledJs: fs.readFileSync(path.join(jsRoot, `js-modules/${offsets[i] - 1}.js`), 'utf8').slice(0, 1000)
       }
-    });
+    }))
     return promise;
   })
   .then(() => console.log('DONE!!!!'))
   .catch(err => console.error(err));
+
+
+  // let sourcemapIndex = offsets[i];
+  // if (sourcemapIndex !== null) {
+  //   // promise = promise.then(() => uploadSourceMap(
+  //   //   sections[sourcemapIndex - 11].map,
+  //   //   `${i}.js`,
+  //   //   path.resolve(path.join(jsRoot, 'js-modules', `${i}.js.map`)),
+  //   //   path.resolve(path.join(jsRoot, 'js-modules', `${i}.js`))
+  //   // ));
+  // }
