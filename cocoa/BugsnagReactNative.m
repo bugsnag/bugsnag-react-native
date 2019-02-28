@@ -294,7 +294,7 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
         // The launch event session is skipped because shouldAutoCaptureSessions
         // was not set when Bugsnag was first initialized. Manually sending a
         // session to compensate.
-        [Bugsnag startSession];
+        [Bugsnag resumeSession];
     }
 }
 

@@ -288,7 +288,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
               // The launch event session is skipped because autoCaptureSessions
               // was not set when Bugsnag was first initialized. Manually sending a
               // session to compensate.
-              client.startSession();
+              client.resumeSession();
           }
       }
   }
