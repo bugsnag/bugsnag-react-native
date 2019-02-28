@@ -85,6 +85,10 @@ typedef enum {
  */
 - (NSArray *)allReports;
 
+/** Get all reports as dictionaries, indexed by file name.
+ */
+- (NSDictionary <NSString *, NSDictionary *> *)allReportsByFilename;
+
 #pragma mark - Configuration -
 
 /** Init BSG_KSCrash instance with custom report files directory path. */
@@ -156,7 +160,7 @@ typedef enum {
  * @param reports The reports to send.
  * @param onCompletion Called when sending is complete (nil = ignore).
  */
-- (void)sendReports:(NSArray *)reports
+- (void)sendReports:(NSDictionary <NSString *, NSDictionary *> *)reports
        onCompletion:(BSG_KSCrashReportFilterCompletion)onCompletion;
 
 @end

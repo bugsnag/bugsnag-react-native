@@ -48,6 +48,7 @@ void bsg_kscrashsentry_uninstallUserExceptionHandler(void) {
 }
 
 void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
+                                           const char *severity,
                                            const char *handledState,
                                            const char *overrides,
                                            const char *metadata,
@@ -92,7 +93,11 @@ void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
         bsg_g_context->userException.state = appState;
 
         BSG_KSLOG_DEBUG("Calling main crash handler.");
-        bsg_g_context->onCrash();
+        char errorClass[21];
+        strncpy(errorClass, bsg_g_context->userException.name, sizeof(errorClass));
+        // default to 'w'arning level severity
+        char severityChar = severity != NULL && strlen(severity) > 0 ? severity[0] : 'w';
+        bsg_g_context->onCrash(severityChar, errorClass);
 
         if (terminateProgram) {
             bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);

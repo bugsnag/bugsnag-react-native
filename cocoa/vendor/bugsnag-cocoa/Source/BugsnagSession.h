@@ -20,11 +20,14 @@
 - (_Nonnull instancetype)initWithDictionary:(NSDictionary *_Nonnull)dict;
 
 - (NSDictionary *_Nonnull)toJson;
+- (void)stop;
+- (void)resume;
 
 @property(readonly) NSString *_Nonnull sessionId;
 @property(readonly) NSDate *_Nonnull startedAt;
 @property(readonly) BugsnagUser *_Nullable user;
 @property(readonly) BOOL autoCaptured;
+@property(readonly, getter=isStopped) BOOL stopped;
 
 @property NSUInteger unhandledCount;
 @property NSUInteger handledCount;

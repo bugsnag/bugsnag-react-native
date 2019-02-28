@@ -56,6 +56,36 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
     [self startNewSessionWithAutoCaptureValue:NO];
 }
 
+- (void)stopSession {
+    [[self currentSession] stop];
+
+    if (self.callback) {
+        self.callback(nil);
+    }
+}
+
+- (BOOL)resumeSession {
+    BugsnagSession *session = self.currentSession;
+
+    if (session == nil) {
+        [self startNewSessionWithAutoCaptureValue:NO];
+        return NO;
+    } else {
+        BOOL stopped = session.isStopped;
+        [session resume];
+        return stopped;
+    }
+}
+
+- (BugsnagSession *)runningSession {
+    BugsnagSession *session = self.currentSession;
+
+    if (session == nil || session.isStopped) {
+        return nil;
+    }
+    return session;
+}
+
 - (void)startNewSessionIfAutoCaptureEnabled {
     if (self.config.shouldAutoCaptureSessions  && [self.config shouldSendReports]) {
         [self startNewSessionWithAutoCaptureValue:YES];
@@ -67,6 +97,7 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
         bsg_log_err(@"The session tracking endpoint has not been set. Session tracking is disabled");
         return;
     }
+
     self.currentSession = [[BugsnagSession alloc] initWithId:[[NSUUID UUID] UUIDString]
                                                    startDate:[NSDate date]
                                                         user:self.config.currentUser
@@ -95,14 +126,16 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
 }
 
 - (void)handleHandledErrorEvent {
-    if (self.currentSession == nil) {
+    BugsnagSession *session = [self runningSession];
+
+    if (session == nil) {
         return;
     }
 
-    @synchronized (self.currentSession) {
-        self.currentSession.handledCount++;
-        if (self.callback && (self.config.shouldAutoCaptureSessions || !self.currentSession.autoCaptured)) {
-            self.callback(self.currentSession);
+    @synchronized (session) {
+        session.handledCount++;
+        if (self.callback && (self.config.shouldAutoCaptureSessions || !session.autoCaptured)) {
+            self.callback(session);
         }
     }
 }

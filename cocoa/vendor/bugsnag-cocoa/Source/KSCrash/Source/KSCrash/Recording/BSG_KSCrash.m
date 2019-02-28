@@ -320,12 +320,12 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     (BSG_KSCrashReportFilterCompletion)onCompletion {
     [self.crashReportStore pruneFilesLeaving:self.maxStoredReports];
 
-    NSArray *reports = [self allReports];
+    NSDictionary *reports = [self allReportsByFilename];
 
     BSG_KSLOG_INFO(@"Sending %d crash reports", [reports count]);
 
     [self sendReports:reports
-         onCompletion:^(NSArray *filteredReports, BOOL completed,
+         onCompletion:^(NSUInteger sentReportCount, BOOL completed,
                         NSError *error) {
            BSG_KSLOG_DEBUG(@"Process finished with completion: %d", completed);
            if (error != nil) {
@@ -336,7 +336,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
                self.deleteBehaviorAfterSendAll == BSG_KSCDeleteAlways) {
                [self deleteAllReports];
            }
-           bsg_kscrash_i_callCompletion(onCompletion, filteredReports,
+           bsg_kscrash_i_callCompletion(onCompletion, sentReportCount,
                                         completed, error);
          }];
 }
@@ -357,6 +357,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     const char *cName = [name cStringUsingEncoding:NSUTF8StringEncoding];
     const char *cReason = [reason cStringUsingEncoding:NSUTF8StringEncoding];
     bsg_kscrash_reportUserException(cName, cReason,
+                                    [handledState[@"currentSeverity"] UTF8String],
                                     [self encodeAsJSONString:handledState],
                                     [self encodeAsJSONString:overrides],
                                     [self encodeAsJSONString:metadata],
@@ -404,16 +405,16 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
     return self.crashReportStore.path;
 }
 
-- (void)sendReports:(NSArray *)reports
+- (void)sendReports:(NSDictionary <NSString *, NSDictionary *> *)reports
        onCompletion:(BSG_KSCrashReportFilterCompletion)onCompletion {
     if ([reports count] == 0) {
-        bsg_kscrash_i_callCompletion(onCompletion, reports, YES, nil);
+        bsg_kscrash_i_callCompletion(onCompletion, 0, YES, nil);
         return;
     }
 
     if (self.sink == nil) {
         bsg_kscrash_i_callCompletion(
-            onCompletion, reports, NO,
+            onCompletion, 0, NO,
             [NSError bsg_errorWithDomain:[[self class] description]
                                     code:0
                              description:@"No sink set. Crash reports not sent."]);
@@ -421,15 +422,19 @@ BSG_SYNTHESIZE_CRASH_STATE_PROPERTY(BOOL, crashedLastLaunch)
     }
 
     [self.sink filterReports:reports
-                onCompletion:^(NSArray *filteredReports, BOOL completed,
+                onCompletion:^(NSUInteger sentReportCount, BOOL completed,
                                NSError *error) {
-                  bsg_kscrash_i_callCompletion(onCompletion, filteredReports,
+                  bsg_kscrash_i_callCompletion(onCompletion, sentReportCount,
                                                completed, error);
                 }];
 }
 
 - (NSArray *)allReports {
     return [self.crashReportStore allFiles];
+}
+
+- (NSDictionary <NSString *, NSDictionary *> *)allReportsByFilename {
+    return [self.crashReportStore allFilesByName];
 }
 
 - (BOOL)redirectConsoleLogsToFile:(NSString *)fullPath

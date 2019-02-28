@@ -47,6 +47,8 @@
 - (void)start;
 
 - (void)startSession;
+- (void)stopSession;
+- (BOOL)resumeSession;
 
 /**
  *  Notify Bugsnag of an exception

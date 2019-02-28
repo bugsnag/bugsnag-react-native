@@ -63,9 +63,51 @@ static char *bsg_g_stateFilePath;
 // ============================================================================
 #pragma mark - Utility -
 // ============================================================================
+static const int bsg_filepath_len = 512;
+static const int bsg_error_class_filepath_len = 21;
+static const char bsg_filepath_context_sep = '-';
 
 static inline BSG_KSCrash_Context *crashContext(void) {
     return &bsg_g_crashReportContext;
+}
+
+int bsg_create_filepath(char *base, char filepath[bsg_filepath_len], char severity, char error_class[bsg_error_class_filepath_len]) {
+    int length;
+    for (length = 0; length < bsg_filepath_len; length++) {
+        if (base[length] == '\0') {
+            break;
+        }
+        filepath[length] = base[length];
+    }
+    if (length > 5) // Remove initial .json from path
+        length -= 5;
+
+    // append contextual info
+    BSG_KSCrash_Context *context = crashContext();
+    filepath[length++] = bsg_filepath_context_sep;
+    filepath[length++] = severity;
+    filepath[length++] = bsg_filepath_context_sep;
+    // 'h' for handled vs 'u'nhandled
+    filepath[length++] = context->crash.crashType == BSG_KSCrashTypeUserReported ? 'h' : 'u';
+    filepath[length++] = bsg_filepath_context_sep;
+    for (int i = 0; error_class != NULL && i < bsg_error_class_filepath_len; i++) {
+        char c = error_class[i];
+        if (c == '\0')
+            break;
+        else if (c == 47 || c > 126 || c <= 0)
+            // disallow '/' and characters outside of the ascii range
+            continue;
+        filepath[length++] = c;
+    }
+    // add suffix
+    filepath[length++] = '.';
+    filepath[length++] = 'j';
+    filepath[length++] = 's';
+    filepath[length++] = 'o';
+    filepath[length++] = 'n';
+    filepath[length++] = '\0';
+
+    return length;
 }
 
 // ============================================================================
@@ -78,7 +120,7 @@ static inline BSG_KSCrash_Context *crashContext(void) {
  *
  * This function gets passed as a callback to a crash handler.
  */
-void bsg_kscrash_i_onCrash(void) {
+void bsg_kscrash_i_onCrash(char severity, char *errorClass) {
     BSG_KSLOG_DEBUG("Updating application state to note crash.");
     bsg_kscrashstate_notifyAppCrash();
 
@@ -92,8 +134,9 @@ void bsg_kscrash_i_onCrash(void) {
         bsg_kscrashreport_writeMinimalReport(context,
                                              bsg_g_recrashReportFilePath);
     } else {
-        bsg_kscrashreport_writeStandardReport(context,
-                                              bsg_g_crashReportFilePath);
+        char filepath[bsg_filepath_len];
+        bsg_create_filepath(bsg_g_crashReportFilePath, filepath, severity, errorClass);
+        bsg_kscrashreport_writeStandardReport(context, filepath);
     }
 }
 
@@ -242,6 +285,7 @@ void bsg_kscrash_setCrashNotifyCallback(
 }
 
 void bsg_kscrash_reportUserException(const char *name, const char *reason,
+                                     const char *severity,
                                      const char *handledState,
                                      const char *overrides,
                                      const char *metadata,
@@ -249,7 +293,7 @@ void bsg_kscrash_reportUserException(const char *name, const char *reason,
                                      const char *config,
                                      int discardDepth,
                                      bool terminateProgram) {
-    bsg_kscrashsentry_reportUserException(name, reason, handledState, overrides,
+    bsg_kscrashsentry_reportUserException(name, reason, severity, handledState, overrides,
                                           metadata, appState, config, discardDepth,
                                           terminateProgram);
 }

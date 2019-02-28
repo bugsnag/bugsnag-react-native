@@ -67,6 +67,7 @@ void bsg_kscrashsentry_uninstallUserExceptionHandler(void);
  * Terminate the program instead.
  */
     void bsg_kscrashsentry_reportUserException(const char *name, const char *reason,
+                                               const char *severity,
                                                const char *handledState,
                                                const char *overrides,
                                                const char *metadata,

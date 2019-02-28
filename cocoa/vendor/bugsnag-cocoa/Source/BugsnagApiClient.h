@@ -7,7 +7,7 @@
 
 @class BugsnagConfiguration;
 
-typedef void (^RequestCompletion)(id data, BOOL success, NSError *error);
+typedef void (^RequestCompletion)(NSUInteger reportCount, BOOL success, NSError *error);
 
 @interface BugsnagApiClient : NSObject
 
@@ -21,11 +21,11 @@ typedef void (^RequestCompletion)(id data, BOOL success, NSError *error);
 
 - (NSOperation *)deliveryOperation;
 
-- (void)sendData:(id)data
-     withPayload:(NSDictionary *)payload
-           toURL:(NSURL *)url
-         headers:(NSDictionary *)headers
-    onCompletion:(RequestCompletion)onCompletion;
+- (void)sendItems:(NSUInteger)count
+      withPayload:(NSDictionary *)payload
+            toURL:(NSURL *)url
+          headers:(NSDictionary *)headers
+     onCompletion:(RequestCompletion)onCompletion;
 
 @property(readonly) NSOperationQueue *sendQueue;
 @property(readonly) BugsnagConfiguration *config;

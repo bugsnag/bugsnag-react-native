@@ -187,6 +187,7 @@ void bsg_kscrash_setCrashNotifyCallback(
  * Terminate the program instead.
  */
 void bsg_kscrash_reportUserException(const char *name, const char *reason,
+                                     const char *severity,
                                      const char *handledState,
                                      const char *overrides,
                                      const char *metadata,

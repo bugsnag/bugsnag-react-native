@@ -226,6 +226,20 @@ static BugsnagNotifier *bsg_g_bugsnag_notifier = NULL;
     }
 }
 
++ (void)stopSession {
+    if ([self bugsnagStarted]) {
+        [self.notifier stopSession];
+    }
+}
+
++ (BOOL)resumeSession {
+    if ([self bugsnagStarted]) {
+        return [self.notifier resumeSession];
+    } else {
+        return false;
+    }
+}
+
 + (NSDateFormatter *)payloadDateFormatter {
     static NSDateFormatter *formatter;
     static dispatch_once_t onceToken;

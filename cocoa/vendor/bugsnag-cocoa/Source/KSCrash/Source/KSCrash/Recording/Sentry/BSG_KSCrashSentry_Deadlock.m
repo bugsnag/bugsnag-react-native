@@ -114,7 +114,7 @@ static NSTimeInterval bsg_g_watchdogInterval = 0;
     bsg_g_context->registersAreValid = false;
 
     BSG_KSLOG_DEBUG(@"Calling main crash handler.");
-    bsg_g_context->onCrash();
+    bsg_g_context->onCrash('e', "");
 
     BSG_KSLOG_DEBUG(@"Crash handling complete. Restoring original handlers.");
     bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);

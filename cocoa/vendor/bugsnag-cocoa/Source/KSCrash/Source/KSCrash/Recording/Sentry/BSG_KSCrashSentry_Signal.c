@@ -107,7 +107,18 @@ void bsg_kssighndl_i_handleSignal(int sigNum, siginfo_t *signalInfo,
         bsg_g_context->signal.signalInfo = signalInfo;
 
         BSG_KSLOG_DEBUG("Calling main crash handler.");
-        bsg_g_context->onCrash();
+        char errorClass[21];
+        const char *sigName = bsg_kssignal_signalName(sigNum);
+        if (sigName != NULL) {
+            for (int i = 0; i < sizeof(errorClass); i++) {
+                char c = sigName[i];
+                if (c == '\0') {
+                    break;
+                }
+                errorClass[i] = c;
+            }
+        }
+        bsg_g_context->onCrash('e', errorClass);
 
         BSG_KSLOG_DEBUG(
             "Crash handling complete. Restoring original handlers.");

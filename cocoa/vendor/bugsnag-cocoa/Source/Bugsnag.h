@@ -211,13 +211,60 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
     (BOOL)writeBinaryImagesForUserReported;
 
 /**
- * Manually starts tracking a new session.
+ * Starts tracking a new session.
  *
- * Sessions automatically start when the application enters the foreground state, and end when the application exits
- * the foreground.If you wish to manually start sessions, simply call this method from the relevant part of your
- * application. Starting a new session will automatically end the previous one.
+ * By default, sessions are automatically started when the application enters the foreground.
+ * If you wish to manually call startSession at
+ * the appropriate time in your application instead, the default behaviour can be disabled via
+ * shouldAutoCaptureSessions.
+ *
+ * Any errors which occur in an active session count towards your application's
+ * stability score. You can prevent errors from counting towards your stability
+ * score by calling stopSession and resumeSession at the appropriate
+ * time in your application.
+ *
+ * @see stopSession:
+ * @see resumeSession:
  */
-
 + (void)startSession;
+
+/**
+ * Stops tracking a session.
+ *
+ * When a session is stopped, errors will not count towards your application's
+ * stability score. This can be advantageous if you do not wish these calculations to
+ * include a certain type of error, for example, a crash in a background service.
+ * You should disable automatic session tracking via shouldAutoCaptureSessions if you call this method.
+ *
+ * A stopped session can be resumed by calling resumeSession,
+ * which will make any subsequent errors count towards your application's
+ * stability score. Alternatively, an entirely new session can be created by calling startSession.
+ *
+ * @see startSession:
+ * @see resumeSession:
+ */
++ (void)stopSession;
+
+/**
+ * Resumes a session which has previously been stopped, or starts a new session if none exists.
+ *
+ * If a session has already been resumed or started and has not been stopped, calling this
+ * method will have no effect. You should disable automatic session tracking via
+ * shouldAutoCaptureSessions if you call this method.
+ *
+ * It's important to note that sessions are stored in memory for the lifetime of the
+ * application process and are not persisted on disk. Therefore calling this method on app
+ * startup would start a new session, rather than continuing any previous session.
+ *
+ * You should call this at the appropriate time in your application when you wish to
+ * resume a previously started session. Any subsequent errors which occur in your application
+ * will still be reported to Bugsnag but will not count towards your application's stability score.
+ *
+ * @see startSession:
+ * @see stopSession:
+ *
+ * @return true if a previous session was resumed, false if a new session was started.
+ */
++ (BOOL)resumeSession;
 
 @end

@@ -179,7 +179,9 @@ static void CPPExceptionTerminate(void) {
         bsg_g_context->crashReason = description;
 
         BSG_KSLOG_DEBUG(@"Calling main crash handler.");
-        bsg_g_context->onCrash();
+        char errorClass[21];
+        strncpy(errorClass, bsg_g_context->CPPException.name, sizeof(errorClass));
+        bsg_g_context->onCrash('e', errorClass);
 
         BSG_KSLOG_DEBUG(
             @"Crash handling complete. Restoring original handlers.");

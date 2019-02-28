@@ -47,11 +47,11 @@
                                           @"Bugsnag-API-Key": apiKey,
                                           @"Bugsnag-Sent-At": [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
                                           };
-            [self sendData:payload
-               withPayload:[payload toJson]
-                     toURL:sessionURL
-                   headers:HTTPHeaders
-              onCompletion:^(id data, BOOL success, NSError *error) {
+            [self sendItems:sessions.count
+                withPayload:[payload toJson]
+                      toURL:sessionURL
+                    headers:HTTPHeaders
+               onCompletion:^(NSUInteger sentCount, BOOL success, NSError *error) {
                   if (success && error == nil) {
                       bsg_log_info(@"Sent %lu sessions to Bugsnag", (unsigned long) sessionCount);
 
