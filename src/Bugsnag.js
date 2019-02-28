@@ -128,14 +128,64 @@ export class Client {
     NativeClient.clearUser()
   }
 
+  /**
+   * Starts tracking a new session. You should disable automatic session tracking via
+   * `autoCaptureSessions` if you call this method.
+   *
+   * You should call this at the appropriate time in your application when you wish to start a
+   * session. Any subsequent errors which occur in your application will still be reported to
+   * Bugsnag but will not count towards your application's
+   * [stability score](https://docs.bugsnag.com/product/releases/releases-dashboard/#stability-score).
+   * This will start a new session even if there is already an existing
+   * session; you should call `resumeSession()` if you only want to start a session
+   * when one doesn't already exist.
+   *
+   * @see `resumeSession()`
+   * @see `stopSession()`
+   * @see `autoCaptureSessions`
+   */
   startSession = () => {
     NativeClient.startSession()
   }
 
+  /**
+   * Stops tracking a session. You should disable automatic session tracking via
+   * `autoCaptureSessions` if you call this method.
+   *
+   * You should call this at the appropriate time in your application when you wish to stop a
+   * session. Any subsequent errors which occur in your application will still be reported to
+   * Bugsnag but will not count towards your application's
+   * [stability score](https://docs.bugsnag.com/product/releases/releases-dashboard/#stability-score).
+   * This can be advantageous if, for example, you do not wish the
+   * stability score to include crashes in a background service.
+   *
+   * @see `startSession()`
+   * @see `resumeSession()`
+   * @see `autoCaptureSessions`
+   */
   stopSession = () => {
     NativeClient.stopSession()
   }
 
+  /**
+   * Resumes a session which has previously been stopped, or starts a new session if none exists.
+   * If a session has already been resumed or started and has not been stopped, calling this
+   * method will have no effect. You should disable automatic session tracking via
+   * `autoCaptureSessions` if you call this method.
+   *
+   * It's important to note that sessions are stored in memory for the lifetime of the
+   * application process and are not persisted on disk. Therefore calling this method on app
+   * startup would start a new session, rather than continuing any previous session.
+   *
+   * You should call this at the appropriate time in your application when you wish to resume
+   * a previously started session. Any subsequent errors which occur in your application will
+   * still be reported to Bugsnag but will not count towards your application's
+   * [stability score](https://docs.bugsnag.com/product/releases/releases-dashboard/#stability-score).
+   *
+   * @see `startSession()`
+   * @see `stopSession()`
+   * @see `autoCaptureSessions`
+   */
   resumeSession = () => {
     NativeClient.resumeSession()
   }
