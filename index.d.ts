@@ -16,6 +16,10 @@ export class Client {
 
   public startSession(): void;
 
+  public stopSession(): void;
+
+  public resumeSession(): void;
+
   public enableConsoleBreadcrumbs(): void;
 
   public disableConsoleBreadCrumbs(): void;

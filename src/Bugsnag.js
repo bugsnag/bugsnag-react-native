@@ -132,6 +132,14 @@ export class Client {
     NativeClient.startSession()
   }
 
+  stopSession = () => {
+    NativeClient.stopSession()
+  }
+
+  resumeSession = () => {
+    NativeClient.resumeSession()
+  }
+
   /**
    * Leaves a 'breadcrumb' log message. The most recent breadcrumbs
    * are attached to subsequent error reports.
