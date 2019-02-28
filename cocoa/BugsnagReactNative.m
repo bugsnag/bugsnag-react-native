@@ -209,6 +209,20 @@ RCT_EXPORT_METHOD(startSession) {
     [Bugsnag startSession];
 }
 
+RCT_EXPORT_METHOD(stopSession) {
+    if (![Bugsnag bugsnagStarted]) {
+        return;
+    }
+    [Bugsnag stopSession];
+}
+
+RCT_EXPORT_METHOD(resumeSession) {
+    if (![Bugsnag bugsnagStarted]) {
+        return;
+    }
+    [Bugsnag resumeSession];
+}
+
 RCT_EXPORT_METHOD(clearUser) {
     if (![Bugsnag bugsnagStarted]) {
         return;
