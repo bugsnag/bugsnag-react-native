@@ -133,8 +133,8 @@ export class Client {
    * `autoCaptureSessions` if you call this method.
    *
    * You should call this at the appropriate time in your application when you wish to start a
-   * session. Any subsequent errors which occur in your application will still be reported to
-   * Bugsnag but will not count towards your application's
+   * session. Any subsequent errors which occur in your application will be reported to
+   * Bugsnag and will count towards your application's
    * [stability score](https://docs.bugsnag.com/product/releases/releases-dashboard/#stability-score).
    * This will start a new session even if there is already an existing
    * session; you should call `resumeSession()` if you only want to start a session
@@ -179,7 +179,7 @@ export class Client {
    *
    * You should call this at the appropriate time in your application when you wish to resume
    * a previously started session. Any subsequent errors which occur in your application will
-   * still be reported to Bugsnag but will not count towards your application's
+   * be reported to Bugsnag and will count towards your application's
    * [stability score](https://docs.bugsnag.com/product/releases/releases-dashboard/#stability-score).
    *
    * @see `startSession()`
