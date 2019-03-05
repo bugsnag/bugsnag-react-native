@@ -40,6 +40,12 @@
  */
 - (NSArray *)allFiles;
 
+/** Get a list of all files by filename.
+ *
+ * @return A collection of file contents indexed by filename.
+ */
+- (NSDictionary <NSString *, NSDictionary *> *)allFilesByName;
+
 /** Delete a file.
  *
  * @param fileId The file ID.

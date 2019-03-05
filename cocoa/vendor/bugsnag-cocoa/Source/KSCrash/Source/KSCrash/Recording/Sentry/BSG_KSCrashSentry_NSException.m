@@ -128,7 +128,9 @@ void bsg_recordException(NSException *exception) {
         bsg_g_context->stackTraceLength = (int)numFrames;
 
         BSG_KSLOG_DEBUG(@"Calling main crash handler.");
-        bsg_g_context->onCrash();
+        char errorClass[21];
+        strncpy(errorClass, bsg_g_context->NSException.name, sizeof(errorClass));
+        bsg_g_context->onCrash('e', errorClass);
     }
 }
 

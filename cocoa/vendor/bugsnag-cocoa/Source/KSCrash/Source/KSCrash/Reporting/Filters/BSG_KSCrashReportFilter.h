@@ -37,7 +37,7 @@
  * @param reports The reports to process.
  * @param onCompletion Block to call when processing is complete.
  */
-- (void)filterReports:(NSArray *)reports
+- (void)filterReports:(NSDictionary <NSString *, NSDictionary *> *)reports
          onCompletion:(BSG_KSCrashReportFilterCompletion)onCompletion;
 
 @end

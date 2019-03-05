@@ -96,7 +96,7 @@ static bool bsg_g_threads_are_running = true;
 BSG_KSCrashType
 bsg_kscrashsentry_installWithContext(BSG_KSCrash_SentryContext *context,
                                      BSG_KSCrashType crashTypes,
-                                     void (*onCrash)(void)) {
+                                     void (*onCrash)(char, char *)) {
     if (bsg_ksmachisBeingTraced()) {
         if (context->reportWhenDebuggerIsAttached) {
             BSG_KSLOG_WARN("KSCrash: App is running in a debugger. Crash "
@@ -206,7 +206,7 @@ void bsg_kscrashsentry_resumeThreads(void) {
 }
 
 void bsg_kscrashsentry_clearContext(BSG_KSCrash_SentryContext *context) {
-    void (*onCrash)(void) = context->onCrash;
+    void (*onCrash)(char, char *) = context->onCrash;
     bool threadTracingEnabled = context->threadTracingEnabled;
     bool reportWhenDebuggerIsAttached = context->reportWhenDebuggerIsAttached;
     bool suspendThreadsForUserReported = context->suspendThreadsForUserReported;

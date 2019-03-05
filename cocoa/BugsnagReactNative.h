@@ -38,5 +38,7 @@
 - (void)setUser:(NSDictionary *)userInfo;
 - (void)clearUser;
 - (void)startSession;
+- (void)stopSession;
+- (void)resumeSession;
 
 @end
