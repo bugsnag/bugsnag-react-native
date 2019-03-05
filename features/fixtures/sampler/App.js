@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import _bugsnag from './index.js';
 
 function longStackB(index) {
   if (index < 1200) {
@@ -14,6 +15,19 @@ function longStackA(index) {
   throw new TypeError('Forever and a day')
 }
 
+function stoppedSession() {
+  _bugsnag.startSession()
+  _bugsnag.stopSession()
+  _bugsnag.notify(new Error("Stopped session error"))
+}
+
+function resumedSession() {
+  _bugsnag.startSession()
+  _bugsnag.stopSession()
+  _bugsnag.resumeSession()
+  _bugsnag.notify(new Error("Resumed session error"))
+}
+
 type Props = {};
 export default class App extends Component<Props> {
   render () {
@@ -25,6 +39,12 @@ export default class App extends Component<Props> {
         case 'unhandledRejection':
           Promise.reject(new SyntaxError('no'))
           break
+        case 'StoppedSessionScenario':
+          stoppedSession();
+          break;
+        case 'ResumedSessionScenario':
+          resumedSession();
+          break;
       }
     }, 10)
     return (
