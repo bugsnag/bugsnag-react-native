@@ -258,7 +258,7 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
  *
  * You should call this at the appropriate time in your application when you wish to
  * resume a previously started session. Any subsequent errors which occur in your application
- * will still be reported to Bugsnag but will not count towards your application's stability score.
+ * will be reported to Bugsnag and will count towards your application's stability score.
  *
  * @see startSession:
  * @see stopSession:
