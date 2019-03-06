@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
-import _bugsnag from './index.js';
+import bugsnag from './index.js';
 
 function longStackB(index) {
   if (index < 1200) {
@@ -16,16 +16,16 @@ function longStackA(index) {
 }
 
 function stoppedSession() {
-  _bugsnag.startSession()
-  _bugsnag.stopSession()
-  _bugsnag.notify(new Error("Stopped session error"))
+  bugsnag.startSession()
+  bugsnag.stopSession()
+  bugsnag.notify(new Error("Stopped session error"))
 }
 
 function resumedSession() {
-  _bugsnag.startSession()
-  _bugsnag.stopSession()
-  _bugsnag.resumeSession()
-  _bugsnag.notify(new Error("Resumed session error"))
+  bugsnag.startSession()
+  bugsnag.stopSession()
+  bugsnag.resumeSession()
+  bugsnag.notify(new Error("Resumed session error"))
 }
 
 type Props = {};
