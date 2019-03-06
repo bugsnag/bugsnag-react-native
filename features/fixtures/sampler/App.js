@@ -23,9 +23,11 @@ function stoppedSession() {
 
 function resumedSession() {
   bugsnag.startSession()
+  bugsnag.notify(new Error("First error"))
   bugsnag.stopSession()
+  bugsnag.notify(new Error("Second error"))
   bugsnag.resumeSession()
-  bugsnag.notify(new Error("Resumed session error"))
+  bugsnag.notify(new Error("Third error"))
 }
 
 type Props = {};
