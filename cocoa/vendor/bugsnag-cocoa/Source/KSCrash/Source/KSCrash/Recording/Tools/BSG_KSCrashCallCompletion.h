@@ -29,10 +29,10 @@
 /** Conditionally call a completion method if it's not nil.
  *
  * @param onCompletion The completion block. If nil, this function does nothing.
- * @param filteredReports The parameter to send as "filteredReports".
+ * @param sentReportCount The number of reports successfully handled.
  * @param completed The parameter to send as "completed".
  * @param error The parameter to send as "error".
  */
 void bsg_kscrash_i_callCompletion(
-    BSG_KSCrashReportFilterCompletion onCompletion, NSArray *filteredReports,
+    BSG_KSCrashReportFilterCompletion onCompletion, NSUInteger sentReportCount,
     BOOL completed, NSError *error);

@@ -16,6 +16,10 @@ static NSString *const kBugsnagHandledCount = @"handledCount";
 static NSString *const kBugsnagStartedAt = @"startedAt";
 static NSString *const kBugsnagUser = @"user";
 
+@interface BugsnagSession ()
+@property(readwrite, getter=isStopped) BOOL stopped;
+@end
+
 @implementation BugsnagSession
 
 - (instancetype)initWithId:(NSString *_Nonnull)sessionId
@@ -57,6 +61,14 @@ static NSString *const kBugsnagUser = @"user";
         BSGDictInsertIfNotNil(dict, [self.user toJson], kBugsnagUser);
     }
     return [NSDictionary dictionaryWithDictionary:dict];
+}
+
+- (void)stop {
+    self.stopped = YES;
+}
+
+- (void)resume {
+    self.stopped = NO;
 }
 
 @end

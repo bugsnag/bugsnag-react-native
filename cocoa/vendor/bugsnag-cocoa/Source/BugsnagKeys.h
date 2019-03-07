@@ -19,6 +19,7 @@ static NSString *const BSGKeyName = @"name";
 static NSString *const BSGKeyTimestamp = @"timestamp";
 static NSString *const BSGKeyType = @"type";
 static NSString *const BSGKeyMetaData = @"metaData";
+static NSString *const BSGKeyIncomplete = @"incomplete";
 static NSString *const BSGKeyId = @"id";
 static NSString *const BSGKeyUser = @"user";
 static NSString *const BSGKeyEmail = @"email";

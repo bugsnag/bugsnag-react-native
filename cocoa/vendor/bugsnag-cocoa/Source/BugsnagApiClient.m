@@ -49,11 +49,11 @@
 #pragma mark - Delivery
 
 
-- (void)sendData:(id)data
-     withPayload:(NSDictionary *)payload
-           toURL:(NSURL *)url
-         headers:(NSDictionary *)headers
-    onCompletion:(RequestCompletion)onCompletion {
+- (void)sendItems:(NSUInteger)count
+      withPayload:(NSDictionary *)payload
+            toURL:(NSURL *)url
+          headers:(NSDictionary *)headers
+     onCompletion:(RequestCompletion)onCompletion {
 
     @try {
         NSError *error = nil;
@@ -64,7 +64,7 @@
 
         if (jsonData == nil) {
             if (onCompletion) {
-                onCompletion(data, NO, error);
+                onCompletion(0, NO, error);
             }
             return;
         }
@@ -79,7 +79,7 @@
                                 NSURLResponse *_Nullable response,
                                 NSError *_Nullable requestErr) {
                             if (onCompletion) {
-                                onCompletion(data, requestErr == nil, requestErr);
+                                onCompletion(count, requestErr == nil, requestErr);
                             }
                         }];
             [task resume];
@@ -92,13 +92,13 @@
                                   returningResponse:&response
                                               error:&error];
             if (onCompletion) {
-                onCompletion(data, error == nil, error);
+                onCompletion(count, error == nil, error);
             }
 #pragma clang diagnostic pop
         }
     } @catch (NSException *exception) {
         if (onCompletion) {
-            onCompletion(data, NO,
+            onCompletion(count, NO,
                     [NSError            errorWithDomain:exception.reason
                                         code:420
                                     userInfo:@{BSGKeyException: exception}]);

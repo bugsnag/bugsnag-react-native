@@ -32,6 +32,9 @@ typedef void (^SessionTrackerCallback)(BugsnagSession *newSession);
  */
 - (void)startNewSession;
 
+- (void)stopSession;
+- (BOOL)resumeSession;
+
 /**
  Record a new auto-captured session if neededed. Auto-captured sessions are only
  recorded and sent if -[BugsnagConfiguration shouldAutoCaptureSessions] is YES
@@ -60,7 +63,9 @@ typedef void (^SessionTrackerCallback)(BugsnagSession *newSession);
  */
 - (void)handleHandledErrorEvent;
 
-
-@property (nonatomic, strong, readonly) BugsnagSession *currentSession;
+/**
+ * Retrieves the running session, or nil if the session is stopped or has not yet been started/resumed.
+ */
+@property (nonatomic, strong, readonly) BugsnagSession *runningSession;
 
 @end

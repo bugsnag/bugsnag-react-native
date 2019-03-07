@@ -85,6 +85,16 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void stopSession() {
+      Bugsnag.stopSession();
+  }
+
+  @ReactMethod
+  public void resumeSession() {
+      Bugsnag.resumeSession();
+  }
+
+  @ReactMethod
   public void startWithOptions(ReadableMap options) {
       String apiKey = null;
       if (options.hasKey("apiKey")) {
@@ -278,7 +288,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
               // The launch event session is skipped because autoCaptureSessions
               // was not set when Bugsnag was first initialized. Manually sending a
               // session to compensate.
-              client.startSession();
+              client.resumeSession();
           }
       }
   }

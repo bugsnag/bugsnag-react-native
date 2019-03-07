@@ -6,7 +6,9 @@ const config = new Configuration('my API key!')
 var endpoint = Platform.OS === 'ios' ? 'http://localhost:9339' : 'http://10.0.2.2:9339'
 config.delivery = new StandardDelivery(endpoint, endpoint)
 config.autoCaptureSessions = false
-const _bugsnag = new Client(config)
+const bugsnag = new Client(config)
+
+export default bugsnag;
 
 import {AppRegistry} from 'react-native'
 import App from './App'

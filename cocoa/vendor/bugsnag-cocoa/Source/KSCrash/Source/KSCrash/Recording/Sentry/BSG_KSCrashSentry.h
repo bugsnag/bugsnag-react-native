@@ -51,7 +51,7 @@ typedef struct BSG_KSCrash_SentryContext {
     // Caller defined values. Caller must fill these out prior to installation.
 
     /** Called by the crash handler when a crash is detected. */
-    void (*onCrash)(void);
+    void (*onCrash)(char, char[21]);
 
     /** If true, will suspend threads for user reported exceptions. */
     bool suspendThreadsForUserReported;
@@ -162,7 +162,7 @@ typedef struct BSG_KSCrash_SentryContext {
 BSG_KSCrashType
 bsg_kscrashsentry_installWithContext(BSG_KSCrash_SentryContext *context,
                                      BSG_KSCrashType crashTypes,
-                                     void (*onCrash)(void));
+                                     void (*onCrash)(char, char *));
 
 /** Uninstall crash sentry.
  *
