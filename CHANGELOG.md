@@ -1,6 +1,41 @@
 Changelog
 =========
 
+## 2.15.0 (2019-03-07)
+
+* Add stopSession() and resumeSession() to Client [#314](https://github.com/bugsnag/bugsnag-react-native/pull/314)
+
+* (Android) Upgrade to bugsnag-android v4.12.0
+
+  ### Enhancements
+
+  * Add stopSession() and resumeSession() to Client
+  [#429](https://github.com/bugsnag/bugsnag-android/pull/429)
+
+  ### Bug fixes
+
+  * Prevent overwriting config.projectPackages if already set
+    [#428](https://github.com/bugsnag/bugsnag-android/pull/428)
+
+  * Fix incorrect session handledCount when notifying in quick succession
+    [#434](https://github.com/bugsnag/bugsnag-android/pull/434)
+
+* (Cocoa) Upgrade to bugsnag-cocoa v5.19.0
+
+  Note for Carthage users: this release updates the Xcode configuration to the settings recommended by Xcode 10.
+
+  * Update workspace to recommended settings suggested by XCode 10
+    [#324](https://github.com/bugsnag/bugsnag-cocoa/pull/324)
+
+  ### Enhancements
+
+  * Add stopSession() and resumeSession() to Bugsnag
+    [#325](https://github.com/bugsnag/bugsnag-cocoa/pull/325)
+
+  * Capture basic report diagnostics in the file path in case of crash report
+    content corruption
+    [#327](https://github.com/bugsnag/bugsnag-cocoa/pull/327)
+
 ## 2.14.0 (2019-01-23)
 
 * (Android) Upgrade to bugsnag-android v4.11.0
