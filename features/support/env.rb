@@ -20,13 +20,24 @@ def launch_packager
   run_script('features/scripts/launch_packager.sh')
 end
 
+def set_envfile(envfile)
+  Dir.chdir('features/fixtures/sampler') do
+    FileUtils.rm('.env')
+    FileUtils.cp("scenario_envs/#{envfile}.env", '.env')
+  end
+end
+
 # Scenario hooks
 Before do
-# Runs before every Scenario
+  Dir.chdir('features/fixtures/sampler') do
+    FileUtils.cp('scenario_envs/default.env', '.env')
+  end
 end
 
 After do
-# Runs after every Scenario
+  Dir.chdir('features/fixtures/sampler') do
+    FileUtils.rm('.env')
+  end
 end
 
 # Runs just before the test suite is terminated

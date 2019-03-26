@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View, NativeModules} from 'react-native'
 import bugsnag from './index.js';
 
 function longStackB(index) {
@@ -30,11 +30,20 @@ function resumedSession() {
   bugsnag.notify(new Error("Third error"))
 }
 
+function testANR6000Timeout() {
+  NativeModules.CustomMethods.triggerANR(6000);
+}
+
+function testANR3000Timeout() {
+  NativeModules.CustomMethods.triggerANR(3000);
+}
+
 type Props = {};
 export default class App extends Component<Props> {
   render () {
     const scenario = require('./scenario.json')
     setTimeout(function () {
+      console.log('Performing scenario: ' + scenario.name)
       switch (scenario.name) {
         case 'uncaughtException':
           longStackA(0);
@@ -46,6 +55,12 @@ export default class App extends Component<Props> {
           break;
         case 'ResumedSessionScenario':
           resumedSession();
+          break;
+        case 'TestANRLong':
+          testANR6000Timeout();
+          break;
+        case 'TestANRShort':
+          testANR3000Timeout();
           break;
       }
     }, 10)
