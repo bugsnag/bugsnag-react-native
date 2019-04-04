@@ -176,6 +176,8 @@ void bsg_kscrash_setCrashNotifyCallback(
  *
  * @param name The exception name (for namespacing exception types).
  * @param reason A description of why the exception occurred.
+ * @param stackAddresses An array of addresses or NULL
+ * @param stackLength The number of addresses in stackAddresses
  * @param handledState The severity, reason, and handled-ness of the report
  * @param appState breadcrumbs and other app environmental info
  * @param overrides Report fields overridden by callbacks, collated in the
@@ -187,6 +189,8 @@ void bsg_kscrash_setCrashNotifyCallback(
  * Terminate the program instead.
  */
 void bsg_kscrash_reportUserException(const char *name, const char *reason,
+                                     uintptr_t *stackAddresses,
+                                     unsigned long stackLength,
                                      const char *severity,
                                      const char *handledState,
                                      const char *overrides,

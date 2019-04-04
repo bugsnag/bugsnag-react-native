@@ -18,12 +18,12 @@ android {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 26)
         versionCode 4
-        versionName '2.15.0'
+        versionName '2.16.0'
         consumerProguardFiles 'proguard-rules.pro'
     }
 }
 
 dependencies {
-    compile 'com.bugsnag:bugsnag-android:4.12.0'
+    compile 'com.bugsnag:bugsnag-android:4.13.0'
     compile 'com.facebook.react:react-native:+'
 }

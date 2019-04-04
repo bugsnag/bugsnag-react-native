@@ -52,6 +52,21 @@ static NSString *const kBugsnagUser = @"user";
     return self;
 }
 
+- (_Nonnull instancetype)initWithId:(NSString *_Nonnull)sessionId
+                          startDate:(NSDate *_Nonnull)startDate
+                               user:(BugsnagUser *_Nullable)user
+                       handledCount:(NSUInteger)handledCount
+                     unhandledCount:(NSUInteger)unhandledCount {
+    if (self = [super init]) {
+        _sessionId = sessionId;
+        _startedAt = startDate;
+        _unhandledCount = unhandledCount;
+        _handledCount = handledCount;
+        _user = user;
+    }
+    return self;
+}
+
 - (NSDictionary *)toJson {
     NSMutableDictionary *dict = [NSMutableDictionary new];
     BSGDictInsertIfNotNil(dict, self.sessionId, kBugsnagSessionId);

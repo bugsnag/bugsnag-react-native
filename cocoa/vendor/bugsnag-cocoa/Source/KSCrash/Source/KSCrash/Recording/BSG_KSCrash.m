@@ -347,6 +347,7 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
 
 - (void)reportUserException:(NSString *)name
                      reason:(NSString *)reason
+          originalException:(NSException *)exception
                handledState:(NSDictionary *)handledState
                    appState:(NSDictionary *)appState
           callbackOverrides:(NSDictionary *)overrides
@@ -356,7 +357,17 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
            terminateProgram:(BOOL)terminateProgram {
     const char *cName = [name cStringUsingEncoding:NSUTF8StringEncoding];
     const char *cReason = [reason cStringUsingEncoding:NSUTF8StringEncoding];
+    NSArray *addresses = [exception callStackReturnAddresses];
+    NSUInteger numFrames = [addresses count];
+    uintptr_t *callstack = malloc(numFrames * sizeof(*callstack));
+    for (NSUInteger i = 0; i < numFrames; i++) {
+        callstack[i] = [addresses[i] unsignedLongValue];
+    }
+    if (numFrames > 0) {
+        depth = 0; // reset depth if the stack does not need to be generated
+    }
     bsg_kscrash_reportUserException(cName, cReason,
+                                    callstack, numFrames,
                                     [handledState[@"currentSeverity"] UTF8String],
                                     [self encodeAsJSONString:handledState],
                                     [self encodeAsJSONString:overrides],

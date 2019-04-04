@@ -41,7 +41,7 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.19.0";
+NSString *const NOTIFIER_VERSION = @"5.19.1";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSAttributeDepth = @"depth";
@@ -179,7 +179,7 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 @interface BugsnagNotifier ()
 @property(nonatomic) BugsnagCrashSentry *crashSentry;
 @property(nonatomic) BugsnagErrorReportApiClient *errorReportApiClient;
-@property(nonatomic) BugsnagSessionTracker *sessionTracker;
+@property(nonatomic, readwrite) BugsnagSessionTracker *sessionTracker;
 @end
 
 @implementation BugsnagNotifier
@@ -443,8 +443,10 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
         [BugsnagHandledState handledStateWithSeverityReason:HandledError
                                                    severity:BSGSeverityWarning
                                                   attrValue:error.domain];
-    [self notify:NSStringFromClass([error class])
-             message:error.localizedDescription
+    NSException *wrapper = [NSException exceptionWithName:NSStringFromClass([error class])
+                                                   reason:error.localizedDescription
+                                                 userInfo:error.userInfo];
+    [self notify:wrapper
         handledState:state
                block:^(BugsnagCrashReport *_Nonnull report) {
                  NSMutableDictionary *metadata = [report.metaData mutableCopy];
@@ -472,20 +474,14 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
         handledStateWithSeverityReason:UserSpecifiedSeverity
                               severity:severity
                              attrValue:nil];
-    [self notify:exception.name ?: NSStringFromClass([exception class])
-             message:exception.reason
-        handledState:state
-               block:block];
+    [self notify:exception handledState:state block:block];
 }
 
 - (void)notifyException:(NSException *)exception
                   block:(void (^)(BugsnagCrashReport *))block {
     BugsnagHandledState *state =
         [BugsnagHandledState handledStateWithSeverityReason:HandledException];
-    [self notify:exception.name ?: NSStringFromClass([exception class])
-             message:exception.reason
-        handledState:state
-               block:block];
+    [self notify:exception handledState:state block:block];
 }
 
 - (void)internalClientNotify:(NSException *_Nonnull)exception
@@ -506,20 +502,14 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                               severity:BSGParseSeverity(severity)
                              attrValue:logLevel];
 
-    [self notify:exception.name ?: NSStringFromClass([exception class])
-             message:exception.reason
-        handledState:state
-               block:^(BugsnagCrashReport *_Nonnull report) {
-                 if (block) {
-                     block(report);
-                 }
-               }];
+    [self notify:exception handledState:state block:block];
 }
 
-- (void)notify:(NSString *)exceptionName
-         message:(NSString *)message
+- (void)notify:(NSException *)exception
     handledState:(BugsnagHandledState *_Nonnull)handledState
            block:(void (^)(BugsnagCrashReport *))block {
+    NSString *exceptionName = exception.name ?: NSStringFromClass([exception class]);
+    NSString *message = exception.reason;
     [self.sessionTracker handleHandledErrorEvent];
 
     BugsnagCrashReport *report = [[BugsnagCrashReport alloc]
@@ -550,6 +540,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 
     [self.crashSentry reportUserException:reportName
                                    reason:reportMessage
+                        originalException:exception
                              handledState:[handledState toJson]
                                  appState:[self.state toDictionary]
                         callbackOverrides:report.overrides

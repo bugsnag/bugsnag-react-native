@@ -43,6 +43,7 @@ NSUInteger const BSG_MAX_STORED_REPORTS = 12;
 
 - (void)reportUserException:(NSString *)reportName
                      reason:(NSString *)reportMessage
+          originalException:(NSException *)ex
                handledState:(NSDictionary *)handledState
                    appState:(NSDictionary *)appState
           callbackOverrides:(NSDictionary *)overrides
@@ -52,6 +53,7 @@ NSUInteger const BSG_MAX_STORED_REPORTS = 12;
 
     [[BSG_KSCrash sharedInstance] reportUserException:reportName
                                                reason:reportMessage
+                                    originalException:ex
                                          handledState:handledState
                                              appState:appState
                                     callbackOverrides:overrides

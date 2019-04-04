@@ -1,10 +1,14 @@
 package com.sampler;
 
 import android.app.Application;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ApplicationInfo;
 
 import com.facebook.react.ReactApplication;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.bugsnag.BugsnagReactNative;
-import com.bugsnag.BugsnagReactNative;
+import com.bugsnag.android.Configuration;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -25,7 +29,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-          BugsnagReactNative.getPackage()
+          new ReactNativeConfigPackage(),
+          BugsnagReactNative.getPackage(),
+          new CustomMethodsPackage()
       );
     }
 
@@ -43,6 +49,22 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    boolean enableANR = false;
+    int anrTimeout = 0;
+    try {
+      ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+      String rawEnableANR = (String) ai.metaData.get("enable-anr");
+      enableANR = Boolean.parseBoolean(rawEnableANR);
+      anrTimeout = Integer.parseInt((String) ai.metaData.get("anr-timeout"));
+    } catch (NameNotFoundException e) {
+      throw new RuntimeException("An error occurred reading .env values", e);
+    }
+    Configuration config = new Configuration("my API key!");
+    config.setDetectAnrs(enableANR);
+    if (anrTimeout > 0) {
+      config.setAnrThresholdMs(anrTimeout);
+    }
+    BugsnagReactNative.startWithConfiguration(this, config);
     SoLoader.init(this, /* native exopackage */ false);
   }
 }

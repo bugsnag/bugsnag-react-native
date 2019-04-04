@@ -181,7 +181,8 @@ __deprecated_msg("Use toJson: instead.");
  */
 @property(readonly, copy, nonnull) NSDictionary *overrides;
 /**
- *  Number of frames to discard at the top of the stacktrace
+ *  Number of frames to discard at the top of the generated stacktrace.
+ *  Stacktraces from raised exceptions are unaffected.
  */
 @property(readwrite) NSUInteger depth;
 /**
