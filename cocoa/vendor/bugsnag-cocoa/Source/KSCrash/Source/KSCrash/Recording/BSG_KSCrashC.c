@@ -122,9 +122,10 @@ int bsg_create_filepath(char *base, char filepath[bsg_filepath_len], char severi
  */
 void bsg_kscrash_i_onCrash(char severity, char *errorClass) {
     BSG_KSLOG_DEBUG("Updating application state to note crash.");
-    bsg_kscrashstate_notifyAppCrash();
 
     BSG_KSCrash_Context *context = crashContext();
+
+    bsg_kscrashstate_notifyAppCrash(context->crash.crashType);
 
     if (context->config.printTraceToStdout) {
         bsg_kscrashreport_logCrash(context);
@@ -285,6 +286,8 @@ void bsg_kscrash_setCrashNotifyCallback(
 }
 
 void bsg_kscrash_reportUserException(const char *name, const char *reason,
+                                     uintptr_t *stackAddresses,
+                                     unsigned long stackLength,
                                      const char *severity,
                                      const char *handledState,
                                      const char *overrides,
@@ -293,7 +296,11 @@ void bsg_kscrash_reportUserException(const char *name, const char *reason,
                                      const char *config,
                                      int discardDepth,
                                      bool terminateProgram) {
-    bsg_kscrashsentry_reportUserException(name, reason, severity, handledState, overrides,
+    bsg_kscrashsentry_reportUserException(name, reason,
+                                          stackAddresses,
+                                          stackLength,
+                                          severity,
+                                          handledState, overrides,
                                           metadata, appState, config, discardDepth,
                                           terminateProgram);
 }

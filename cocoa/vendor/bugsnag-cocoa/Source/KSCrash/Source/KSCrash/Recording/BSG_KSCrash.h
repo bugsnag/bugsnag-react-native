@@ -173,6 +173,7 @@ typedef enum {
  *
  * @param name The exception name (for namespacing exception types).
  * @param reason A description of why the exception occurred
+ * @param exception The exception which was thrown (if any)
  * @param handledState The severity, reason, and handled-ness of the report
  * @param appState breadcrumbs and other app environmental info
  * @param overrides Report fields overridden by callbacks, collated in the
@@ -185,6 +186,7 @@ typedef enum {
  */
 - (void)reportUserException:(NSString *)name
                      reason:(NSString *)reason
+          originalException:(NSException *)exception
                handledState:(NSDictionary *)handledState
                    appState:(NSDictionary *)appState
           callbackOverrides:(NSDictionary *)overrides

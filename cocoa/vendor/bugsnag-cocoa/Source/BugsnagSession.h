@@ -19,6 +19,12 @@
 
 - (_Nonnull instancetype)initWithDictionary:(NSDictionary *_Nonnull)dict;
 
+- (_Nonnull instancetype)initWithId:(NSString *_Nonnull)sessionId
+                          startDate:(NSDate *_Nonnull)startDate
+                               user:(BugsnagUser *_Nullable)user
+                       handledCount:(NSUInteger)handledCount
+                     unhandledCount:(NSUInteger)unhandledCount;
+
 - (NSDictionary *_Nonnull)toJson;
 - (void)stop;
 - (void)resume;

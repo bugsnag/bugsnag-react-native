@@ -1,6 +1,47 @@
 Changelog
 =========
 
+## 2.16.0 (2019-04-04)
+
+* (Android) Upgrade to bugsnag-android v4.13.0
+
+  ### Enhancements
+
+  * Add ANR detection to bugsnag-android
+  [#442](https://github.com/bugsnag/bugsnag-android/pull/442)
+
+  * Add unhandled_events field to native payload
+  [#445](https://github.com/bugsnag/bugsnag-android/pull/445)
+
+  ### Bug fixes
+
+  * Ensure boolean object from map serialised as boolean primitive in JNI
+  [#452](https://github.com/bugsnag/bugsnag-android/pull/452)
+
+  * Prevent NPE occurring when calling resumeSession()
+  [#444](https://github.com/bugsnag/bugsnag-android/pull/444)
+
+* (Cocoa) Upgrade to bugsnag-cocoa v5.19.1
+
+  ### Bug fixes
+
+  * Fix generating an incorrect stacktrace used when logging an exception to
+    Bugsnag from a location other than the original call site (for example, from a
+    logging function or across threads).  If an exception was raised/thrown, then
+    the resulting Bugsnag report from `notify()` will now use the `NSException`
+    instance's call stack addresses to construct the stacktrace, ignoring depth.
+    This fixes an issue in macOS exception reporting where `reportException` is
+    reporting the handler code stacktrace rather than the reported exception
+    stack.
+    [#334](https://github.com/bugsnag/bugsnag-cocoa/pull/334)
+
+  * Fix network connectivity monitor by connecting to the correct domain
+    [Jacky Wijaya](https://github.com/Jekiwijaya)
+    [#332](https://github.com/bugsnag/bugsnag-cocoa/pull/332)
+
+
+
+
 ## 2.15.0 (2019-03-07)
 
 * Add stopSession() and resumeSession() to Client [#314](https://github.com/bugsnag/bugsnag-react-native/pull/314)

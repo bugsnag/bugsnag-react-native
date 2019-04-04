@@ -52,7 +52,7 @@ static void BSGConnectivityCallback(SCNetworkReachabilityRef target,
 - (instancetype)initWithURL:(NSURL *)url
                 changeBlock:(ConnectivityChange)changeBlock {
     if (self = [super init]) {
-        NSString *hostName = [url absoluteString];
+        NSString *hostName = [url host];
         _reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, [hostName UTF8String]);
 
         _connectivityChangeBlock = [changeBlock copy];

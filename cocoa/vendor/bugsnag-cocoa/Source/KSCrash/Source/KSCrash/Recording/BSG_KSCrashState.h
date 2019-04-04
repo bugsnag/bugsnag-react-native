@@ -37,6 +37,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "BSG_KSCrashType.h"
 
 typedef struct {
     // Saved data
@@ -114,7 +115,7 @@ void bsg_kscrashstate_notifyAppTerminate(void);
 
 /** Notify the crash reporter that the application has crashed.
  */
-void bsg_kscrashstate_notifyAppCrash(void);
+void bsg_kscrashstate_notifyAppCrash(BSG_KSCrashType type);
 
 /** Read-only access into the current state.
  */
