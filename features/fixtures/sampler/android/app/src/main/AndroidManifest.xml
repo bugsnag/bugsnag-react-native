@@ -10,6 +10,12 @@
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+      <meta-data
+        android:name="enable-anr"
+        android:value="@string/MAZE_ENABLE_ANR"/>
+      <meta-data
+        android:name="anr-timeout"
+        android:value="@string/MAZE_ANR_TIMEOUT"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
