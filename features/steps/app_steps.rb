@@ -21,3 +21,7 @@ end
 When(/^I launch an (\w+) app which has a syntax error$/) do |os|
   launch_crashy_app(os.downcase, "syntaxError")
 end
+
+When("I set the envfile to {string}") do |envfile|
+  set_envfile(envfile)
+end

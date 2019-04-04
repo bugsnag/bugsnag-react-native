@@ -20,13 +20,37 @@ def launch_packager
   run_script('features/scripts/launch_packager.sh')
 end
 
+def set_envfile(envfile)
+  Dir.chdir('features/fixtures/sampler') do
+    begin
+      FileUtils.rm('.env')
+      FileUtils.cp("scenario_envs/#{envfile}.env", '.env')
+    rescue => exception
+      exit("envfile could not be set:", exception)
+    end
+
+  end
+end
+
 # Scenario hooks
 Before do
-# Runs before every Scenario
+  Dir.chdir('features/fixtures/sampler') do
+    begin
+      FileUtils.cp('scenario_envs/default.env', '.env')
+    rescue => exception
+      exit("envfile could not be set:", exception)
+    end
+  end
 end
 
 After do
-# Runs after every Scenario
+  Dir.chdir('features/fixtures/sampler') do
+    begin
+      FileUtils.rm('.env')
+    rescue => exception
+      exit("envfile could not be set:", exception)
+    end
+  end
 end
 
 # Runs just before the test suite is terminated
