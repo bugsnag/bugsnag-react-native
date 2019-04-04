@@ -22,21 +22,34 @@ end
 
 def set_envfile(envfile)
   Dir.chdir('features/fixtures/sampler') do
-    FileUtils.rm('.env')
-    FileUtils.cp("scenario_envs/#{envfile}.env", '.env')
+    begin
+      FileUtils.rm('.env')
+      FileUtils.cp("scenario_envs/#{envfile}.env", '.env')
+    rescue => exception
+      exit("envfile could not be set:", exception)
+    end
+
   end
 end
 
 # Scenario hooks
 Before do
   Dir.chdir('features/fixtures/sampler') do
-    FileUtils.cp('scenario_envs/default.env', '.env')
+    begin
+      FileUtils.cp('scenario_envs/default.env', '.env')
+    rescue => exception
+      exit("envfile could not be set:", exception)
+    end
   end
 end
 
 After do
   Dir.chdir('features/fixtures/sampler') do
-    FileUtils.rm('.env')
+    begin
+      FileUtils.rm('.env')
+    rescue => exception
+      exit("envfile could not be set:", exception)
+    end
   end
 end
 

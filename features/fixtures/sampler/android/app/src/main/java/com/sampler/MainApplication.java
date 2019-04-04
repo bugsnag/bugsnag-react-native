@@ -57,6 +57,7 @@ public class MainApplication extends Application implements ReactApplication {
       enableANR = Boolean.parseBoolean(rawEnableANR);
       anrTimeout = Integer.parseInt((String) ai.metaData.get("anr-timeout"));
     } catch (NameNotFoundException e) {
+      throw new RuntimeException("An error occurred reading .env values", e);
     }
     Configuration config = new Configuration("my API key!");
     config.setDetectAnrs(enableANR);

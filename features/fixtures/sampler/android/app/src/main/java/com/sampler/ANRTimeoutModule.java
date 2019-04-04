@@ -14,15 +14,15 @@ import com.bugsnag.android.Bugsnag;
 import com.bugsnag.android.Client;
 import com.bugsnag.android.Configuration;
 
-public class CustomMethodsModule extends ReactContextBaseJavaModule {
+public class ANRTimeoutModule extends ReactContextBaseJavaModule {
 
-    public CustomMethodsModule(ReactApplicationContext reactContext) {
+    public ANRTimeoutModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
     @Override
     public String getName() {
-        return "CustomMethods";
+        return "ANRTimeout";
     }
 
     @ReactMethod

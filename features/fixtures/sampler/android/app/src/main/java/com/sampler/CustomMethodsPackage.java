@@ -20,7 +20,7 @@ public class CustomMethodsPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new CustomMethodsModule(reactContext));
+        modules.add(new ANRTimeoutModule(reactContext));
 
         return modules;
     }

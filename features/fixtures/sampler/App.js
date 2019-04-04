@@ -31,11 +31,11 @@ function resumedSession() {
 }
 
 function testANR6000Timeout() {
-  NativeModules.CustomMethods.triggerANR(6000);
+  NativeModules.ANRTimeout.triggerANR(6000);
 }
 
 function testANR3000Timeout() {
-  NativeModules.CustomMethods.triggerANR(3000);
+  NativeModules.ANRTimeout.triggerANR(3000);
 }
 
 type Props = {};
