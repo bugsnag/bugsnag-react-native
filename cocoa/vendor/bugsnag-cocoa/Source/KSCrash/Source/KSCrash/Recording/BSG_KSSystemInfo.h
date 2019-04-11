@@ -67,4 +67,9 @@
  */
 + (NSDictionary *)systemInfo;
 
+/**
+ * The build version of the OS
+ */
++ (NSString *)osBuildVersion;
+
 @end

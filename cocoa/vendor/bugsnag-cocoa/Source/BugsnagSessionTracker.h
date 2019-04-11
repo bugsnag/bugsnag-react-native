@@ -15,6 +15,8 @@
 
 typedef void (^SessionTrackerCallback)(BugsnagSession *newSession);
 
+extern NSString *const BSGSessionUpdateNotification;
+
 @interface BugsnagSessionTracker : NSObject
 
 /**

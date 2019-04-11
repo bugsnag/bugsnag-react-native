@@ -66,6 +66,7 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
         _breadcrumbs = [BugsnagBreadcrumbs new];
         _automaticallyCollectBreadcrumbs = YES;
         _shouldAutoCaptureSessions = YES;
+        _reportBackgroundOOMs = YES;
 
         if ([NSURLSession class]) {
             _session = [NSURLSession
@@ -123,7 +124,10 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
 
 - (void)setReleaseStage:(NSString *)newReleaseStage {
     @synchronized (self) {
+        NSString *key = NSStringFromSelector(@selector(releaseStage));
+        [self willChangeValueForKey:key];
         _releaseStage = newReleaseStage;
+        [self didChangeValueForKey:key];
         [self.config addAttribute:BSGKeyReleaseStage
                         withValue:newReleaseStage
                     toTabWithName:BSGKeyConfig];

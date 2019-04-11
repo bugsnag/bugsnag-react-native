@@ -18,6 +18,8 @@
  */
 NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
 
+NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
+
 @interface BugsnagSessionTracker ()
 @property (weak, nonatomic) BugsnagConfiguration *config;
 @property (strong, nonatomic) BugsnagSessionFileStore *sessionStore;
@@ -62,6 +64,7 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
     if (self.callback) {
         self.callback(nil);
     }
+    [self postUpdateNotice];
 }
 
 - (BOOL)resumeSession {
@@ -73,6 +76,7 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
     } else {
         BOOL stopped = session.isStopped;
         [session resume];
+        [self postUpdateNotice];
         return stopped;
     }
 }
@@ -108,6 +112,8 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
     if (self.callback) {
         self.callback(self.currentSession);
     }
+    [self postUpdateNotice];
+
     [self.apiClient deliverSessionsInStore:self.sessionStore];
 }
 
@@ -128,6 +134,12 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
     if (self.callback) {
         self.callback(self.currentSession);
     }
+    [self postUpdateNotice];
+}
+
+- (void)postUpdateNotice {
+    [[NSNotificationCenter defaultCenter] postNotificationName:BSGSessionUpdateNotification
+                                                        object:[self.runningSession toDictionary]];
 }
 
 #pragma mark - Handling events
@@ -156,6 +168,7 @@ NSTimeInterval const BSGNewSessionBackgroundDuration = 60;
         if (self.callback && (self.config.shouldAutoCaptureSessions || !session.autoCaptured)) {
             self.callback(session);
         }
+        [self postUpdateNotice];
     }
 }
 

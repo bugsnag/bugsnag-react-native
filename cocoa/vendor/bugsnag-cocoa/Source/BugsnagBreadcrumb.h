@@ -94,6 +94,10 @@ typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
 
 /** Number of breadcrumbs accumulated */
 @property(assign, readonly) NSUInteger count;
+/**
+ * Path where breadcrumbs are persisted on disk
+ */
+@property (nonatomic, readonly, strong, nullable) NSString *cachePath;
 
 /**
  * Store a new breadcrumb with a provided message.
@@ -124,5 +128,10 @@ typedef void (^BSGBreadcrumbConfiguration)(BugsnagBreadcrumb *_Nonnull);
  * returns nil if empty
  */
 - (NSArray *_Nullable)arrayValue;
+
+/**
+ * Reads and return breadcrumb data currently stored on disk
+ */
+- (NSDictionary *_Nullable)cachedBreadcrumbs;
 
 @end

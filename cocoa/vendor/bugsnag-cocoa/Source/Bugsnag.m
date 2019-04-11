@@ -76,6 +76,13 @@ static BugsnagNotifier *bsg_g_bugsnag_notifier = NULL;
     return bsg_g_bugsnag_notifier;
 }
 
++ (BOOL)appDidCrashLastLaunch {
+    if ([self bugsnagStarted]) {
+        return [self.notifier appCrashedLastLaunch];
+    }
+    return NO;
+}
+
 + (void)notify:(NSException *)exception {
     if ([self bugsnagStarted]) {
         [self.notifier notifyException:exception

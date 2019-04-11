@@ -1,12 +1,24 @@
 Changelog
 =========
 
-## TBD
+## 2.17.0 (2019-04-11)
 
 ### Bug fixes
 
 * (iOS) Prevent delivering duplicate fatal JS crash reports when using enhanced
   native integration.
+  [#337](https://github.com/bugsnag/bugsnag-react-native/pull/337)
+
+### Enhancements
+
+* (iOS) Upgrade to bugsnag-cocoa v5.20.0:
+  * Persist breadcrumbs on disk to allow reading upon next boot in the event of
+    an uncatchable app termination.
+  * Add `+[Bugsnag appDidCrashLastLaunch]` as a helper to determine if the
+    previous launch of the app ended in a crash or otherwise unexpected
+    termination.
+  * Report unexpected app terminations on iOS as likely out of memory events
+    where the operating system killed the app
 
 ## 2.16.0 (2019-04-04)
 
