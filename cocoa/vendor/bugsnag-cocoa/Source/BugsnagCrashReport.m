@@ -218,7 +218,7 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
  *  User-provided exception metadata
  */
 @property(nonatomic, readwrite, copy, nullable) NSDictionary *customException;
-@property(nonatomic) BugsnagSession *session;
+@property(nonatomic, strong) BugsnagSession *session;
 
 @property (nonatomic, readwrite, getter=isIncomplete) BOOL incomplete;
 @end
@@ -232,68 +232,86 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
 - (instancetype)initWithKSReport:(NSDictionary *)report
                     fileMetadata:(NSString *)metadata {
     if (self = [super init]) {
-        FallbackReportData *fallback = [[FallbackReportData alloc] initWithMetadata:metadata];
-        _notifyReleaseStages =
-            [report valueForKeyPath:@"user.config.notifyReleaseStages"];
-        _releaseStage = BSGParseReleaseStage(report);
-
         _error = [report valueForKeyPath:@"crash.error"];
-        _incomplete = report.count == 0;
         _errorType = _error[BSGKeyType];
-        _threads = [report valueForKeyPath:@"crash.threads"];
-        RegisterErrorData *data = [RegisterErrorData errorDataFromThreads:_threads];
-        if (data) {
-            _errorClass = data.errorClass ?: fallback.errorClass;
-            _errorMessage = data.errorMessage;
-        } else {
-            _errorClass = BSGParseErrorClass(_error, _errorType, fallback.errorClass);
+        if ([[report valueForKeyPath:@"user.state.didOOM"] boolValue]) {
+            _errorClass = BSGParseErrorClass(_error, _errorType, nil);
             _errorMessage = BSGParseErrorMessage(report, _error, _errorType);
-        }
-        _binaryImages = report[@"binary_images"];
-        _breadcrumbs = BSGParseBreadcrumbs(report);
-        _dsymUUID = [report valueForKeyPath:@"system.app_uuid"];
-        _deviceAppHash = [report valueForKeyPath:@"system.device_app_hash"];
-        _metaData =
-            [report valueForKeyPath:@"user.metaData"] ?: [NSDictionary new];
-        _context = BSGParseContext(report, _metaData);
-        _deviceState = BSGParseDeviceState(report);
-        _device = BSGParseDevice(report);
-        _app = BSGParseApp(report);
-        _appState = BSGParseAppState(report[BSGKeySystem], [report valueForKeyPath:@"user.config.appVersion"]);
-        _groupingHash = BSGParseGroupingHash(report, _metaData);
-        _overrides = [report valueForKeyPath:@"user.overrides"];
-        _customException = BSGParseCustomException(report, [_errorClass copy],
-                                                   [_errorMessage copy]);
+            _breadcrumbs = [report valueForKeyPath:@"user.state.oom.breadcrumbs"];
+            _app = [report valueForKeyPath:@"user.state.oom.app"];
+            _device = [report valueForKeyPath:@"user.state.oom.device"];
+            _releaseStage = [report valueForKeyPath:@"user.state.oom.app.releaseStage"];
+            _handledState = [BugsnagHandledState handledStateWithSeverityReason:LikelyOutOfMemory];
+            _deviceAppHash = [report valueForKeyPath:@"user.state.oom.device.id"];
+            NSDictionary *sessionData = [report valueForKeyPath:@"user.state.oom.session"];
+            if (sessionData) {
+                _session = [[BugsnagSession alloc] initWithDictionary:sessionData];
+                _session.unhandledCount += 1; // include own event
+                if (_session.user) {
+                    _metaData = @{@"user": [_session.user toJson]};
+                }
+            }
+        } else {
+            FallbackReportData *fallback = [[FallbackReportData alloc] initWithMetadata:metadata];
+            _notifyReleaseStages =
+                [report valueForKeyPath:@"user.config.notifyReleaseStages"];
+            _releaseStage = BSGParseReleaseStage(report);
+            _incomplete = report.count == 0;
+            _threads = [report valueForKeyPath:@"crash.threads"];
+            RegisterErrorData *data = [RegisterErrorData errorDataFromThreads:_threads];
+            if (data) {
+                _errorClass = data.errorClass ?: fallback.errorClass;
+                _errorMessage = data.errorMessage;
+            } else {
+                _errorClass = BSGParseErrorClass(_error, _errorType, fallback.errorClass);
+                _errorMessage = BSGParseErrorMessage(report, _error, _errorType);
+            }
+            _binaryImages = report[@"binary_images"];
+            _breadcrumbs = BSGParseBreadcrumbs(report);
+            _dsymUUID = [report valueForKeyPath:@"system.app_uuid"];
+            _deviceAppHash = [report valueForKeyPath:@"system.device_app_hash"];
+            _metaData =
+                [report valueForKeyPath:@"user.metaData"] ?: [NSDictionary new];
+            _context = BSGParseContext(report, _metaData);
+            _deviceState = BSGParseDeviceState(report);
+            _device = BSGParseDevice(report);
+            _app = BSGParseApp(report);
+            _appState = BSGParseAppState(report[BSGKeySystem], [report valueForKeyPath:@"user.config.appVersion"]);
+            _groupingHash = BSGParseGroupingHash(report, _metaData);
+            _overrides = [report valueForKeyPath:@"user.overrides"];
+            _customException = BSGParseCustomException(report, [_errorClass copy],
+                                                       [_errorMessage copy]);
 
-        NSDictionary *recordedState =
-            [report valueForKeyPath:@"user.handledState"];
+            NSDictionary *recordedState =
+                [report valueForKeyPath:@"user.handledState"];
 
-        if (recordedState) {
-            _handledState =
-                [[BugsnagHandledState alloc] initWithDictionary:recordedState];
+            if (recordedState) {
+                _handledState =
+                    [[BugsnagHandledState alloc] initWithDictionary:recordedState];
 
-            // only makes sense to use serialised value for handled exceptions
-            _depth = [[report valueForKeyPath:@"user.state.crash.depth"]
-                    unsignedIntegerValue];
-        } else if (_errorType != nil) { // the event was unhandled.
-            BOOL isSignal = [BSGKeySignal isEqualToString:_errorType];
-            SeverityReasonType severityReason =
-                isSignal ? Signal : UnhandledException;
-            _handledState = [BugsnagHandledState
-                handledStateWithSeverityReason:severityReason
-                                      severity:BSGSeverityError
-                                     attrValue:_errorClass];
-            _depth = 0;
-        } else { // Incomplete report
-            SeverityReasonType severityReason = [fallback isUnhandled] ? UnhandledException : HandledError;
-            _handledState = [BugsnagHandledState handledStateWithSeverityReason:severityReason
-                                                                       severity:fallback.severity
-                                                                      attrValue:nil];
-        }
-        _severity = _handledState.currentSeverity;
+                // only makes sense to use serialised value for handled exceptions
+                _depth = [[report valueForKeyPath:@"user.state.crash.depth"]
+                        unsignedIntegerValue];
+            } else if (_errorType != nil) { // the event was unhandled.
+                BOOL isSignal = [BSGKeySignal isEqualToString:_errorType];
+                SeverityReasonType severityReason =
+                    isSignal ? Signal : UnhandledException;
+                _handledState = [BugsnagHandledState
+                    handledStateWithSeverityReason:severityReason
+                                          severity:BSGSeverityError
+                                         attrValue:_errorClass];
+                _depth = 0;
+            } else { // Incomplete report
+                SeverityReasonType severityReason = [fallback isUnhandled] ? UnhandledException : HandledError;
+                _handledState = [BugsnagHandledState handledStateWithSeverityReason:severityReason
+                                                                           severity:fallback.severity
+                                                                          attrValue:nil];
+            }
+            _severity = _handledState.currentSeverity;
 
-        if (report[@"user"][@"id"]) {
-            _session = [[BugsnagSession alloc] initWithDictionary:report[@"user"]];
+            if (report[@"user"][@"id"]) {
+                _session = [[BugsnagSession alloc] initWithDictionary:report[@"user"]];
+            }
         }
     }
     return self;

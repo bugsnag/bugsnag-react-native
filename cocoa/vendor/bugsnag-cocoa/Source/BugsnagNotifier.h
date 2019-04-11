@@ -51,6 +51,8 @@
 - (void)stopSession;
 - (BOOL)resumeSession;
 
+- (BOOL)appCrashedLastLaunch;
+
 /**
  *  Notify Bugsnag of an exception
  *
