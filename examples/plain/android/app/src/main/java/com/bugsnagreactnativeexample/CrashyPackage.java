@@ -12,22 +12,22 @@ import java.util.List;
 
 class CrashyPackage implements ReactPackage {
 
-  public List<Class<? extends JavaScriptModule>> createJSModules() {
-    return Collections.emptyList();
-  }
+    public List<Class<? extends JavaScriptModule>> createJSModules() {
+        return Collections.emptyList();
+    }
 
-  @SuppressWarnings("rawtypes") // the ReactPackage interface uses a raw type, ignore it
-  @Override
-  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-    return Collections.emptyList();
-  }
+    @SuppressWarnings("rawtypes") // the ReactPackage interface uses a raw type, ignore it
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        return Collections.emptyList();
+    }
 
-  @Override
-  public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    List<NativeModule> modules = new ArrayList<>();
+    @Override
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+        List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new CrashyModule(reactContext));
+        modules.add(new CrashyModule(reactContext));
 
-    return modules;
-  }
+        return modules;
+    }
 }
