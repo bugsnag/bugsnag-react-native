@@ -4,12 +4,6 @@ def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
-//gradle.projectsEvaluated {
-    //tasks.withType(JavaCompile) {
-        //options.compilerArgs << "-Xlint:all" << "-Werror"
-    //}
-//}
-
 android {
     buildToolsVersion safeExtGet('buildToolsVersion', '27.0.3')
     compileSdkVersion safeExtGet('compileSdkVersion', 26)
@@ -20,6 +14,11 @@ android {
         versionCode 4
         versionName '2.16.0'
         consumerProguardFiles 'proguard-rules.pro'
+    }
+    lintOptions {
+        abortOnError true
+        warningsAsErrors true
+        baseline file("lint-baseline.xml")
     }
 }
 
