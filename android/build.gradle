@@ -26,3 +26,17 @@ dependencies {
     compile 'com.bugsnag:bugsnag-android:4.13.0'
     compile 'com.facebook.react:react-native:+'
 }
+
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = "8.18"
+}
+
+task("checkstyle", type: Checkstyle) {
+    configFile rootProject.file("config/checkstyle/checkstyle.xml")
+    source  "src/"
+    include "**/*.java"
+    exclude "**/external/**/*.java"
+    classpath = files()
+}
