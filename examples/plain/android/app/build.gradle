@@ -108,6 +108,11 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
     splits {
         abi {
             reset()
@@ -147,7 +152,8 @@ android {
 }
 
 dependencies {
-    implementation project(':bugsnag-react-native')
+    implementation project(path:':bugsnag-react-native', configuration: 'default')
+    implementation 'com.bugsnag:bugsnag-android-ndk:4.10.0'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
