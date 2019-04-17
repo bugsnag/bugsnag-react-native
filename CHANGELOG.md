@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* (iOS) Prevent delivering duplicate fatal JS crash reports when using enhanced
+  native integration.
+
 ## 2.16.0 (2019-04-04)
 
 * (Android) Upgrade to bugsnag-android v4.13.0
