@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 2.17.1 (2019-04-24)
+
+Re-release that fixes packaging issue where the previous artefact included duplicate header files, preventing compilation for iOS
+
 ## 2.17.0 (2019-04-18)
 
 ### Bug fixes
