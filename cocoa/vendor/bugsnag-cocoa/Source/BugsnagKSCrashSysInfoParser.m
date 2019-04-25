@@ -13,8 +13,6 @@
 #import "BugsnagConfiguration.h"
 #import "BugsnagLogger.h"
 
-#define PLATFORM_WORD_SIZE sizeof(void*)*8
-
 NSDictionary *BSGParseDevice(NSDictionary *report) {
     NSMutableDictionary *device = [NSMutableDictionary new];
     NSDictionary *state = [report valueForKeyPath:@"user.state.deviceState"];
@@ -120,7 +118,13 @@ NSDictionary *BSGParseDeviceState(NSDictionary *report) {
     BSGDictSetSafeObject(deviceState, report[@"machine"], @"model");
     BSGDictSetSafeObject(deviceState, report[@"system_name"], @"osName");
     BSGDictSetSafeObject(deviceState, report[@"system_version"], @"osVersion");
-    BSGDictSetSafeObject(deviceState, report[@"os_version"], @"osBuild");
+
+    NSString *osVersion = report[@"os_version"];
+
+    if (osVersion != nil) {
+        BSGDictSetSafeObject(deviceState, @{@"osBuild": osVersion}, @"runtimeVersions");
+    }
+
     BSGDictSetSafeObject(deviceState, @(PLATFORM_WORD_SIZE), @"wordSize");
     BSGDictSetSafeObject(deviceState, @"Apple", @"manufacturer");
     BSGDictSetSafeObject(deviceState, report[@"jailbroken"], @"jailbroken");

@@ -406,7 +406,7 @@
     }
     [sysInfo bsg_ksc_safeSetObject:[self stringSysctl:@"kern.version"]
                             forKey:@BSG_KSSystemField_KernelVersion];
-    [sysInfo bsg_ksc_safeSetObject:[self stringSysctl:@"kern.osversion"]
+    [sysInfo bsg_ksc_safeSetObject:[self osBuildVersion]
                             forKey:@BSG_KSSystemField_OSVersion];
     [sysInfo bsg_ksc_safeSetObject:@([self isJailbroken])
                             forKey:@BSG_KSSystemField_Jailbroken];
@@ -458,6 +458,10 @@
     [sysInfo bsg_ksc_safeSetObject:memory forKey:@BSG_KSSystemField_Memory];
 
     return sysInfo;
+}
+
++ (NSString *)osBuildVersion {
+    return [self stringSysctl:@"kern.osversion"];
 }
 
 @end

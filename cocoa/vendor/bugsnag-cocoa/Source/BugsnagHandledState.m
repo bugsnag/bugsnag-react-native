@@ -19,6 +19,7 @@ static NSString *const kUnhandledException = @"unhandledException";
 static NSString *const kSignal = @"signal";
 static NSString *const kPromiseRejection = @"unhandledPromiseRejection";
 static NSString *const kHandledError = @"handledError";
+static NSString *const kLikelyOutOfMemory = @"outOfMemory";
 static NSString *const kLogGenerated = @"log";
 static NSString *const kHandledException = @"handledException";
 static NSString *const kUserSpecifiedSeverity = @"userSpecifiedSeverity";
@@ -58,6 +59,7 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
     case UserSpecifiedSeverity:
     case UserCallbackSetSeverity:
         break;
+    case LikelyOutOfMemory:
     case UnhandledException:
         severity = BSGSeverityError;
         unhandled = YES;
@@ -127,6 +129,8 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
         return kLogGenerated;
     case UnhandledException:
         return kUnhandledException;
+    case LikelyOutOfMemory:
+        return kLikelyOutOfMemory;
     }
 }
 
@@ -147,6 +151,8 @@ static NSString *const kUserCallbackSetSeverity = @"userCallbackSetSeverity";
         return UserCallbackSetSeverity;
     } else if ([kPromiseRejection isEqualToString:string]) {
         return PromiseRejection;
+    } else if ([kLikelyOutOfMemory isEqualToString:string]) {
+        return LikelyOutOfMemory;
     } else {
         return UnhandledException;
     }

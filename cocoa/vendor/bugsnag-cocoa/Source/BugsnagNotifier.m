@@ -32,8 +32,11 @@
 #import "BugsnagLogger.h"
 #import "BugsnagKeys.h"
 #import "BugsnagSessionTracker.h"
+#import "BSGOutOfMemoryWatchdog.h"
 #import "BSG_RFC3339DateTool.h"
 #import "BSG_KSCrashType.h"
+#import "BSG_KSCrashState.h"
+#import "BSG_KSMach.h"
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
@@ -72,6 +75,8 @@ static NSDictionary *notificationNameMap;
 
 static char *sessionId[128];
 static char *sessionStartDate[128];
+static char *watchdogSentinelPath = NULL;
+static char *crashSentinelPath = NULL;
 static NSUInteger handledCount;
 static bool hasRecordedSessions;
 
@@ -99,6 +104,19 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type
         }
         if (bsg_g_bugsnag_data.metaDataJSON) {
             writer->addJSONElement(writer, "metaData", bsg_g_bugsnag_data.metaDataJSON);
+        }
+        if (watchdogSentinelPath != NULL) {
+            // Delete the file to indicate a handled termination
+            unlink(watchdogSentinelPath);
+        }
+        if (crashSentinelPath != NULL) {
+            // Create a file to indicate that the crash has been handled by
+            // the library. This exists in case the subsequent `onCrash` handler
+            // crashes or otherwise corrupts the crash report file.
+            int fd = open(crashSentinelPath, O_RDWR | O_CREAT, 0644);
+            if (fd > -1) {
+                close(fd);
+            }
         }
     }
 
@@ -180,6 +198,8 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 @property(nonatomic) BugsnagCrashSentry *crashSentry;
 @property(nonatomic) BugsnagErrorReportApiClient *errorReportApiClient;
 @property(nonatomic, readwrite) BugsnagSessionTracker *sessionTracker;
+@property (nonatomic, strong) BSGOutOfMemoryWatchdog *oomWatchdog;
+@property (nonatomic) BOOL appCrashedLastLaunch;
 @end
 
 @implementation BugsnagNotifier
@@ -187,6 +207,8 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 @synthesize configuration;
 
 - (id)initWithConfiguration:(BugsnagConfiguration *)initConfiguration {
+    static NSString *const BSGWatchdogSentinelFileName = @"bugsnag_oom_watchdog.json";
+    static NSString *const BSGCrashSentinelFileName = @"bugsnag_handled_crash.txt";
     if ((self = [super init])) {
         self.configuration = initConfiguration;
         self.state = [[BugsnagMetaData alloc] init];
@@ -195,6 +217,17 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
             BSGKeyVersion : NOTIFIER_VERSION,
             BSGKeyUrl : NOTIFIER_URL
         } mutableCopy];
+
+        NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(
+                                NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+        if (cacheDir) {
+            NSString *sentinelPath = [cacheDir stringByAppendingPathComponent:BSGWatchdogSentinelFileName];
+            NSString *crashPath = [cacheDir stringByAppendingPathComponent:BSGCrashSentinelFileName];
+            watchdogSentinelPath = strdup([sentinelPath UTF8String]);
+            crashSentinelPath = strdup([crashPath UTF8String]);
+            self.oomWatchdog = [[BSGOutOfMemoryWatchdog alloc] initWithSentinelPath:sentinelPath
+                                                                      configuration:configuration];
+        }
 
         self.metaDataLock = [[NSLock alloc] init];
         self.configuration.metaData.delegate = self;
@@ -293,6 +326,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     [self.crashSentry install:self.configuration
                     apiClient:self.errorReportApiClient
                       onCrash:&BSSerializeDataCrashHandler];
+    [self computeDidCrashLastLaunch];
     [self setupConnectivityListener];
     [self updateAutomaticBreadcrumbDetectionSettings];
 
@@ -350,6 +384,10 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 #endif
 
     _started = YES;
+    if (!bsg_ksmachisBeingTraced() && self.configuration.autoNotify) {
+        [self.oomWatchdog enable];
+    }
+
     [self.sessionTracker startNewSessionIfAutoCaptureEnabled];
 
     // notification not received in time on initial startup, so trigger manually
@@ -361,6 +399,35 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                                              selector:@selector(unsubscribeFromNotifications:)
                                                  name:name
                                                object:nil];
+}
+
+- (void)computeDidCrashLastLaunch {
+    const BSG_KSCrash_State *crashState = bsg_kscrashstate_currentState();
+#if TARGET_OS_TV || TARGET_OS_IPHONE
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSString *didCrashSentinelPath = [NSString stringWithUTF8String:crashSentinelPath];
+    BOOL appCrashSentinelExists = [manager fileExistsAtPath:didCrashSentinelPath];
+    BOOL handledCrashLastLaunch = appCrashSentinelExists || crashState->crashedLastLaunch;
+    if (appCrashSentinelExists) {
+        NSError *error = nil;
+        [manager removeItemAtPath:didCrashSentinelPath error:&error];
+        if (error) {
+            bsg_log_err(@"Failed to remove crash sentinel file: %@", error);
+            unlink(crashSentinelPath);
+        }
+    }
+    self.appCrashedLastLaunch = handledCrashLastLaunch || [self.oomWatchdog didOOMLastLaunch];
+    // Ignore potential false positive OOM if previous session crashed and was
+    // reported. There are two checks in place:
+    // 1. crashState->crashedLastLaunch: Accurate unless the crash callback crashes
+    // 2. crash sentinel file exists: This file is written in the event of a crash
+    //    and insures against the crash callback crashing
+    if (!handledCrashLastLaunch && [self.oomWatchdog didOOMLastLaunch]) {
+        [self notifyOutOfMemoryEvent];
+    }
+#else
+    self.appCrashedLastLaunch = crashState->crashedLastLaunch;
+#endif
 }
 
 /**
@@ -503,6 +570,32 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                              attrValue:logLevel];
 
     [self notify:exception handledState:state block:block];
+}
+
+- (void)notifyOutOfMemoryEvent {
+    static NSString *const BSGOutOfMemoryErrorClass = @"Out Of Memory";
+    static NSString *const BSGOutOfMemoryMessageFormat = @"The app was likely terminated by the operating system while in the %@";
+    NSMutableDictionary *lastLaunchInfo = [[self.oomWatchdog lastBootCachedFileInfo] mutableCopy];
+    BOOL wasInForeground = [[lastLaunchInfo valueForKeyPath:@"app.inForeground"] boolValue];
+    NSString *message = [NSString stringWithFormat:BSGOutOfMemoryMessageFormat, wasInForeground ? @"foreground" : @"background"];
+    BugsnagHandledState *handledState = [BugsnagHandledState
+        handledStateWithSeverityReason:LikelyOutOfMemory
+                              severity:BSGSeverityError
+                             attrValue:nil];
+    NSDictionary *crumbs = [self.configuration.breadcrumbs cachedBreadcrumbs];
+    if (crumbs.count > 0) {
+        lastLaunchInfo[@"breadcrumbs"] = crumbs;
+    }
+    NSDictionary *appState = @{@"oom": lastLaunchInfo, @"didOOM": @YES};
+    [self.crashSentry reportUserException:BSGOutOfMemoryErrorClass
+                                   reason:message
+                        originalException:nil
+                             handledState:[handledState toJson]
+                                 appState:appState
+                        callbackOverrides:@{}
+                                 metadata:@{}
+                                   config:@{}
+                             discardDepth:0];
 }
 
 - (void)notify:(NSException *)exception
