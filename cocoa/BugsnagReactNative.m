@@ -1,6 +1,7 @@
 #import "Bugsnag.h"
 #import "BSG_KSCrashC.h"
 #import "BugsnagReactNative.h"
+#import "RCTVersion.h"
 #import <React/RCTConvert.h>
 
 NSString *const BSGInfoPlistKey = @"BugsnagAPIKey";
@@ -265,8 +266,14 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     config.shouldAutoCaptureSessions = [RCTConvert BOOL:options[@"autoCaptureSessions"]];
     config.automaticallyCollectBreadcrumbs = [RCTConvert BOOL:options[@"automaticallyCollectBreadcrumbs"]];
 
+    [config addBeforeSendSession:^void(NSMutableDictionary *_Nonnull data) {
+        data[@"device"] = [self addDeviceRuntimeVersion:data[@"device"]];
+    }];
+
     [config addBeforeSendBlock:^bool(NSDictionary *_Nonnull rawEventData,
                                      BugsnagCrashReport *_Nonnull report) {
+        report.device = [self addDeviceRuntimeVersion:report.device];
+
         return !([report.errorClass hasPrefix:@"RCTFatalException"]
                  && [report.errorMessage hasPrefix:@"Unhandled JS Exception"]);
     }];
@@ -296,6 +303,45 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
         // session to compensate.
         [Bugsnag resumeSession];
     }
+}
+
+- (NSDictionary *)addDeviceRuntimeVersion:(NSDictionary *)device {
+    NSMutableDictionary *copy = [device mutableCopy];
+    NSMutableDictionary *runtimeVersions = [copy[@"runtimeVersions"] mutableCopy];
+
+    if (runtimeVersions == nil) {
+        runtimeVersions = [NSMutableDictionary new];
+    }
+    runtimeVersions[@"reactNative"] = [self findReactNativeVersion];
+    copy[@"runtimeVersions"] = runtimeVersions;
+    return copy;
+}
+
+// see https://github.com/facebook/react-native/blob/6df2edeb2a33d529e4b13a5b6767f300d08aeb0a/scripts/bump-oss-version.js
+- (NSString *)findReactNativeVersion {
+    NSDictionary *versionMap = RCTGetReactNativeVersion();
+    NSNumber *major = versionMap[@"major"];
+    NSNumber *minor = versionMap[@"minor"];
+    NSNumber *patch = versionMap[@"patch"];
+    NSString *prerelease = versionMap[@"prerelease"];
+    NSMutableString *versionString = [NSMutableString new];
+
+    if (![major isEqual:[NSNull null]]) {
+        [versionString appendString:[major stringValue]];
+        [versionString appendString:@"."];
+    }
+    if (![minor isEqual:[NSNull null]]) {
+        [versionString appendString:[minor stringValue]];
+        [versionString appendString:@"."];
+    }
+    if (![patch isEqual:[NSNull null]]) {
+        [versionString appendString:[patch stringValue]];
+    }
+    if (![prerelease isEqual:[NSNull null]]) {
+        [versionString appendString:@"-"];
+        [versionString appendString:prerelease];
+    }
+    return [NSString stringWithString:versionString];
 }
 
 - (void)setNotifierDetails:(NSString *)packageVersion {
