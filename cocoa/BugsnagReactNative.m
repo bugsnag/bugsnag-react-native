@@ -267,12 +267,17 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     config.automaticallyCollectBreadcrumbs = [RCTConvert BOOL:options[@"automaticallyCollectBreadcrumbs"]];
 
     [config addBeforeSendSession:^void(NSMutableDictionary *_Nonnull data) {
-        data[@"device"] = [self addDeviceRuntimeVersion:data[@"device"]];
+        data[@"device"] = [self addDeviceRuntimeVersion:data[@"device"]
+                                     reactNativeVersion:[self findReactNativeVersion]];
     }];
 
     [config addBeforeSendBlock:^bool(NSDictionary *_Nonnull rawEventData,
                                      BugsnagCrashReport *_Nonnull report) {
-        report.device = [self addDeviceRuntimeVersion:report.device];
+        NSString *reactNativeVersion = report.metaData[@"_bugsnag"][@"reactNativeVersion"];
+        if (reactNativeVersion != nil) {
+            report.device = [self addDeviceRuntimeVersion:report.device reactNativeVersion:reactNativeVersion];
+        }
+        report.metaData = [self removeRuntimeVersionFromMetaData:report];
 
         return !([report.errorClass hasPrefix:@"RCTFatalException"]
                  && [report.errorMessage hasPrefix:@"Unhandled JS Exception"]);
@@ -303,16 +308,34 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
         // session to compensate.
         [Bugsnag resumeSession];
     }
+    [self addRuntimeVersionToMetaData:config];
 }
 
-- (NSDictionary *)addDeviceRuntimeVersion:(NSDictionary *)device {
+/**
+ * Stores runtime version info in a metadata tab (it will be moved to a
+ * different payload location before sending)
+ */
+- (void)addRuntimeVersionToMetaData:(BugsnagConfiguration *)config {
+    [config.metaData addAttribute:@"reactNativeVersion"
+                        withValue:[self findReactNativeVersion]
+                    toTabWithName:@"_bugsnag"];
+}
+
+- (NSDictionary *)removeRuntimeVersionFromMetaData:(BugsnagCrashReport *)report {
+    NSMutableDictionary *metadata = report.metaData.mutableCopy;
+    metadata[@"_bugsnag"] = nil;
+    return metadata;
+}
+
+- (NSDictionary *)addDeviceRuntimeVersion:(NSDictionary *)device
+                       reactNativeVersion:(NSString *)reactNativeVersion {
     NSMutableDictionary *copy = [device mutableCopy];
     NSMutableDictionary *runtimeVersions = [copy[@"runtimeVersions"] mutableCopy];
 
     if (runtimeVersions == nil) {
         runtimeVersions = [NSMutableDictionary new];
     }
-    runtimeVersions[@"reactNative"] = [self findReactNativeVersion];
+    runtimeVersions[@"reactNative"] = reactNativeVersion;
     copy[@"runtimeVersions"] = runtimeVersions;
     return copy;
 }
