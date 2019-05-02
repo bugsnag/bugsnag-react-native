@@ -1,6 +1,6 @@
 Feature: Runtime versions are included in all requests
 
-    Scenario Outline: Uncaught exception contains runtime versions for Android
+    Scenario Outline: Uncaught exception contains runtime versions
         When I launch an <platform> app which has an uncaught exception
         And I wait for 1 second
         Then I should receive a request
@@ -14,7 +14,7 @@ Feature: Runtime versions are included in all requests
         | Android  | androidApiLevel |
         | iOS      | osBuild         |
 
-    Scenario Outline: Session contains runtime versions for Android
+    Scenario Outline: Session contains runtime versions
         When I launch an <platform> app with "StoppedSessionScenario"
         And I wait for 1 second
         Then I should receive 2 requests
