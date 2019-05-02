@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-@SuppressWarnings("JavadocMethod")
 public class BugsnagReactNative extends ReactContextBaseJavaModule {
 
     private ReactContext reactContext;
@@ -33,6 +32,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         return new BugsnagPackage();
     }
 
+    /**
+     * Instantiates a bugsnag client using the API key in the AndroidManifest.xml
+     *
+     * @param context the application context
+     * @return the bugsnag client
+     */
     public static Client start(Context context) {
         Client client = Bugsnag.init(context);
         // The first session starts during JS initialization
@@ -43,17 +48,34 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         return client;
     }
 
+    /**
+     * Instantiates a bugsnag client with a given API key.
+     *
+     * @param context the application context
+     * @param apiKey the api key for your project
+     * @return the bugsnag client
+     */
     public static Client startWithApiKey(Context context, String apiKey) {
         Client client = Bugsnag.init(context, apiKey);
         client.setAutoCaptureSessions(false);
         return client;
     }
 
+    /**
+     * Instantiates a bugsnag client with a given configuration object.
+     *
+     * @param context the application context
+     * @param config configuration for how bugsnag should behave
+     * @return the bugsnag client
+     */
     public static Client startWithConfiguration(Context context, Configuration config) {
         config.setAutoCaptureSessions(false);
         return Bugsnag.init(context, config);
     }
 
+    /**
+     * Instantiates the bugsnag react native module
+     */
     public BugsnagReactNative(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
@@ -81,6 +103,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         Bugsnag.resumeSession();
     }
 
+    /**
+     * Configures the bugsnag client with configuration options from the JS layer, starting a new 
+     * client if one has not already been created.
+     *
+     * @param options the JS configuration object
+     */
     @ReactMethod
     public void startWithOptions(ReadableMap options) {
         String apiKey = null;
@@ -96,7 +124,12 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                 libraryVersion,
                 bugsnagAndroidVersion));
     }
-
+    
+    /**
+     * Leaves a breadcrumb from the JS layer.
+     *
+     * @param options the JS breadcrumb
+     */
     @ReactMethod
     public void leaveBreadcrumb(ReadableMap options) {
         String name = options.getString("name");
@@ -105,7 +138,13 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
                 readStringMap(options.getMap("metadata")));
     }
 
-
+    /**
+     * Notifies the native client that a JS error occurred. Upon invoking this method, an 
+     * error report will be generated and delivered via the native client.
+     *
+     * @param payload information about the JS error
+     * @param promise a nullable JS promise that is resolved after a report is delivered
+     */
     @ReactMethod
     public void notify(ReadableMap payload, Promise promise) {
         if (!payload.hasKey("errorClass")) {
@@ -144,6 +183,11 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         }
     }
 
+    /**
+     * Sets a user from the JS layer.
+     *
+     * @param userInfo the JS user
+     */
     @ReactMethod
     public void setUser(ReadableMap userInfo) {
         String userId = userInfo.hasKey("id") ? userInfo.getString("id") : null;
