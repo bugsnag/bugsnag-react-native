@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## TBD
+
+Run checkstyle and lint on Android code, address existing violations
+[#452](https://github.com/bugsnag/bugsnag-react-native/pull/336)
+
 ## 2.17.1 (2019-04-24)
 
 Re-release that fixes packaging issue where the previous artefact included duplicate header files, preventing compilation for iOS
