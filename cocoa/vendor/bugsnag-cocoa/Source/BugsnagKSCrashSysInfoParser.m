@@ -13,8 +13,6 @@
 #import "BugsnagConfiguration.h"
 #import "BugsnagLogger.h"
 
-#define PLATFORM_WORD_SIZE sizeof(void*)*8
-
 NSDictionary *BSGParseDevice(NSDictionary *report) {
     NSMutableDictionary *device = [NSMutableDictionary new];
     NSDictionary *state = [report valueForKeyPath:@"user.state.deviceState"];

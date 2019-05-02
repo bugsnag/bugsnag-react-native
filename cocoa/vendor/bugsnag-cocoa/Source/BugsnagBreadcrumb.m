@@ -181,11 +181,18 @@ NSString *BSGBreadcrumbTypeValue(BSGBreadcrumbType type) {
 NSUInteger BreadcrumbsDefaultCapacity = 20;
 
 - (instancetype)init {
+    static NSString *const BSGBreadcrumbCacheFileName = @"bugsnag_breadcrumbs.json";
     if (self = [super init]) {
         _breadcrumbs = [NSMutableArray new];
         _capacity = BreadcrumbsDefaultCapacity;
         _readWriteQueue = dispatch_queue_create("com.bugsnag.BreadcrumbRead",
                                                 DISPATCH_QUEUE_SERIAL);
+        NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(
+                                 NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+        if (cacheDir != nil) {
+            _cachePath = [cacheDir stringByAppendingPathComponent:
+                             BSGBreadcrumbCacheFileName];
+        }
     }
     return self;
 }
@@ -205,10 +212,42 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
     if (crumb) {
         [self resizeToFitCapacity:self.capacity - 1];
         dispatch_barrier_sync(self.readWriteQueue, ^{
-          [self.breadcrumbs addObject:crumb];
+            [self.breadcrumbs addObject:crumb];
+            // Serialize crumbs to disk inside barrier to avoid simultaneous
+            // access to the file
+            if (self.cachePath != nil) {
+                static NSString *const arrayKeyPath = @"objectValue";
+                NSArray *items = [self.breadcrumbs valueForKeyPath:arrayKeyPath];
+                if ([NSJSONSerialization isValidJSONObject:items]) {
+                    NSError *error = nil;
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:items
+                                                                   options:0
+                                                                     error:&error];
+                    [data writeToFile:self.cachePath atomically:NO];
+                    if (error != nil) {
+                        bsg_log_err(@"Failed to write breadcrumbs to disk: %@", error);
+                    }
+                }
+            }
         });
     }
 }
+
+- (NSDictionary *)cachedBreadcrumbs {
+    __block NSDictionary *cache = nil;
+    dispatch_barrier_sync(self.readWriteQueue, ^{
+        NSError *error = nil;
+        NSData *data = [NSData dataWithContentsOfFile:self.cachePath options:0 error:&error];
+        if (error == nil) {
+            cache = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        }
+        if (error != nil) {
+            bsg_log_err(@"Failed to read breadcrumbs from disk: %@", error);
+        }
+    });
+    return cache;
+}
+
 @synthesize capacity = _capacity;
 
 - (NSUInteger)capacity {

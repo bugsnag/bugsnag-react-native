@@ -34,6 +34,10 @@
 		8A4E733F1DC13281001F7CC8 /* BugsnagConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4E733E1DC13281001F7CC8 /* BugsnagConfigurationTests.m */; };
 		8A627CD01EC2A5FD00F7C04E /* BSGSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A627CCF1EC2A5FD00F7C04E /* BSGSerialization.h */; };
 		8A627CD21EC2A62900F7C04E /* BSGSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A627CD11EC2A62900F7C04E /* BSGSerialization.m */; };
+		8A70D9C922539C81006B696F /* BSGOutOfMemoryWatchdog.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A70D9C722539C81006B696F /* BSGOutOfMemoryWatchdog.h */; };
+		8A70D9CA22539C81006B696F /* BSGOutOfMemoryWatchdog.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A70D9C822539C81006B696F /* BSGOutOfMemoryWatchdog.m */; };
+		8A70D9CB22539C81006B696F /* BSGOutOfMemoryWatchdog.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A70D9C822539C81006B696F /* BSGOutOfMemoryWatchdog.m */; };
+		8A70D9CD2253C484006B696F /* BSGOutOfMemoryWatchdogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A70D9CC2253C484006B696F /* BSGOutOfMemoryWatchdogTests.m */; };
 		8AE1BC951DEFCE8B00D16CEF /* BugsnagConfigurationSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AE1BC941DEFCE8B00D16CEF /* BugsnagConfigurationSpec.m */; };
 		E70E52152216E41C00A590AB /* BugsnagSessionTrackerStopTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E70E52142216E41C00A590AB /* BugsnagSessionTrackerStopTest.m */; };
 		E70EE0781FD7039E00FA745C /* RFC3339DateTool_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = E70EE0771FD7039D00FA745C /* RFC3339DateTool_Tests.m */; };
@@ -447,6 +451,9 @@
 		8A4E733E1DC13281001F7CC8 /* BugsnagConfigurationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagConfigurationTests.m; path = ../Tests/BugsnagConfigurationTests.m; sourceTree = SOURCE_ROOT; };
 		8A627CCF1EC2A5FD00F7C04E /* BSGSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BSGSerialization.h; path = ../Source/BSGSerialization.h; sourceTree = SOURCE_ROOT; };
 		8A627CD11EC2A62900F7C04E /* BSGSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BSGSerialization.m; path = ../Source/BSGSerialization.m; sourceTree = SOURCE_ROOT; };
+		8A70D9C722539C81006B696F /* BSGOutOfMemoryWatchdog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BSGOutOfMemoryWatchdog.h; path = ../Source/BSGOutOfMemoryWatchdog.h; sourceTree = "<group>"; };
+		8A70D9C822539C81006B696F /* BSGOutOfMemoryWatchdog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = BSGOutOfMemoryWatchdog.m; path = ../Source/BSGOutOfMemoryWatchdog.m; sourceTree = "<group>"; };
+		8A70D9CC2253C484006B696F /* BSGOutOfMemoryWatchdogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BSGOutOfMemoryWatchdogTests.m; sourceTree = "<group>"; };
 		8AE1BC941DEFCE8B00D16CEF /* BugsnagConfigurationSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BugsnagConfigurationSpec.m; path = ../Tests/BugsnagConfigurationSpec.m; sourceTree = SOURCE_ROOT; };
 		E70E52142216E41C00A590AB /* BugsnagSessionTrackerStopTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = BugsnagSessionTrackerStopTest.m; path = ../../Tests/BugsnagSessionTrackerStopTest.m; sourceTree = "<group>"; };
 		E70EE0771FD7039D00FA745C /* RFC3339DateTool_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RFC3339DateTool_Tests.m; path = ../Tests/KSCrash/RFC3339DateTool_Tests.m; sourceTree = SOURCE_ROOT; };
@@ -714,6 +721,8 @@
 				8A2C8F1D1C6BBD2300846019 /* Info.plist */,
 				E7107BB31F4C97F100BB3F98 /* KSCrash */,
 				8A2C8F321C6BBD7200846019 /* module.modulemap */,
+				8A70D9C722539C81006B696F /* BSGOutOfMemoryWatchdog.h */,
+				8A70D9C822539C81006B696F /* BSGOutOfMemoryWatchdog.m */,
 			);
 			name = Bugsnag;
 			sourceTree = SOURCE_ROOT;
@@ -738,6 +747,7 @@
 				F429551527EAE3AFE1F605FE /* BugsnagThreadTest.m */,
 				E70E52142216E41C00A590AB /* BugsnagSessionTrackerStopTest.m */,
 				8A120069221C36420008C9C3 /* BSGFilepathTests.m */,
+				8A70D9CC2253C484006B696F /* BSGOutOfMemoryWatchdogTests.m */,
 			);
 			name = Tests;
 			path = BugsnagTests;
@@ -949,6 +959,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7107C411F4C97F100BB3F98 /* BSG_KSCrashReportWriter.h in Headers */,
+				8A70D9C922539C81006B696F /* BSGOutOfMemoryWatchdog.h in Headers */,
 				8A2C8F4F1C6BBE3C00846019 /* Bugsnag.h in Headers */,
 				8A2C8F5B1C6BBE3C00846019 /* BugsnagMetaData.h in Headers */,
 				8A2C8F551C6BBE3C00846019 /* BugsnagConfiguration.h in Headers */,
@@ -1164,6 +1175,7 @@
 				E7107C3A1F4C97F100BB3F98 /* BSG_KSCrashDoctor.m in Sources */,
 				E7107C421F4C97F100BB3F98 /* BSG_KSCrashState.c in Sources */,
 				E72BF77B1FC869F7004BE82F /* BugsnagSession.m in Sources */,
+				8A70D9CA22539C81006B696F /* BSGOutOfMemoryWatchdog.m in Sources */,
 				E7107C5E1F4C97F100BB3F98 /* BSG_KSCrashCallCompletion.m in Sources */,
 				E7107C4D1F4C97F100BB3F98 /* BSG_KSCrashSentry_CPPException.mm in Sources */,
 				E7107C681F4C97F100BB3F98 /* BSG_KSLogger.m in Sources */,
@@ -1214,6 +1226,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A70D9CD2253C484006B696F /* BSGOutOfMemoryWatchdogTests.m in Sources */,
 				E7B970341FD7031500590C27 /* XCTestCase+KSCrash.m in Sources */,
 				E70EE07E1FD703D600FA745C /* NSError+SimpleConstructor_Tests.m in Sources */,
 				E70EE08D1FD705A700FA745C /* KSSafeCollections_Tests.m in Sources */,
@@ -1275,6 +1288,7 @@
 				E7397E3D1F83BC320034242A /* BSG_KSJSONCodec.c in Sources */,
 				E7397E3E1F83BC320034242A /* BSG_KSMach.c in Sources */,
 				E72BF77C1FC869F7004BE82F /* BugsnagSession.m in Sources */,
+				8A70D9CB22539C81006B696F /* BSGOutOfMemoryWatchdog.m in Sources */,
 				E7397E3F1F83BC320034242A /* BSG_KSMach_Arm.c in Sources */,
 				E7397E401F83BC320034242A /* BSG_KSMach_Arm64.c in Sources */,
 				E7397E411F83BC320034242A /* BSG_KSMach_x86_32.c in Sources */,

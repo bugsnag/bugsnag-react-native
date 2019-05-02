@@ -145,6 +145,12 @@ BugsnagBreadcrumbs *breadcrumbs;
 @property BOOL shouldAutoCaptureSessions;
 
 /**
+ * Whether the app should report out of memory events which terminate the app
+ * while the app is in the background.
+ */
+@property BOOL reportBackgroundOOMs;
+
+/**
  * Retrieves the endpoint used to notify Bugsnag of errors
  *
  * NOTE: If you want to set this value, you should do so via setEndpointsForNotify:sessions: instead.

@@ -78,6 +78,18 @@ static NSString *const kBugsnagUser = @"user";
     return [NSDictionary dictionaryWithDictionary:dict];
 }
 
+- (NSDictionary *)toDictionary {
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    dict[kBugsnagSessionId] = self.sessionId ?: @"";
+    dict[kBugsnagStartedAt] = self.startedAt ? [BSG_RFC3339DateTool stringFromDate:self.startedAt] : @"";
+    dict[kBugsnagHandledCount] = @(self.handledCount);
+    dict[kBugsnagUnhandledCount] = @(self.unhandledCount);
+    if (self.user) {
+        dict[kBugsnagUser] = [self.user toJson];
+    }
+    return dict;
+}
+
 - (void)stop {
     self.stopped = YES;
 }
