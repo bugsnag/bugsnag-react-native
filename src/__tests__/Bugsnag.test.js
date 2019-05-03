@@ -376,3 +376,22 @@ test('{enable|disable}ConsoleBreadCrumbs(): gracefully handles serialization edg
   // switched off for the next test ¯\_(ツ)_/¯
   c.disableConsoleBreadCrumbs()
 })
+
+test('setUser(): attempts to stringify non-strings and tolerates errors', () => {
+  const mockSetUser = jest.fn()
+  jest.mock('react-native', () => ({
+    NativeModules: { BugsnagReactNative: { startWithOptions: jest.fn(), setUser: mockSetUser } }
+  }), { virtual: true })
+  const { Client, Configuration } = require('../Bugsnag')
+  const config = new Configuration('API_KEY')
+  const c = new Client(config)
+  c.setUser('123', 'Jim', 'jim@bugsnag.com')
+  c.setUser(4, 'Jim', 'jim@bugsnag.com')
+  c.setUser(null, 'Jim', 'jim@bugsnag.com')
+  c.setUser(Object.create(null), 'Jim', 'jim@bugsnag.com')
+  expect(mockSetUser).toHaveBeenCalledTimes(4)
+  expect(mockSetUser.mock.calls[0][0]).toEqual({ id: '123', name: 'Jim', email: 'jim@bugsnag.com' })
+  expect(mockSetUser.mock.calls[1][0]).toEqual({ id: '4', name: 'Jim', email: 'jim@bugsnag.com' })
+  expect(mockSetUser.mock.calls[2][0]).toEqual({ id: 'null', name: 'Jim', email: 'jim@bugsnag.com' })
+  expect(mockSetUser.mock.calls[3][0]).toEqual({ name: 'Jim', email: 'jim@bugsnag.com' })
+})
