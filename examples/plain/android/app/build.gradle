@@ -131,6 +131,13 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    lintOptions {
+        abortOnError true
+        warningsAsErrors true
+        baseline file("lint-baseline.xml")
+    }
+
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -162,4 +169,18 @@ task copyDownloadableDepsToLibs(type: Copy) {
 
 bugsnag {
     overwrite true
+}
+
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion = "8.18"
+}
+
+task("checkstyle", type: Checkstyle) {
+    configFile rootProject.file("config/checkstyle/checkstyle.xml")
+    source  "src/"
+    include "**/*.java"
+    exclude "**/external/**/*.java"
+    classpath = files()
 }

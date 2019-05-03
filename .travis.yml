@@ -43,7 +43,7 @@ jobs:
         - yarn install
         - ./node_modules/.bin/react-native link
         - cd android
-        - ./gradlew assembleRelease
+        - ./gradlew lint checkstyle assembleRelease
       licenses:
         -
     - stage: build

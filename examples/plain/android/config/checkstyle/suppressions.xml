@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+  "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+  "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+  <!-- react-native link adds an import in the wrong place on CI builds, this warning
+  is suppressed to avoid failing the build -->
+  <suppress checks="CustomImportOrder"
+            files="MainApplication.java"/>
+</suppressions>
