@@ -342,29 +342,34 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
 
 // see https://github.com/facebook/react-native/blob/6df2edeb2a33d529e4b13a5b6767f300d08aeb0a/scripts/bump-oss-version.js
 - (NSString *)findReactNativeVersion {
-    NSDictionary *versionMap = RCTGetReactNativeVersion();
-    NSNumber *major = versionMap[@"major"];
-    NSNumber *minor = versionMap[@"minor"];
-    NSNumber *patch = versionMap[@"patch"];
-    NSString *prerelease = versionMap[@"prerelease"];
-    NSMutableString *versionString = [NSMutableString new];
+    static dispatch_once_t onceToken;
+    static NSString *BSGReactNativeVersion = nil;
+    dispatch_once(&onceToken, ^{
+        NSDictionary *versionMap = RCTGetReactNativeVersion();
+        NSNumber *major = versionMap[@"major"];
+        NSNumber *minor = versionMap[@"minor"];
+        NSNumber *patch = versionMap[@"patch"];
+        NSString *prerelease = versionMap[@"prerelease"];
+        NSMutableString *versionString = [NSMutableString new];
 
-    if (![major isEqual:[NSNull null]]) {
-        [versionString appendString:[major stringValue]];
-        [versionString appendString:@"."];
-    }
-    if (![minor isEqual:[NSNull null]]) {
-        [versionString appendString:[minor stringValue]];
-        [versionString appendString:@"."];
-    }
-    if (![patch isEqual:[NSNull null]]) {
-        [versionString appendString:[patch stringValue]];
-    }
-    if (![prerelease isEqual:[NSNull null]]) {
-        [versionString appendString:@"-"];
-        [versionString appendString:prerelease];
-    }
-    return [NSString stringWithString:versionString];
+        if (![major isEqual:[NSNull null]]) {
+            [versionString appendString:[major stringValue]];
+            [versionString appendString:@"."];
+        }
+        if (![minor isEqual:[NSNull null]]) {
+            [versionString appendString:[minor stringValue]];
+            [versionString appendString:@"."];
+        }
+        if (![patch isEqual:[NSNull null]]) {
+            [versionString appendString:[patch stringValue]];
+        }
+        if (![prerelease isEqual:[NSNull null]]) {
+            [versionString appendString:@"-"];
+            [versionString appendString:prerelease];
+        }
+        BSGReactNativeVersion = [NSString stringWithString:versionString];
+    });
+    return BSGReactNativeVersion;
 }
 
 - (void)setNotifierDetails:(NSString *)packageVersion {
