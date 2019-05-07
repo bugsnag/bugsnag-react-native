@@ -119,11 +119,10 @@ NSDictionary *BSGParseDeviceState(NSDictionary *report) {
     BSGDictSetSafeObject(deviceState, report[@"system_name"], @"osName");
     BSGDictSetSafeObject(deviceState, report[@"system_version"], @"osVersion");
 
-    NSString *osVersion = report[@"os_version"];
-
-    if (osVersion != nil) {
-        BSGDictSetSafeObject(deviceState, @{@"osBuild": osVersion}, @"runtimeVersions");
-    }
+    NSMutableDictionary *runtimeVersions = [NSMutableDictionary new];
+    BSGDictSetSafeObject(runtimeVersions, report[@"os_version"], @"osBuild");
+    BSGDictSetSafeObject(runtimeVersions, report[@"clang_version"], @"clangVersion");
+    BSGDictSetSafeObject(deviceState, runtimeVersions, @"runtimeVersions");
 
     BSGDictSetSafeObject(deviceState, @(PLATFORM_WORD_SIZE), @"wordSize");
     BSGDictSetSafeObject(deviceState, @"Apple", @"manufacturer");
