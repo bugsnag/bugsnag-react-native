@@ -11,15 +11,15 @@ public class InternalHooks {
         client.getConfig().addBeforeSendSession(new BeforeSendSession() {
             @Override
             public void beforeSendSession(SessionTrackingPayload payload) {
-              RuntimeVersions.addRuntimeVersions(payload.getDevice());
+                RuntimeVersions.addRuntimeVersions(payload.getDevice());
             }
         });
 
         client.getConfig().beforeSend(new BeforeSend() {
             @Override
             public boolean run(Report report) {
-              RuntimeVersions.addRuntimeVersions(report.getError().getDeviceData());
-              return true;
+                RuntimeVersions.addRuntimeVersions(report.getError().getDeviceData());
+                return true;
             }
         });
     }
