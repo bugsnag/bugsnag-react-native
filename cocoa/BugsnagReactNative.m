@@ -1,6 +1,7 @@
 #import "Bugsnag.h"
 #import "BSG_KSCrashC.h"
 #import "BugsnagReactNative.h"
+#import "RCTVersion.h"
 #import <React/RCTConvert.h>
 
 NSString *const BSGInfoPlistKey = @"BugsnagAPIKey";
@@ -265,8 +266,19 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     config.shouldAutoCaptureSessions = [RCTConvert BOOL:options[@"autoCaptureSessions"]];
     config.automaticallyCollectBreadcrumbs = [RCTConvert BOOL:options[@"automaticallyCollectBreadcrumbs"]];
 
+    [config addBeforeSendSession:^void(NSMutableDictionary *_Nonnull data) {
+        data[@"device"] = [self addDeviceRuntimeVersion:data[@"device"]
+                                     reactNativeVersion:[self findReactNativeVersion]];
+    }];
+
     [config addBeforeSendBlock:^bool(NSDictionary *_Nonnull rawEventData,
                                      BugsnagCrashReport *_Nonnull report) {
+        NSString *reactNativeVersion = report.metaData[@"_bugsnag"][@"reactNativeVersion"];
+        if (reactNativeVersion != nil) {
+            report.device = [self addDeviceRuntimeVersion:report.device reactNativeVersion:reactNativeVersion];
+        }
+        report.metaData = [self removeRuntimeVersionFromMetaData:report];
+
         return !([report.errorClass hasPrefix:@"RCTFatalException"]
                  && [report.errorMessage hasPrefix:@"Unhandled JS Exception"]);
     }];
@@ -296,6 +308,68 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
         // session to compensate.
         [Bugsnag resumeSession];
     }
+    [self addRuntimeVersionToMetaData:config];
+}
+
+/**
+ * Stores runtime version info in a metadata tab (it will be moved to a
+ * different payload location before sending)
+ */
+- (void)addRuntimeVersionToMetaData:(BugsnagConfiguration *)config {
+    [config.metaData addAttribute:@"reactNativeVersion"
+                        withValue:[self findReactNativeVersion]
+                    toTabWithName:@"_bugsnag"];
+}
+
+- (NSDictionary *)removeRuntimeVersionFromMetaData:(BugsnagCrashReport *)report {
+    NSMutableDictionary *metadata = report.metaData.mutableCopy;
+    metadata[@"_bugsnag"] = nil;
+    return metadata;
+}
+
+- (NSDictionary *)addDeviceRuntimeVersion:(NSDictionary *)device
+                       reactNativeVersion:(NSString *)reactNativeVersion {
+    NSMutableDictionary *copy = [device mutableCopy];
+    NSMutableDictionary *runtimeVersions = [copy[@"runtimeVersions"] mutableCopy];
+
+    if (runtimeVersions == nil) {
+        runtimeVersions = [NSMutableDictionary new];
+    }
+    runtimeVersions[@"reactNative"] = reactNativeVersion;
+    copy[@"runtimeVersions"] = runtimeVersions;
+    return copy;
+}
+
+// see https://github.com/facebook/react-native/blob/6df2edeb2a33d529e4b13a5b6767f300d08aeb0a/scripts/bump-oss-version.js
+- (NSString *)findReactNativeVersion {
+    static dispatch_once_t onceToken;
+    static NSString *BSGReactNativeVersion = nil;
+    dispatch_once(&onceToken, ^{
+        NSDictionary *versionMap = RCTGetReactNativeVersion();
+        NSNumber *major = versionMap[@"major"];
+        NSNumber *minor = versionMap[@"minor"];
+        NSNumber *patch = versionMap[@"patch"];
+        NSString *prerelease = versionMap[@"prerelease"];
+        NSMutableString *versionString = [NSMutableString new];
+
+        if (![major isEqual:[NSNull null]]) {
+            [versionString appendString:[major stringValue]];
+            [versionString appendString:@"."];
+        }
+        if (![minor isEqual:[NSNull null]]) {
+            [versionString appendString:[minor stringValue]];
+            [versionString appendString:@"."];
+        }
+        if (![patch isEqual:[NSNull null]]) {
+            [versionString appendString:[patch stringValue]];
+        }
+        if (![prerelease isEqual:[NSNull null]]) {
+            [versionString appendString:@"-"];
+            [versionString appendString:prerelease];
+        }
+        BSGReactNativeVersion = [NSString stringWithString:versionString];
+    });
+    return BSGReactNativeVersion;
 }
 
 - (void)setNotifierDetails:(NSString *)packageVersion {

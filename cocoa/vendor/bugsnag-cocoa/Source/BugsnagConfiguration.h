@@ -57,6 +57,13 @@ typedef bool (^BugsnagBeforeSendBlock)(NSDictionary *_Nonnull rawEventData,
                                        BugsnagCrashReport *_Nonnull reports);
 
 /**
+ * A configuration block for modifying a session. Intended for internal usage only.
+ *
+ * @param sessionPayload The session about to be delivered
+ */
+typedef void(^BeforeSendSession)(NSMutableDictionary *_Nonnull sessionPayload);
+
+/**
  *  A handler for modifying data before sending it to Bugsnag
  *
  *  @param rawEventReports The raw event data written at crash time. This
@@ -126,6 +133,13 @@ BugsnagBreadcrumbs *breadcrumbs;
  */
 @property(readonly, strong, nullable)
     NSArray<BugsnagBeforeSendBlock> *beforeSendBlocks;
+
+/**
+ *  Hooks for modifying sessions before they are sent to Bugsnag. Intended for internal use only by React Native/Unity.
+ */
+@property(readonly, strong, nullable)
+NSArray<BeforeSendSession> *beforeSendSessionBlocks;
+
 /**
  *  Optional handler invoked when a crash or fatal signal occurs
  */
@@ -143,6 +157,12 @@ BugsnagBreadcrumbs *breadcrumbs;
  * will be captured.
  */
 @property BOOL shouldAutoCaptureSessions;
+
+/**
+ * Whether the app should report out of memory events which terminate the app
+ * while the app is in the background.
+ */
+@property BOOL reportBackgroundOOMs;
 
 /**
  * Retrieves the endpoint used to notify Bugsnag of errors
@@ -198,6 +218,13 @@ BugsnagBreadcrumbs *breadcrumbs;
  *  @param block A block which returns YES if the report should be sent
  */
 - (void)addBeforeSendBlock:(BugsnagBeforeSendBlock _Nonnull)block;
+
+/**
+ *  Add a callback to be invoked before a session is sent to Bugsnag. Intended for internal usage only.
+ *
+ *  @param block A block which can modify the session
+ */
+- (void)addBeforeSendSession:(BeforeSendSession _Nonnull)block;
 
 /**
  * Clear all callbacks

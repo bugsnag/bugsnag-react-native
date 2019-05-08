@@ -14,7 +14,7 @@
 
 - (instancetype)initWithSessions:(NSArray<BugsnagSession *> *)sessions;
 
-- (NSDictionary *)toJson;
+- (NSMutableDictionary *)toJson;
 
 @property NSArray<BugsnagSession *> *sessions;
 

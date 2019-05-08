@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 2.X.X (TBD)
+
+* Collect version information in device.runtimeVersions
+[#345](https://github.com/bugsnag/bugsnag-react-native/pull/345)
+
 ## 2.16.0 (2019-04-04)
 
 * (Android) Upgrade to bugsnag-android v4.13.0

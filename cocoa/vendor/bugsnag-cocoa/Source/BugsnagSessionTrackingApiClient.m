@@ -41,6 +41,12 @@
         }
         BugsnagSessionTrackingPayload *payload = [[BugsnagSessionTrackingPayload alloc] initWithSessions:sessions];
         NSUInteger sessionCount = payload.sessions.count;
+        NSMutableDictionary *data = [payload toJson];
+
+        for (BeforeSendSession cb in self.config.beforeSendSessionBlocks) {
+            cb(data);
+        }
+
         if (sessionCount > 0) {
             NSDictionary *HTTPHeaders = @{
                                           @"Bugsnag-Payload-Version": @"1.0",
@@ -48,7 +54,7 @@
                                           @"Bugsnag-Sent-At": [BSG_RFC3339DateTool stringFromDate:[NSDate new]]
                                           };
             [self sendItems:sessions.count
-                withPayload:[payload toJson]
+                withPayload:data
                       toURL:sessionURL
                     headers:HTTPHeaders
                onCompletion:^(NSUInteger sentCount, BOOL success, NSError *error) {

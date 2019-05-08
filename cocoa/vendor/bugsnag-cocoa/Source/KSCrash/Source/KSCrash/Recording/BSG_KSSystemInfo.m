@@ -362,7 +362,10 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSDictionary *infoDict = [mainBundle infoDictionary];
     const struct mach_header *header = _dyld_get_image_header(0);
-
+#ifdef __clang_version__
+    [sysInfo bsg_ksc_safeSetObject:@__clang_version__
+                            forKey:@BSG_KSSystemField_ClangVersion];
+#endif
 #if BSG_KSCRASH_HAS_UIDEVICE
     [sysInfo bsg_ksc_safeSetObject:[UIDevice currentDevice].systemName
                             forKey:@BSG_KSSystemField_SystemName];
@@ -406,7 +409,7 @@
     }
     [sysInfo bsg_ksc_safeSetObject:[self stringSysctl:@"kern.version"]
                             forKey:@BSG_KSSystemField_KernelVersion];
-    [sysInfo bsg_ksc_safeSetObject:[self stringSysctl:@"kern.osversion"]
+    [sysInfo bsg_ksc_safeSetObject:[self osBuildVersion]
                             forKey:@BSG_KSSystemField_OSVersion];
     [sysInfo bsg_ksc_safeSetObject:@([self isJailbroken])
                             forKey:@BSG_KSSystemField_Jailbroken];
@@ -458,6 +461,10 @@
     [sysInfo bsg_ksc_safeSetObject:memory forKey:@BSG_KSSystemField_Memory];
 
     return sysInfo;
+}
+
++ (NSString *)osBuildVersion {
+    return [self stringSysctl:@"kern.osversion"];
 }
 
 @end

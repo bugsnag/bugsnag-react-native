@@ -25,7 +25,16 @@
                        handledCount:(NSUInteger)handledCount
                      unhandledCount:(NSUInteger)unhandledCount;
 
+/**
+ * Representation used in report payloads
+ */
 - (NSDictionary *_Nonnull)toJson;
+
+/**
+ * Full representation of a session suitable for creating an identical session
+ * using initWithDictionary
+ */
+- (NSDictionary *_Nonnull)toDictionary;
 - (void)stop;
 - (void)resume;
 

@@ -67,6 +67,11 @@ static NSString *_Nonnull const BugsnagSeverityInfo = @"info";
 + (void)startBugsnagWithConfiguration:
     (BugsnagConfiguration *_Nonnull)configuration;
 
+/**
+ * @return YES if Bugsnag has been started and the previous launch crashed
+ */
++ (BOOL)appDidCrashLastLaunch;
+
 /** Send a custom or caught exception to Bugsnag.
  *
  * The exception will be sent to Bugsnag in the background allowing your
