@@ -362,7 +362,10 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSDictionary *infoDict = [mainBundle infoDictionary];
     const struct mach_header *header = _dyld_get_image_header(0);
-
+#ifdef __clang_version__
+    [sysInfo bsg_ksc_safeSetObject:@__clang_version__
+                            forKey:@BSG_KSSystemField_ClangVersion];
+#endif
 #if BSG_KSCRASH_HAS_UIDEVICE
     [sysInfo bsg_ksc_safeSetObject:[UIDevice currentDevice].systemName
                             forKey:@BSG_KSSystemField_SystemName];

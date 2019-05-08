@@ -1,7 +1,10 @@
 Changelog
 =========
 
-## TBD
+## 2.18.0 (2019-05-08)
+
+* Collect version information in device.runtimeVersions
+[#345](https://github.com/bugsnag/bugsnag-react-native/pull/345)
 
 Run checkstyle and lint on Android code, address existing violations
 [#452](https://github.com/bugsnag/bugsnag-react-native/pull/336)

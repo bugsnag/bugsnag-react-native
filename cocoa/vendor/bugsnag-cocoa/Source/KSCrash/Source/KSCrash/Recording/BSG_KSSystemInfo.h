@@ -51,6 +51,7 @@
 #define BSG_KSSystemField_Size "size"
 #define BSG_KSSystemField_SystemName "system_name"
 #define BSG_KSSystemField_SystemVersion "system_version"
+#define BSG_KSSystemField_ClangVersion "clang_version"
 #define BSG_KSSystemField_TimeZone "time_zone"
 #define BSG_KSSystemField_BuildType "build_type"
 

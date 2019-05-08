@@ -21,6 +21,7 @@ public class CustomMethodsPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new ANRTimeoutModule(reactContext));
+        modules.add(new NativeErrorModule(reactContext));
 
         return modules;
     }

@@ -4,6 +4,7 @@ import com.bugsnag.android.BreadcrumbType;
 import com.bugsnag.android.Bugsnag;
 import com.bugsnag.android.Client;
 import com.bugsnag.android.Configuration;
+import com.bugsnag.android.InternalHooks;
 
 import android.content.Context;
 
@@ -119,6 +120,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         libraryVersion = options.getString("version");
         bugsnagAndroidVersion = client.getClass().getPackage().getSpecificationVersion();
         configureRuntimeOptions(client, options);
+        InternalHooks.configureClient(client);
 
         logger.info(String.format("Initialized Bugsnag React Native %s/Android %s",
                 libraryVersion,

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, View, NativeModules} from 'react-native'
+import {StyleSheet, Text, View, NativeModules, Platform} from 'react-native'
 import bugsnag from './index.js';
 
 function longStackB(index) {
@@ -38,6 +38,10 @@ function testANR3000Timeout() {
   NativeModules.ANRTimeout.triggerANR(3000);
 }
 
+function triggerNativeError() {
+  NativeModules.NativeError.triggerNativeError();
+}
+
 type Props = {};
 export default class App extends Component<Props> {
   render () {
@@ -47,6 +51,7 @@ export default class App extends Component<Props> {
       switch (scenario.name) {
         case 'uncaughtException':
           longStackA(0);
+          break;
         case 'unhandledRejection':
           Promise.reject(new SyntaxError('no'))
           break
@@ -61,6 +66,9 @@ export default class App extends Component<Props> {
           break;
         case 'TestANRShort':
           testANR3000Timeout();
+          break;
+        case 'TriggerNativeError':
+          triggerNativeError();
           break;
       }
     }, 10)

@@ -48,6 +48,7 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
 @interface BugsnagConfiguration ()
 @property(nonatomic, readwrite, strong) NSMutableArray *beforeNotifyHooks;
 @property(nonatomic, readwrite, strong) NSMutableArray *beforeSendBlocks;
+@property(nonatomic, readwrite, strong) NSMutableArray *beforeSendSessionBlocks;
 @end
 
 @implementation BugsnagConfiguration
@@ -62,6 +63,7 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
         _notifyURL = [NSURL URLWithString:BSGDefaultNotifyUrl];
         _beforeNotifyHooks = [NSMutableArray new];
         _beforeSendBlocks = [NSMutableArray new];
+        _beforeSendSessionBlocks = [NSMutableArray new];
         _notifyReleaseStages = nil;
         _breadcrumbs = [BugsnagBreadcrumbs new];
         _automaticallyCollectBreadcrumbs = YES;
@@ -104,6 +106,10 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
 
 - (void)addBeforeSendBlock:(BugsnagBeforeSendBlock)block {
     [(NSMutableArray *)self.beforeSendBlocks addObject:[block copy]];
+}
+
+- (void)addBeforeSendSession:(BeforeSendSession)block {
+    [(NSMutableArray *)self.beforeSendSessionBlocks addObject:[block copy]];
 }
 
 - (void)clearBeforeSendBlocks {
