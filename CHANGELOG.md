@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 2.X.X (TBD)
+## 2.18.0 (2019-05-08)
 
 * Collect version information in device.runtimeVersions
 [#345](https://github.com/bugsnag/bugsnag-react-native/pull/345)
