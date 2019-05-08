@@ -100,6 +100,12 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
     return frames;
 }
 
+bool (^BSGReactNativeReportFilter)(NSDictionary *, BugsnagCrashReport *) = ^bool(NSDictionary *rawEventData,
+                                                                                 BugsnagCrashReport *_Nonnull report) {
+    return !([report.errorClass hasPrefix:@"RCTFatalException"]
+          && [report.errorMessage hasPrefix:@"Unhandled JS Exception"]);
+};
+
 @interface Bugsnag ()
 + (id)notifier;
 + (BOOL)bugsnagStarted;
@@ -122,10 +128,9 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
 }
 
 + (void)startWithAPIKey:(NSString *)APIKey {
-    if (APIKey.length == 0)
-        APIKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:BSGInfoPlistKey];
-
-    [Bugsnag startBugsnagWithApiKey:APIKey];
+    BugsnagConfiguration *config = [BugsnagConfiguration new];
+    config.apiKey = APIKey;
+    [self startWithConfiguration:config];
 }
 
 + (void)startWithConfiguration:(BugsnagConfiguration *)config {
@@ -137,6 +142,7 @@ NSArray *BSGParseJavaScriptStacktrace(NSString *stacktrace, NSNumberFormatter *f
     // way to interact with the application should instead leverage startSession
     // manually.
     config.shouldAutoCaptureSessions = NO;
+    [config addBeforeSendBlock:BSGReactNativeReportFilter];
     [Bugsnag startBugsnagWithConfiguration:config];
 }
 
@@ -296,9 +302,12 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
                             withValue:codeBundleId
                         toTabWithName:@"app"];
     }
-    if ([Bugsnag bugsnagStarted] && !config.autoNotify) {
-        bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeUserReported);
-    } else if (![Bugsnag bugsnagStarted]) {
+    if ([Bugsnag bugsnagStarted]) {
+        if (!config.autoNotify) {
+            bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeUserReported);
+        }
+    } else {
+        [config addBeforeSendBlock:BSGReactNativeReportFilter];
         [Bugsnag startBugsnagWithConfiguration:config];
     }
     [self setNotifierDetails:[RCTConvert NSString:options[@"version"]]];
