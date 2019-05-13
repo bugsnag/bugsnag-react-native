@@ -158,7 +158,7 @@
                 [appInfo valueForKey:(__bridge NSString *)kCFBundleVersionKey];
             BOOL sameVersions = [lastBootOSVersion isEqualToString:osVersion] &&
                                 [lastBootAppVersion isEqualToString:appVersion];
-            BOOL shouldReport = config.reportBackgroundOOMs || lastBootInForeground;
+            BOOL shouldReport = config.reportOOMs && (config.reportBackgroundOOMs || lastBootInForeground);
             [self deleteSentinelFile];
             return sameVersions && shouldReport;
         }

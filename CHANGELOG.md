@@ -1,6 +1,17 @@
 Changelog
 =========
 
+
+### Enhancements
+
+* (iOS) Upgrade to bugsnag-cocoa v5.22.0:
+  * Add configuration option (`reportOOMs`) to disable out-of-memory (OOM) event
+    reporting, defaulting to enabled.
+    [bugsnag-cocoa#345](https://github.com/bugsnag/bugsnag-cocoa/pull/345)
+  * Disable background OOM reporting by default. It can be enabled using
+    `reportBackgroundOOMs`.
+    [bugsnag-cocoa#345](https://github.com/bugsnag/bugsnag-cocoa/pull/345)
+
 ## 2.18.0 (2019-05-08)
 
 * Collect version information in device.runtimeVersions

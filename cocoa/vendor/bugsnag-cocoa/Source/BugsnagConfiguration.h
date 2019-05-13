@@ -160,7 +160,13 @@ NSArray<BeforeSendSession> *beforeSendSessionBlocks;
 
 /**
  * Whether the app should report out of memory events which terminate the app
- * while the app is in the background.
+ * When NO, this setting overrides reportBackgroundOOMs.
+ */
+@property BOOL reportOOMs;
+
+/**
+ * Whether the app should report out of memory events which terminate the app
+ * while the app is in the background. This setting has no effect when reportOOMs is NO.
  */
 @property BOOL reportBackgroundOOMs;
 

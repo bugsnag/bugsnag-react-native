@@ -68,7 +68,8 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
         _breadcrumbs = [BugsnagBreadcrumbs new];
         _automaticallyCollectBreadcrumbs = YES;
         _shouldAutoCaptureSessions = YES;
-        _reportBackgroundOOMs = YES;
+        _reportBackgroundOOMs = NO;
+        _reportOOMs = YES;
 
         if ([NSURLSession class]) {
             _session = [NSURLSession
