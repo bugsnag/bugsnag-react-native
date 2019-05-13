@@ -1,6 +1,7 @@
 Changelog
 =========
 
+## 2.19.0 (2019-05-13)
 
 ### Enhancements
 
