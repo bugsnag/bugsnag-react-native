@@ -169,6 +169,7 @@ task copyDownloadableDepsToLibs(type: Copy) {
 
 bugsnag {
     overwrite true
+    failOnUploadError false
 }
 
 apply plugin: 'checkstyle'
