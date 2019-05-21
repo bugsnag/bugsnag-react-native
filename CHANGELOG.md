@@ -1,6 +1,20 @@
 Changelog
 =========
 
+## 2.19.1 (2019-05-21)
+
+### Enhancements
+
+* (iOS) Upgrade to bugsnag-cocoa v5.22.1:
+  * Report correct app version in out-of-memory reports. Previously the bundle
+    version was reported as the version number rather than the short version
+    string.
+    [#349](https://github.com/bugsnag/bugsnag-cocoa/pull/349)
+  * Fix missing stacktraces in reports generated from `notify()`
+    [#348](https://github.com/bugsnag/bugsnag-cocoa/pull/348)
+* (Android) Upgrade to bugsnag-android v4.14.2
+  * Disable ANR detection by default [#484](https://github.com/bugsnag/bugsnag-android/pull/484)
+
 ## 2.19.0 (2019-05-13)
 
 ### Enhancements
