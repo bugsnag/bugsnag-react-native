@@ -64,6 +64,11 @@ void bsg_kscrashsentry_reportUserException(const char *name,
         BSG_KSLOG_WARN("User-reported exception sentry is not installed. "
                        "Exception has not been recorded.");
     } else {
+        // We want these variables to persist until the onCrash
+        // call later
+        int callstackCount = 100;
+        uintptr_t callstack[callstackCount];
+        
         bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
 
         if (bsg_g_context->suspendThreadsForUserReported) {
@@ -71,14 +76,11 @@ void bsg_kscrashsentry_reportUserException(const char *name,
             bsg_kscrashsentry_suspendThreads();
         }
 
-
         if (stackAddresses != NULL && stackLength > 0) {
             bsg_g_context->stackTrace = stackAddresses;
             bsg_g_context->stackTraceLength = (int)stackLength;
         } else {
             BSG_KSLOG_DEBUG("Fetching call stack.");
-            int callstackCount = 100;
-            uintptr_t callstack[callstackCount];
             callstackCount = backtrace((void **)callstack, callstackCount);
             if (callstackCount <= 0) {
                 BSG_KSLOG_ERROR("backtrace() returned call stack length of %d",

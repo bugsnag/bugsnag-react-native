@@ -146,6 +146,8 @@
         NSDictionary *lastBootInfo = [self readSentinelFile];
         if (lastBootInfo != nil) {
             self.lastBootCachedFileInfo = lastBootInfo;
+            NSString *lastBootBundleVersion =
+                [lastBootInfo valueForKeyPath:@"app.bundleVersion"];
             NSString *lastBootAppVersion =
                 [lastBootInfo valueForKeyPath:@"app.version"];
             NSString *lastBootOSVersion =
@@ -154,9 +156,12 @@
                 [[lastBootInfo valueForKeyPath:@"app.inForeground"] boolValue];
             NSString *osVersion = [BSG_KSSystemInfo osBuildVersion];
             NSDictionary *appInfo = [[NSBundle mainBundle] infoDictionary];
+            NSString *bundleVersion =
+                [appInfo valueForKey:@BSG_KSSystemField_BundleVersion];
             NSString *appVersion =
-                [appInfo valueForKey:(__bridge NSString *)kCFBundleVersionKey];
+                [appInfo valueForKey:@BSG_KSSystemField_BundleShortVersion];
             BOOL sameVersions = [lastBootOSVersion isEqualToString:osVersion] &&
+                                [lastBootBundleVersion isEqualToString:bundleVersion] &&
                                 [lastBootAppVersion isEqualToString:appVersion];
             BOOL shouldReport = config.reportOOMs && (config.reportBackgroundOOMs || lastBootInForeground);
             [self deleteSentinelFile];
@@ -214,7 +219,8 @@
     app[@"id"] = systemInfo[@BSG_KSSystemField_BundleID] ?: @"";
     app[@"name"] = systemInfo[@BSG_KSSystemField_BundleName] ?: @"";
     app[@"releaseStage"] = config.releaseStage;
-    app[@"version"] = systemInfo[@BSG_KSSystemField_BundleVersion] ?: @"";
+    app[@"version"] = systemInfo[@BSG_KSSystemField_BundleShortVersion] ?: @"";
+    app[@"bundleVersion"] = systemInfo[@BSG_KSSystemField_BundleVersion] ?: @"";
     app[@"inForeground"] = @YES;
 #if TARGET_OS_TV
     app[@"type"] = @"tvOS";
