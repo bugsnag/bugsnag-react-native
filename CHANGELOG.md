@@ -3,7 +3,7 @@ Changelog
 
 ## 2.19.1 (2019-05-21)
 
-### Enhancements
+### Bug fixes
 
 * (iOS) Upgrade to bugsnag-cocoa v5.22.1:
   * Report correct app version in out-of-memory reports. Previously the bundle
