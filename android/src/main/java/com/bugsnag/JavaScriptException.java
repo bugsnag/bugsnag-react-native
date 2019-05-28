@@ -2,8 +2,6 @@ package com.bugsnag;
 
 import com.bugsnag.android.JsonStream;
 
-import android.support.annotation.NonNull;
-
 import java.io.IOException;
 
 /**
@@ -24,7 +22,7 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
     }
 
     @Override
-    public void toStream(@NonNull JsonStream writer) throws IOException {
+    public void toStream(JsonStream writer) throws IOException {
         writer.beginObject();
         writer.name("errorClass").value(name);
         writer.name("message").value(getLocalizedMessage());

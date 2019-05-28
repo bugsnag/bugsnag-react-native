@@ -5,8 +5,6 @@ import com.bugsnag.android.MetaData;
 import com.bugsnag.android.Report;
 import com.bugsnag.android.Severity;
 
-import android.support.annotation.NonNull;
-
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 
@@ -92,7 +90,7 @@ class DiagnosticsCallback implements Callback {
     }
 
     @Override
-    public void beforeNotify(@NonNull Report report) {
+    public void beforeNotify(Report report) {
         report.getNotifier().setName(NOTIFIER_NAME);
         report.getNotifier().setURL(NOTIFIER_URL);
         report.getNotifier().setVersion(String.format("%s (Android %s)",
