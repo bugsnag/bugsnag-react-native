@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* Remove nullability annotations to workaround androidx jetifier issue
+[#361](https://github.com/bugsnag/bugsnag-react-native/pull/361)
+
 ## 2.19.1 (2019-05-21)
 
 ### Bug fixes
