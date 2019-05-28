@@ -23,8 +23,8 @@ android {
 }
 
 dependencies {
-    compile 'com.bugsnag:bugsnag-android:4.14.2'
-    compile 'com.facebook.react:react-native:+'
+    api 'com.bugsnag:bugsnag-android:4.14.2'
+    implementation 'com.facebook.react:react-native:+'
 }
 
 apply plugin: 'checkstyle'
