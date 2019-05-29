@@ -3,7 +3,7 @@ Changelog
 
 ## TBD
 
-* Remove unnecessary gradlew from android directory
+* Remove unnecessary gradlew from android directory, reducing artefact bundle size
 [#363](https://github.com/bugsnag/bugsnag-react-native/pull/363)
 
 ## 2.19.1 (2019-05-21)
