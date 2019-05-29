@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## TBD
+
+* Remove unnecessary gradlew from android directory
+[#363](https://github.com/bugsnag/bugsnag-react-native/pull/363)
+
 ## 2.19.1 (2019-05-21)
 
 ### Bug fixes
