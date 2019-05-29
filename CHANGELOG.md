@@ -3,10 +3,16 @@ Changelog
 
 ## TBD
 
-This release updates the package's Gradle build script to use `api` and `implementation` rather than the deprecated `compile` syntax. If you are using v2.X of the Android Gradle Plugin, you will need to upgrade to v3.X of the [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin#updating-plugin), and [upgrade your gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper).
+This release updates the package's Gradle build script to use `api` and `implementation` rather than the deprecated 
+`compile` syntax. If you are using v2.X of the Android Gradle Plugin, you will need to upgrade to v3.X of 
+the [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin#updating-plugin), 
+and [upgrade your gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper).
 
 * Update deprecated compile dependencies to use implementation/api
 [#362](https://github.com/bugsnag/bugsnag-react-native/pull/362)
+
+* Remove unnecessary gradlew from android directory, reducing artefact bundle size
+[#363](https://github.com/bugsnag/bugsnag-react-native/pull/363)
 
 ## 2.19.1 (2019-05-21)
 
