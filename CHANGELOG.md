@@ -14,6 +14,11 @@ and [upgrade your gradle wrapper](https://docs.gradle.org/current/userguide/grad
 * Remove unnecessary gradlew from android directory, reducing artefact bundle size
 [#363](https://github.com/bugsnag/bugsnag-react-native/pull/363)
 
+### Bug fixes
+
+* Remove nullability annotations to workaround androidx jetifier issue
+[#361](https://github.com/bugsnag/bugsnag-react-native/pull/361)
+
 ## 2.19.1 (2019-05-21)
 
 ### Bug fixes
