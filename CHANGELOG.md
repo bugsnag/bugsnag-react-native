@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## TBD
+## 2.20.0 (2019-05-29)
 
 This release updates the package's Gradle build script to use `api` and `implementation` rather than the deprecated 
 `compile` syntax. If you are using v2.X of the Android Gradle Plugin, you will need to upgrade to v3.X of 
