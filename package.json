@@ -18,7 +18,8 @@
     "index.d.ts",
     "lib",
     "android",
-    "cocoa",
+    "cocoa/BugsnagReactNative.{h,m}",
+    "cocoa/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}",
     "BugsnagReactNative.podspec"
   ],
   "scripts": {
