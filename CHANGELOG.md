@@ -1,11 +1,29 @@
 Changelog
 =========
 
+## 2.21.0 (2019-06-12)
+
+### Enhancements
+
+* (Android) Upgrade to bugsnag-android v4.15.0
+  * Improve ANR detection by using a signal handler to detect `SIGQUIT`
+  events, removing dependence on "in foreground" calculations. This change
+  should remove false positives. This change deprecates the configuration
+  options `setAnrThresholdMs`/`getAnrThresholdMs` as they now have no effect and
+  the underlying OS ANR threshold is used in all cases.
+  [#490](https://github.com/bugsnag/bugsnag-android/pull/490)
+  * Add `detectNdkCrashes` configuration option to toggle whether C/C++ crashes
+  are detected
+  [#491](https://github.com/bugsnag/bugsnag-android/pull/491)
+  * Reduce AAR size [#492](https://github.com/bugsnag/bugsnag-android/pull/492)
+  * Make handledState.isUnhandled() publicly readable [#496](https://github.com/bugsnag/bugsnag-android/pull/496)
+* (iOS) Ensure only the necessary files are included in the npm tarball [#356](https://github.com/bugsnag/bugsnag-react-native/pull/365)
+
 ## 2.20.0 (2019-05-29)
 
-This release updates the package's Gradle build script to use `api` and `implementation` rather than the deprecated 
-`compile` syntax. If you are using v2.X of the Android Gradle Plugin, you will need to upgrade to v3.X of 
-the [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin#updating-plugin), 
+This release updates the package's Gradle build script to use `api` and `implementation` rather than the deprecated
+`compile` syntax. If you are using v2.X of the Android Gradle Plugin, you will need to upgrade to v3.X of
+the [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin#updating-plugin),
 and [upgrade your gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:upgrading_wrapper).
 
 * Update deprecated compile dependencies to use implementation/api
