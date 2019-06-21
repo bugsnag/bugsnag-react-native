@@ -3,31 +3,18 @@
 //
 // 1. Add a --sourcemap-output flag for when the packager generates the JS bundle
 // 2. Add a task that uploads the sourcemap after it has been generated
-//
-// As React Native only allows the sourcemap output to be specified once, we can only
-// support upload for one variant automatically. You should edit this file or raise
-// a bug with Facebook if you wish to upload multiple variants.
 
-
-// 1. find the packager args from react.gradle and retrieve or add a value for --sourcemap-output
-def args = findReactPackagerArgs()
-def sourcemapOutput = findExistingSourcemapOutput(args)
-
-if (sourcemapOutput == null) {
-    def outputDir = "$buildDir/sourcemap.android.js"
-    args.add("--sourcemap-output")
-    args.add(outputDir)
-    sourcemapOutput = new File(outputDir)
-}
-
-// 2. add a task to each variant to upload the sourcemap automatically after it is generated
 project.afterEvaluate {
     android.applicationVariants.all { def variant ->
+        // 1. find the packager args from react.gradle and retrieve or add a value for --sourcemap-output
         def jsBundleTask = variant.ext.bundleJsAndAssets
+        def output = setSourcemapOutputArgs(jsBundleTask)
+
+        // 2. add a task to each variant to upload the sourcemap automatically after it is generated
         def uploadTaskName = "${jsBundleTask.name}BugsnagUpload"
         def currentUploadTask = tasks.create(uploadTaskName) {
             doLast {
-                uploadSourcemap(sourcemapOutput)
+                uploadSourcemap(new File(output[0]), new File(output[1]))
             }
         }
         currentUploadTask.mustRunAfter(jsBundleTask)
@@ -35,21 +22,29 @@ project.afterEvaluate {
     }
 }
 
-def uploadSourcemap(File sourcemap) {
-    project.logger.lifecycle("TODO upload source maps here ${sourcemap} ${sourcemap.length()}")
+def uploadSourcemap(def bundleOutput, def sourcemapOutput) {
+    project.logger.lifecycle("TODO upload bundle: $bundleOutput sourcemap: $sourcemapOutput")
 }
 
-def findReactPackagerArgs() {
-    def reactProps = project.ext.react ?: []
-    def args = reactProps.get("extraPackagerArgs") ?: []
-    reactProps.put("extraPackagerArgs", args)
-    return args
+def setSourcemapOutputArgs(def bundleTask) {
+    def args = bundleTask.getProperties().get("args")
+    def bundleOutput = findExistingArg(args, "--bundle-output")
+    def sourcemapOutput = findExistingArg(args, "--sourcemap-output")
+
+    // create a sourcemap if one does not already exist
+    if (sourcemapOutput == null) {
+        sourcemapOutput = bundleOutput + ".map"
+        args.add("--sourcemap-output")
+        args.add(sourcemapOutput)
+    }
+    bundleTask.setProperty("args", args)
+    return [bundleOutput, sourcemapOutput]
 }
 
-def findExistingSourcemapOutput(def args) {
-    int index = args.indexOf("--sourcemap-output")
-    if (index != -1) { // respect where user previously put sourcemap
-        return new File(args.get(index + 1));
+def findExistingArg(def args, def key) {
+    int index = args.indexOf(key)
+    if (index != -1) {
+        return args.get(index + 1);
     }
     return null
 }
