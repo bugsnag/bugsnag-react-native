@@ -727,6 +727,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				E717C66222BD06E500A424A9 /* Upload Sourcemap */,
 			);
 			buildRules = (
 			);
@@ -1204,7 +1205,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\nexport FORCE_BUNDLING=1 # required for dev sourcemaps only\nexport APP_DEST=\"$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nexport BUNDLE_FILE=\"$APP_DEST/main.jsbundle\"\nexport SOURCEMAP_FILE=\"$BUNDLE_FILE.map\"\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $SOURCEMAP_FILE\"\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1219,6 +1220,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		E717C66222BD06E500A424A9 /* Upload Sourcemap */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Sourcemap";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export APP_DEST=\"$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nexport BUNDLE_FILE=\"$APP_DEST/main.jsbundle\"\nexport SOURCEMAP_FILE=\"$BUNDLE_FILE.map\"\n\necho \"TODO: upload bundle file $BUNDLE_FILE\"\necho \"TODO: upload sourcemap $SOURCEMAP_FILE\"\n\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
