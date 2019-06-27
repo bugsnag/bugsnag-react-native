@@ -1,6 +1,24 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* (iOS) Upgrade bugsnag-cocoa to v5.22.2
+  * Fix trimming the stacktraces of handled error/exceptions using the
+    [`depth`](https://docs.bugsnag.com/platforms/ios/reporting-handled-exceptions/#depth)
+    property.
+    [Paul Zabelin](https://github.com/paulz)
+    [bugsnag-cocoa#363](https://github.com/bugsnag/bugsnag-cocoa/pull/363)
+  * Fix crash report parsing logic around arrays of numbers. Metadata which
+    included arrays of numbers could previously had missing values.
+    [bugsnag-cocoa#365](https://github.com/bugsnag/bugsnag-cocoa/pull/365)
+  * Fix incrementing unhandled counts when using internal notify() API. This
+    resolves discrepancies in stability scores for users of bugsnag-react-native
+    after receiving unhandled JavaScript events.
+    [bugsnag-cocoa#370](https://github.com/bugsnag/bugsnag-cocoa/pull/370)
+
 ## 2.21.0 (2019-06-12)
 
 ### Enhancements

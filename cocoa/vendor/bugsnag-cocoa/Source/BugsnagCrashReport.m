@@ -290,7 +290,7 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
                     [[BugsnagHandledState alloc] initWithDictionary:recordedState];
 
                 // only makes sense to use serialised value for handled exceptions
-                _depth = [[report valueForKeyPath:@"user.state.crash.depth"]
+                _depth = [[report valueForKeyPath:@"user.depth"]
                         unsignedIntegerValue];
             } else if (_errorType != nil) { // the event was unhandled.
                 BOOL isSignal = [BSGKeySignal isEqualToString:_errorType];

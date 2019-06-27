@@ -77,6 +77,13 @@ extern NSString *const BSGSessionUpdateNotification;
 - (void)handleHandledErrorEvent;
 
 /**
+ Handled Bugsnag.notify() being called with an event with unhandled = YES.
+ Increases the number of unhandled errors recorded for the current session, if
+ a session exists.
+ */
+- (void)handleUnhandledErrorEvent;
+
+/**
  * Retrieves the running session, or nil if the session is stopped or has not yet been started/resumed.
  */
 @property (nonatomic, strong, readonly) BugsnagSession *runningSession;

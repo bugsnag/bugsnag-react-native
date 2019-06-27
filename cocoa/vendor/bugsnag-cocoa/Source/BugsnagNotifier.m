@@ -44,7 +44,7 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.22.1";
+NSString *const NOTIFIER_VERSION = @"5.22.2";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSAttributeDepth = @"depth";
@@ -78,6 +78,7 @@ static char *sessionStartDate[128];
 static char *watchdogSentinelPath = NULL;
 static char *crashSentinelPath = NULL;
 static NSUInteger handledCount;
+static NSUInteger unhandledCount;
 static bool hasRecordedSessions;
 
 /**
@@ -93,7 +94,8 @@ void BSSerializeDataCrashHandler(const BSG_KSCrashReportWriter *writer, int type
         writer->addStringElement(writer, "id", (const char *) sessionId);
         writer->addStringElement(writer, "startedAt", (const char *) sessionStartDate);
         writer->addUIntegerElement(writer, "handledCount", handledCount);
-        writer->addUIntegerElement(writer, "unhandledCount", isCrash ? 1 : 0);
+        NSUInteger unhandledEvents = unhandledCount + (isCrash ? 1 : 0);
+        writer->addUIntegerElement(writer, "unhandledCount", unhandledEvents);
     }
     if (isCrash) {
         if (bsg_g_bugsnag_data.configJSON) {
@@ -191,6 +193,7 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
 
     // record info for C JSON serialiser
     handledCount = session.handledCount;
+    unhandledCount = session.unhandledCount;
     hasRecordedSessions = true;
 }
 
@@ -555,19 +558,19 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
                     withData:(NSDictionary *_Nullable)metaData
                        block:(BugsnagNotifyBlock _Nullable)block {
 
-    NSString *severity = metaData[BSGKeySeverity];
+    BSGSeverity severity = BSGParseSeverity(metaData[BSGKeySeverity]);
     NSString *severityReason = metaData[BSGKeySeverityReason];
+    BOOL unhandled = [metaData[BSGKeyUnhandled] boolValue];
     NSString *logLevel = metaData[BSGKeyLogLevel];
-    NSParameterAssert(severity.length > 0);
     NSParameterAssert(severityReason.length > 0);
 
     SeverityReasonType severityReasonType =
         [BugsnagHandledState severityReasonFromString:severityReason];
 
-    BugsnagHandledState *state = [BugsnagHandledState
-        handledStateWithSeverityReason:severityReasonType
-                              severity:BSGParseSeverity(severity)
-                             attrValue:logLevel];
+    BugsnagHandledState *state = [[BugsnagHandledState alloc] initWithSeverityReason:severityReasonType
+                                                                            severity:severity
+                                                                           unhandled:unhandled
+                                                                           attrValue:logLevel];
 
     [self notify:exception handledState:state block:block];
 }
@@ -603,7 +606,11 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
            block:(void (^)(BugsnagCrashReport *))block {
     NSString *exceptionName = exception.name ?: NSStringFromClass([exception class]);
     NSString *message = exception.reason;
-    [self.sessionTracker handleHandledErrorEvent];
+    if (handledState.unhandled) {
+        [self.sessionTracker handleUnhandledErrorEvent];
+    } else {
+        [self.sessionTracker handleHandledErrorEvent];
+    }
 
     BugsnagCrashReport *report = [[BugsnagCrashReport alloc]
         initWithErrorName:exceptionName

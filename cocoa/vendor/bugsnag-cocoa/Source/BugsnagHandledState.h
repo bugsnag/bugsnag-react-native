@@ -42,6 +42,11 @@ typedef NS_ENUM(NSUInteger, SeverityReasonType) {
                                       severity:(BSGSeverity)severity
                                      attrValue:(NSString *)attrValue;
 
+- (instancetype)initWithSeverityReason:(SeverityReasonType)severityReason
+                              severity:(BSGSeverity)severity
+                             unhandled:(BOOL)unhandled
+                             attrValue:(NSString *)attrValue;
+
 - (NSDictionary *)toJson;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
