@@ -354,7 +354,11 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     static dispatch_once_t onceToken;
     static NSString *BSGReactNativeVersion = nil;
     dispatch_once(&onceToken, ^{
-        NSDictionary *versionMap = RCTGetReactNativeVersion();
+        #ifdef REACT_NATIVE_VERSION
+            NSDictionary *versionMap = REACT_NATIVE_VERSION;
+        #else
+            NSDictionary *versionMap = RCTGetReactNativeVersion();
+        #endif
         NSNumber *major = versionMap[@"major"];
         NSNumber *minor = versionMap[@"minor"];
         NSNumber *patch = versionMap[@"patch"];
