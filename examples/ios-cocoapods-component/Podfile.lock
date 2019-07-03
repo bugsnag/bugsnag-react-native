@@ -14,10 +14,10 @@ PODS:
   - boost/preprocessor-includes (1.59.0)
   - boost/shared_ptr-includes (1.59.0)
   - boost/string_algorithms-includes (1.59.0)
-  - BugsnagReactNative (2.5.0):
-    - BugsnagReactNative/Core (= 2.5.0)
+  - BugsnagReactNative (2.21.1):
+    - BugsnagReactNative/Core (= 2.21.1)
     - React
-  - BugsnagReactNative/Core (2.5.0):
+  - BugsnagReactNative/Core (2.21.1):
     - React
   - DoubleConversion (1.1.5)
   - Folly (2016.09.26.00):
@@ -25,42 +25,42 @@ PODS:
     - DoubleConversion
     - GLog
   - GLog (0.3.4)
-  - React (0.49.3):
-    - React/Core (= 0.49.3)
-  - React/Core (0.49.3):
-    - yoga (= 0.49.3.React)
-  - React/CxxBridge (0.49.3):
+  - React (0.49.5):
+    - React/Core (= 0.49.5)
+  - React/Core (0.49.5):
+    - yoga (= 0.49.5.React)
+  - React/CxxBridge (0.49.5):
     - Folly (= 2016.09.26.00)
     - React/Core
     - React/cxxreact
-  - React/cxxreact (0.49.3):
+  - React/cxxreact (0.49.5):
     - boost
     - Folly (= 2016.09.26.00)
     - React/jschelpers
-  - React/DevSupport (0.49.3):
+  - React/DevSupport (0.49.5):
     - React/Core
     - React/RCTWebSocket
-  - React/fishhook (0.49.3)
-  - React/jschelpers (0.49.3):
+  - React/fishhook (0.49.5)
+  - React/jschelpers (0.49.5):
     - Folly (= 2016.09.26.00)
-  - React/RCTActionSheet (0.49.3):
+  - React/RCTActionSheet (0.49.5):
     - React/Core
-  - React/RCTAnimation (0.49.3):
+  - React/RCTAnimation (0.49.5):
     - React/Core
-  - React/RCTBlob (0.49.3):
+  - React/RCTBlob (0.49.5):
     - React/Core
-  - React/RCTImage (0.49.3):
+  - React/RCTImage (0.49.5):
     - React/Core
     - React/RCTNetwork
-  - React/RCTNetwork (0.49.3):
+  - React/RCTNetwork (0.49.5):
     - React/Core
-  - React/RCTText (0.49.3):
+  - React/RCTText (0.49.5):
     - React/Core
-  - React/RCTWebSocket (0.49.3):
+  - React/RCTWebSocket (0.49.5):
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - yoga (0.49.3.React)
+  - yoga (0.49.5.React)
 
 DEPENDENCIES:
   - BugsnagReactNative (from `./node_modules/bugsnag-react-native`)
@@ -80,6 +80,10 @@ DEPENDENCIES:
   - React/RCTWebSocket (from `./node_modules/react-native`)
   - yoga (from `./node_modules/react-native/ReactCommon/yoga`)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - boost
+
 EXTERNAL SOURCES:
   BugsnagReactNative:
     :path: "./node_modules/bugsnag-react-native"
@@ -95,14 +99,14 @@ EXTERNAL SOURCES:
     :path: "./node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  boost: 30a15ffb6d9aa4646dd3caffc960753f4cb4ca4e
-  BugsnagReactNative: 7810890dca86366c6a8ef9b46ce587f6de33635e
+  boost: c3477167da90f975ad14372bc55690f6f91a76b0
+  BugsnagReactNative: 3ece9f1c9c8b5ac0eba71f1ddb5b08f4865dab26
   DoubleConversion: ebb6747c5b66026ad4f97b789c3ceac6f18e57a6
   Folly: b7255b29f1d693c375d642d0f04f0592181156d9
   GLog: 3e4e4ae9746ce6bf6e9420c7fc1e08ad59c8ba1a
-  React: 5751f5630c58f7ef31a00cf03044878295bceff0
-  yoga: 6e56575501ecea04196f9c9f08b90cf97cd5da24
+  React: 9d5a23842dcc75ffef540ee2d2ef0eee1904ee58
+  yoga: 596e987aa8aac0165abb235d2977982f090476a0
 
 PODFILE CHECKSUM: 0e96525e391f7dbb69380b2e74ff63febf509288
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.7.1

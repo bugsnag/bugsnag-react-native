@@ -120,8 +120,6 @@
 				8A48D35D1F90C74100B8F83C /* Sources */,
 				8A48D35E1F90C74100B8F83C /* Frameworks */,
 				8A48D35F1F90C74100B8F83C /* Resources */,
-				ACEBB420913E13A3A0AB0B1D /* [CP] Embed Pods Frameworks */,
-				FC064FC205856A995D315A98 /* [CP] Copy Pods Resources */,
 				8A48D3891F91089400B8F83C /* Bundle JavaScript Resources (in Release Mode) */,
 			);
 			buildRules = (
@@ -195,49 +193,22 @@
 			shellPath = /bin/bash;
 			shellScript = "if [[ ! \"$CONFIGURATION\" == Debug ]]; then\nDEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\nAPP_VERSION=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nBUGSNAG_API_KEY=$(/usr/libexec/PlistBuddy -c \"Print BugsnagAPIKey\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\n\nnpm run bundle -- \\\n  --entry-file index.ios.js \\\n  --platform ios \\\n  --dev false \\\n  --bundle-output \"$DEST/main.jsbundle\" \\\n  --sourcemap-output ios.bundle.map \\\n  --assets-dest \"$DEST\"\nbugsnag-sourcemaps upload \\\n  --api-key \"$BUGSNAG_API_KEY\" \\\n  --app-version \"$APP_VERSION\" \\\n  --minified-file \"$DEST/main.jsbundle\" \\\n  --source-map ios.bundle.map \\\n  --minified-url \"main.jsbundle\" \\\n  --upload-sources\nfi";
 		};
-		ACEBB420913E13A3A0AB0B1D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RNCocoaPodsExample/Pods-RNCocoaPodsExample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FC064FC205856A995D315A98 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RNCocoaPodsExample/Pods-RNCocoaPodsExample-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		FE7C48B28C1E455586378348 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RNCocoaPodsExample-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
