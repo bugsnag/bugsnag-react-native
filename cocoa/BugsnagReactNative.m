@@ -354,8 +354,10 @@ RCT_EXPORT_METHOD(startWithOptions:(NSDictionary *)options) {
     static dispatch_once_t onceToken;
     static NSString *BSGReactNativeVersion = nil;
     dispatch_once(&onceToken, ^{
-        #ifdef REACT_NATIVE_VERSION
-            NSDictionary *versionMap = REACT_NATIVE_VERSION;
+        #ifdef RCT_REACT_NATIVE_VERSION
+            // for react-native versions prior 0.55
+            // see https://github.com/react-native-community/releases/blob/451f8e7fa53f80daec9c2381c7984bee73efa51d/CHANGELOG.md#ios-specific-additions
+            NSDictionary *versionMap = RCT_REACT_NATIVE_VERSION;
         #else
             NSDictionary *versionMap = RCTGetReactNativeVersion();
         #endif
