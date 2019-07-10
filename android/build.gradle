@@ -12,7 +12,7 @@ android {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 26)
         versionCode 4
-        versionName '2.21.1'
+        versionName '2.22.0'
         consumerProguardFiles 'proguard-rules.pro'
     }
     lintOptions {
@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    api 'com.bugsnag:bugsnag-android:4.15.0'
+    api 'com.bugsnag:bugsnag-android:4.16.1'
     implementation 'com.facebook.react:react-native:+'
 }
 
