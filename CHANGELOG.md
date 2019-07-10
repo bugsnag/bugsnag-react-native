@@ -1,6 +1,24 @@
 Changelog
 =========
 
+## 2.22.0 (2019-07-10)
+
+This release adds a compile-time dependency on the Kotlin standard library. This should not affect
+the use of any API supplied by bugsnag-android/bugsnag-react-native.
+
+* (Android) Upgrade to bugsnag-android v4.16.1
+  * Prevent overwrite of signal mask when installing ANR handler
+    [#520](https://github.com/bugsnag/bugsnag-android/pull/520)
+  * Use NetworkCallback to monitor connectivity changes on newer API levels
+  [#501](https://github.com/bugsnag/bugsnag-android/pull/501)
+  * Send minimal error report if cached file is corrupted/empty
+  [#500](https://github.com/bugsnag/bugsnag-android/pull/500)
+  * Fix abort() in native code when storing breadcrumbs with null values in
+    metadata
+    [#510](https://github.com/bugsnag/bugsnag-android/pull/510)
+  * Convert metadata to map when notifying the NDK observer
+    [#513](https://github.com/bugsnag/bugsnag-android/pull/513)
+
 ## 2.21.1 (2019-06-27)
 
 ### Bug fixes
