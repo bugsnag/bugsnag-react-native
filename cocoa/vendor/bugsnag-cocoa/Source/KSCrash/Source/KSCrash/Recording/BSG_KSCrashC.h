@@ -138,13 +138,6 @@ void bsg_kscrash_setSearchQueueNames(bool shouldSearchQueueNames);
  */
 void bsg_kscrash_setIntrospectMemory(bool introspectMemory);
 
-/** If true, monitor all Objective-C/Swift deallocations and keep track of any
- * accesses after deallocation.
- *
- * Default: false
- */
-void bsg_kscrash_setCatchZombies(bool catchZombies);
-
 /** List of Objective-C classes that should never be introspected.
  * Whenever a class in this list is encountered, only the class name will be
  * recorded. This can be useful for information security concerns.

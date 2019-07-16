@@ -55,3 +55,11 @@ void BSGDictInsertIfNotNil(NSMutableDictionary *dict, id object,
  *  @param object an object or nil
  */
 void BSGArrayInsertIfNotNil(NSMutableArray *array, id object);
+
+/**
+ *  Merge values from source dictionary with destination
+ *
+ *  @param source a dictionary
+ *  @param destination a dictionary or nil
+ */
+NSDictionary *BSGDictMerge(NSDictionary *source, NSDictionary *destination);

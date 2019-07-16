@@ -28,6 +28,7 @@
 
 #include "BSG_KSFileUtils.h"
 #include "BSG_KSJSONCodec.h"
+#include "BSG_KSJSONCodecObjC.h"
 #include "BSG_KSMach.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
@@ -104,7 +105,7 @@ int bsg_kscrashstate_i_onIntegerElement(const char *const name,
 
     if (strcmp(name, BSG_kKeyFormatVersion) == 0) {
         if (value != BSG_kFormatVersion) {
-            BSG_KSLOG_ERROR("Expected version 1 but got %lld", value);
+            BSG_KSLOG_ERROR(@"Expected version 1 but got %lld", value);
             return BSG_KSJSON_ERROR_INVALID_DATA;
         }
     } else if (strcmp(name, BSG_kKeyLaunchesSinceLastCrash) == 0) {
@@ -169,43 +170,35 @@ int bsg_kscrashstate_i_addJSONData(const char *const data, const size_t length,
  */
 bool bsg_kscrashstate_i_loadState(BSG_KSCrash_State *const context,
                                   const char *const path) {
-    // Stop if the file doesn't exist.
-    // This is expected on the first run of the app.
-    const int fd = open(path, O_RDONLY);
-    if (fd < 0) {
+    if (path == NULL) {
         return false;
     }
-    close(fd);
-
-    char *data;
-    size_t length;
-    if (!bsg_ksfureadEntireFile(path, &data, &length)) {
-        BSG_KSLOG_ERROR("%s: Could not load file", path);
+    NSError *error = nil;
+    NSData *data = [NSData dataWithContentsOfFile:[NSString stringWithUTF8String:path] options:0 error:&error];
+    if (error != nil) {
+        BSG_KSLOG_ERROR(@"%s: Could not load file: %@", path, error);
+        return false;
+    }
+    id objectContext = [BSG_KSJSONCodec decode:data options:0 error:&error];
+    if (error != nil) {
+        BSG_KSLOG_ERROR(@"%s: Could not load file: %@", path, error);
         return false;
     }
 
-    BSG_KSJSONDecodeCallbacks callbacks;
-    callbacks.onBeginArray = bsg_kscrashstate_i_onBeginArray;
-    callbacks.onBeginObject = bsg_kscrashstate_i_onBeginObject;
-    callbacks.onBooleanElement = bsg_kscrashstate_i_onBooleanElement;
-    callbacks.onEndContainer = bsg_kscrashstate_i_onEndContainer;
-    callbacks.onEndData = bsg_kscrashstate_i_onEndData;
-    callbacks.onFloatingPointElement =
-        bsg_kscrashstate_i_onFloatingPointElement;
-    callbacks.onIntegerElement = bsg_kscrashstate_i_onIntegerElement;
-    callbacks.onNullElement = bsg_kscrashstate_i_onNullElement;
-    callbacks.onStringElement = bsg_kscrashstate_i_onStringElement;
+    context->activeDurationSinceLastCrash = [objectContext[@"activeDurationSinceLastCrash"] doubleValue];
+    context->activeDurationSinceLaunch = [objectContext[@"activeDurationSinceLaunch"] doubleValue];
+    context->appLaunchTime = [objectContext[@"appLaunchTime"] unsignedLongLongValue];
+    context->appStateTransitionTime = [objectContext[@"appStateTransitionTime"] unsignedLongLongValue];
+    context->launchesSinceLastCrash = [objectContext[@"launchesSinceLastCrash"] intValue];
+    context->sessionsSinceLastCrash = [objectContext[@"sessionsSinceLastCrash"] intValue];
+    context->sessionsSinceLaunch = [objectContext[@"sessionsSinceLaunch"] intValue];
+    context->crashedLastLaunch = [objectContext[@"crashedLastLaunch"] boolValue];
+    context->crashedThisLaunch = [objectContext[@"crashedThisLaunch"] boolValue];
+    context->applicationIsActive = [objectContext[@"applicationIsActive"] boolValue];
+    context->applicationIsInForeground = [objectContext[@"applicationIsInForeground"] boolValue];
+    context->backgroundDurationSinceLaunch = [objectContext[@"backgroundDurationSinceLaunch"] doubleValue];
+    context->backgroundDurationSinceLastCrash = [objectContext[@"backgroundDurationSinceLastCrash"] doubleValue];
 
-    size_t errorOffset = 0;
-
-    const int result =
-        bsg_ksjsondecode(data, length, &callbacks, context, &errorOffset);
-    free(data);
-    if (result != BSG_KSJSON_OK) {
-        BSG_KSLOG_ERROR("%s, offset %d: %s", path, errorOffset,
-                        bsg_ksjsonstringForError(result));
-        return false;
-    }
     return true;
 }
 
@@ -221,7 +214,7 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
                                   const char *const path) {
     int fd = open(path, O_RDWR | O_CREAT | O_TRUNC, 0644);
     if (fd < 0) {
-        BSG_KSLOG_ERROR("Could not open file %s for writing: %s", path,
+        BSG_KSLOG_ERROR(@"Could not open file %s for writing: %s", path,
                         strerror(errno));
         return false;
     }
@@ -267,14 +260,14 @@ bool bsg_kscrashstate_i_saveState(const BSG_KSCrash_State *const state,
     }
     result = bsg_ksjsonendEncode(&JSONContext);
     if (!bsg_ksfuflushWriteBuffer(fd)) {
-        BSG_KSLOG_ERROR("Failed to flush write buffer");
+        BSG_KSLOG_ERROR(@"Failed to flush write buffer");
     }
 
 done:
     close(fd);
 
     if (result != BSG_KSJSON_OK) {
-        BSG_KSLOG_ERROR("%s: %s", path, bsg_ksjsonstringForError(result));
+        BSG_KSLOG_ERROR(@"%s: %s", path, bsg_ksjsonstringForError(result));
         return false;
     }
     return true;

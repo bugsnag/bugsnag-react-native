@@ -33,7 +33,6 @@
 #include "BSG_KSObjC.h"
 #include "BSG_KSString.h"
 #include "BSG_KSSystemInfoC.h"
-#include "BSG_KSZombie.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
@@ -239,10 +238,6 @@ void bsg_kscrash_setSearchQueueNames(bool shouldSearchQueueNames) {
 
 void bsg_kscrash_setIntrospectMemory(bool introspectMemory) {
     crashContext()->config.introspectionRules.enabled = introspectMemory;
-}
-
-void bsg_kscrash_setCatchZombies(bool catchZombies) {
-    bsg_kszombie_setEnabled(catchZombies);
 }
 
 void bsg_kscrash_setDoNotIntrospectClasses(const char **doNotIntrospectClasses,

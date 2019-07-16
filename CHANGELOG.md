@@ -1,6 +1,18 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* (iOS) Upgrade bugsnag-cocoa to v5.22.3
+  * Fix JSON parsing errors in crash reports for control characters and some
+    other sequences
+    [bugsnag-cocoa#382](https://github.com/bugsnag/bugsnag-cocoa/pull/382)
+  * Disable reporting out-of-memory events in debug mode, removing false
+    positives triggered by killing and relaunching apps using development tools.
+    [bugsnag-cocoa#380](https://github.com/bugsnag/bugsnag-cocoa/pull/380)
+
 ## 2.22.0 (2019-07-10)
 
 This release adds a compile-time dependency on the Kotlin standard library. This should not affect

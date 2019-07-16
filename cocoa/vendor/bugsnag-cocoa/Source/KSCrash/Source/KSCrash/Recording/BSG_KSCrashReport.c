@@ -36,7 +36,6 @@
 #include "BSG_KSObjC.h"
 #include "BSG_KSSignalInfo.h"
 #include "BSG_KSString.h"
-#include "BSG_KSZombie.h"
 
 //#define BSG_kSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
@@ -884,11 +883,6 @@ void bsg_kscrw_i_writeMemoryContents(
     writer->beginObject(writer, key);
     {
         writer->addUIntegerElement(writer, BSG_KSCrashField_Address, address);
-        const char *zombieClassName = bsg_kszombie_className(object);
-        if (zombieClassName != NULL) {
-            writer->addStringElement(writer, BSG_KSCrashField_LastDeallocObject,
-                                     zombieClassName);
-        }
         switch (bsg_ksobjc_objectType(object)) {
         case BSG_KSObjCTypeUnknown:
             if (object == NULL) {
@@ -1012,7 +1006,6 @@ void bsg_kscrw_i_writeMemoryContentsIfNotable(
     const void *object = (const void *)address;
 
     if (bsg_ksobjc_objectType(object) == BSG_KSObjCTypeUnknown &&
-        bsg_kszombie_className(object) == NULL &&
         !bsg_kscrw_i_isValidString(object)) {
         // Nothing notable about this memory location.
         return;
@@ -1849,25 +1842,6 @@ void bsg_kscrw_i_writeProcessState(const BSG_KSCrashReportWriter *const writer,
                                    const char *const key) {
     writer->beginObject(writer, key);
     {
-        const void *excAddress = bsg_kszombie_lastDeallocedNSExceptionAddress();
-        if (excAddress != NULL) {
-            writer->beginObject(writer,
-                                BSG_KSCrashField_LastDeallocedNSException);
-            {
-                writer->addUIntegerElement(writer, BSG_KSCrashField_Address,
-                                           (uintptr_t)excAddress);
-                writer->addStringElement(
-                    writer, BSG_KSCrashField_Name,
-                    bsg_kszombie_lastDeallocedNSExceptionName());
-                writer->addStringElement(
-                    writer, BSG_KSCrashField_Reason,
-                    bsg_kszombie_lastDeallocedNSExceptionReason());
-                bsg_kscrw_i_writeAddressReferencedByString(
-                    writer, BSG_KSCrashField_ReferencedObject,
-                    bsg_kszombie_lastDeallocedNSExceptionReason());
-            }
-            writer->endContainer(writer);
-        }
     }
     writer->endContainer(writer);
 }

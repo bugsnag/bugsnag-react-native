@@ -28,10 +28,9 @@
 
 #import "BSG_KSCrashDoctor.h"
 #import "BSG_KSCrashReportFields.h"
-#import "BSG_KSSafeCollections.h"
 #import "BSG_RFC3339DateTool.h"
-#import "NSDictionary+BSG_Merge.h"
 #import "BSG_KSLogger.h"
+#import "BugsnagCollections.h"
 
 static NSString *const kCrashReportSuffix = @"-CrashReport-";
 #define BSG_kRecrashReportSuffix @"-RecrashReport-"
@@ -99,8 +98,7 @@ static NSString *const kCrashReportSuffix = @"-CrashReport-";
         NSMutableDictionary *fileContents = [NSMutableDictionary new];
         NSMutableDictionary *recrashReport =
                 [self readFile:[self pathToRecrashReportWithID:fileId] error:nil];
-        [fileContents bsg_ksc_setObjectIfNotNil:recrashReport
-                                         forKey:@BSG_KSCrashField_RecrashReport];
+        BSGDictInsertIfNotNil(fileContents, recrashReport, @BSG_KSCrashField_RecrashReport);
         return fileContents;
     }
 }
@@ -116,8 +114,7 @@ static NSString *const kCrashReportSuffix = @"-CrashReport-";
     NSMutableDictionary *mutableReport = [report mutableCopy];
     NSMutableDictionary *mutableInfo =
             [report[@BSG_KSCrashField_Report] mutableCopy];
-    [mutableReport bsg_ksc_setObjectIfNotNil:mutableInfo
-                                      forKey:@BSG_KSCrashField_Report];
+    BSGDictInsertIfNotNil(mutableReport, mutableInfo, @BSG_KSCrashField_Report);
 
     // Timestamp gets stored as a unix timestamp. Convert it to rfc3339.
     [self convertTimestamp:@BSG_KSCrashField_Timestamp inReport:mutableInfo];
@@ -132,11 +129,9 @@ static NSString *const kCrashReportSuffix = @"-CrashReport-";
 
     NSMutableDictionary *crashReport =
             [report[@BSG_KSCrashField_Crash] mutableCopy];
-    [mutableReport bsg_ksc_setObjectIfNotNil:crashReport
-                                      forKey:@BSG_KSCrashField_Crash];
+    BSGDictInsertIfNotNil(mutableReport, crashReport, @BSG_KSCrashField_Crash);
     BSG_KSCrashDoctor *doctor = [BSG_KSCrashDoctor doctor];
-    [crashReport bsg_ksc_setObjectIfNotNil:[doctor diagnoseCrash:report]
-                                    forKey:@BSG_KSCrashField_Diagnosis];
+    BSGDictInsertIfNotNil(crashReport, [doctor diagnoseCrash:report], @BSG_KSCrashField_Diagnosis);
 
     return mutableReport;
 }
@@ -160,8 +155,7 @@ static NSString *const kCrashReportSuffix = @"-CrashReport-";
         return;
     }
 
-    [report bsg_ksc_setObjectIfNotNil:[srcDict bsg_mergedInto:dstDict]
-                               forKey:dstKey];
+    BSGDictInsertIfNotNil(report, BSGDictMerge(srcDict, dstDict), dstKey);
     [report removeObjectForKey:srcKey];
 }
 

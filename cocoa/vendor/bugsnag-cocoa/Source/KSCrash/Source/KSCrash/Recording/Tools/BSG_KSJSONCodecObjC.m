@@ -504,28 +504,14 @@ int bsg_ksjsoncodecobjc_i_encodeObject(BSG_KSJSONCodec *codec, id object,
 + (id)decode:(NSData *)JSONData
      options:(BSG_KSJSONDecodeOption)decodeOptions
        error:(NSError *__autoreleasing *)error {
-    BSG_KSJSONCodec *codec =
-        [self codecWithEncodeOptions:0 decodeOptions:decodeOptions];
-    size_t errorOffset;
-    int result =
-        bsg_ksjsondecode([JSONData bytes], [JSONData length], codec.callbacks,
-                         (__bridge void *)codec, &errorOffset);
-    if (result != BSG_KSJSON_OK && codec.error == nil) {
-        codec.error = [NSError
-           bsg_errorWithDomain:@"KSJSONCodecObjC"
-                          code:0
-                   description:@"%s (offset %d)", bsg_ksjsonstringForError(result),
-                               errorOffset];
+    *error = nil;
+    id result = nil;
+    @try {
+        result = [NSJSONSerialization JSONObjectWithData:JSONData options:0 error:error];
+    } @catch (NSException *exception) {
+        result = @{};
     }
-    if (error != nil) {
-        *error = codec.error;
-    }
-
-    if (result != BSG_KSJSON_OK &&
-        !(decodeOptions & BSG_KSJSONDecodeOptionKeepPartialObject)) {
-        return nil;
-    }
-    return codec.topLevelContainer;
+    return result;
 }
 
 @end

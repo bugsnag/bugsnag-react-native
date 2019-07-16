@@ -102,44 +102,6 @@ bool bsg_ksfureadBytesFromFD(const int fd, char *const bytes, ssize_t length) {
     return true;
 }
 
-bool bsg_ksfureadEntireFile(const char *const path, char **data,
-                            size_t *length) {
-    struct stat st;
-    if (stat(path, &st) < 0) {
-        BSG_KSLOG_ERROR("Could not stat %s: %s", path, strerror(errno));
-        return false;
-    }
-
-    void *mem = NULL;
-    int fd = open(path, O_RDONLY);
-    if (fd < 0) {
-        BSG_KSLOG_ERROR("Could not open %s: %s", path, strerror(errno));
-        return false;
-    }
-
-    mem = malloc((size_t)st.st_size);
-    if (mem == NULL) {
-        BSG_KSLOG_ERROR("Out of memory");
-        goto failed;
-    }
-
-    if (!bsg_ksfureadBytesFromFD(fd, mem, (ssize_t)st.st_size)) {
-        goto failed;
-    }
-
-    close(fd);
-    *length = (size_t)st.st_size;
-    *data = mem;
-    return true;
-
-failed:
-    close(fd);
-    if (mem != NULL) {
-        free(mem);
-    }
-    return false;
-}
-
 bool bsg_ksfuwriteStringToFD(const int fd, const char *const string) {
     if (*string != 0) {
         size_t bytesToWrite = strlen(string);

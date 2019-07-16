@@ -99,7 +99,6 @@
 @synthesize searchThreadNames = _searchThreadNames;
 @synthesize searchQueueNames = _searchQueueNames;
 @synthesize introspectMemory = _introspectMemory;
-@synthesize catchZombies = _catchZombies;
 @synthesize doNotIntrospectClasses = _doNotIntrospectClasses;
 @synthesize maxStoredReports = _maxStoredReports;
 @synthesize suspendThreadsForUserReported = _suspendThreadsForUserReported;
@@ -155,7 +154,6 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
         self.searchThreadNames = NO;
         self.searchQueueNames = NO;
         self.introspectMemory = YES;
-        self.catchZombies = NO;
         self.maxStoredReports = 5;
 
         self.suspendThreadsForUserReported = YES;
@@ -220,11 +218,6 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
 - (void)setIntrospectMemory:(bool)introspectMemory {
     _introspectMemory = introspectMemory;
     bsg_kscrash_setIntrospectMemory(introspectMemory);
-}
-
-- (void)setCatchZombies:(bool)catchZombies {
-    _catchZombies = catchZombies;
-    bsg_kscrash_setCatchZombies(catchZombies);
 }
 
 - (void)setSuspendThreadsForUserReported:(BOOL)suspendThreadsForUserReported {

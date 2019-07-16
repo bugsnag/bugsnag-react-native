@@ -18,7 +18,6 @@
 #import "BugsnagHandledState.h"
 #import "BugsnagLogger.h"
 #import "BugsnagKeys.h"
-#import "NSDictionary+BSG_Merge.h"
 #import "BugsnagKSCrashSysInfoParser.h"
 #import "BugsnagSession.h"
 #import "BSG_RFC3339DateTool.h"
@@ -522,7 +521,7 @@ initWithErrorName:(NSString *_Nonnull)name
         BSGDictSetSafeObject(event, @YES, BSGKeyIncomplete);
     }
 
-    NSDictionary *device = [self.device bsg_mergedInto:self.deviceState];
+    NSDictionary *device = BSGDictMerge(self.device, self.deviceState);
     BSGDictSetSafeObject(event, device, BSGKeyDevice);
     
     NSMutableDictionary *appObj = [NSMutableDictionary new];

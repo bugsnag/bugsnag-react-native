@@ -426,20 +426,6 @@ typedef enum {
     return function;
 }
 
-- (NSString *)zombieCall:(BSG_KSCrashDoctorFunctionCall *)functionCall {
-    if ([functionCall.name isEqualToString:@"objc_msgSend"] &&
-        functionCall.params.count > 0 &&
-        [functionCall.params[0] previousClassName] != nil) {
-        return [functionCall descriptionWithParamCount:4];
-    } else if ([functionCall.name isEqualToString:@"objc_retain"] &&
-               functionCall.params.count > 0 &&
-               [functionCall.params[0] previousClassName] !=
-                   nil) {
-        return [functionCall descriptionWithParamCount:1];
-    }
-    return nil;
-}
-
 - (BOOL)isStackOverflow:(NSDictionary *)crashedThreadReport {
     NSDictionary *stack =
             crashedThreadReport[@BSG_KSCrashField_Stack];
@@ -503,17 +489,6 @@ typedef enum {
                     [NSString
                         stringWithFormat:
                             @"Math error (usually caused from division by 0)."]
-                             callName:lastFunctionName];
-        }
-
-        BSG_KSCrashDoctorFunctionCall *functionCall =
-            [self lastFunctionCall:report];
-        NSString *zombieCall = [self zombieCall:functionCall];
-        if (zombieCall != nil) {
-            return [self
-                appendOriginatingCall:
-                    [NSString stringWithFormat:@"Possible zombie in call: %@",
-                                               zombieCall]
                              callName:lastFunctionName];
         }
 

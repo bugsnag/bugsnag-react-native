@@ -460,25 +460,6 @@ typedef struct BSG_KSJSONDecodeCallbacks {
 
 } BSG_KSJSONDecodeCallbacks;
 
-/** Read a JSON encoded file from the specified FD.
- *
- * @param data UTF-8 encoded JSON data.
- *
- * @param length Length of the data.
- *
- * @param callbacks The callbacks to call while decoding.
- *
- * @param userData Any data you would like passed to the callbacks.
- *
- * @oaram errorOffset If not null, will contain the offset into the data
- *                    where the error (if any) occurred.
- *
- * @return BSG_KSJSON_OK if succesful. An error code otherwise.
- */
-int bsg_ksjsondecode(const char *data, size_t length,
-                     BSG_KSJSONDecodeCallbacks *callbacks, void *userData,
-                     size_t *errorOffset);
-
 #ifdef __cplusplus
 }
 #endif

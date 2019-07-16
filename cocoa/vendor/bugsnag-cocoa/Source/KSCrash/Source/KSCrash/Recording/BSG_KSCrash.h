@@ -121,12 +121,6 @@ typedef enum {
  */
 @property(nonatomic, readwrite, assign) bool introspectMemory;
 
-/** If YES, monitor all Objective-C/Swift deallocations and keep track of any
- * accesses after deallocation.
- *
- * Default: NO
- */
-@property(nonatomic, readwrite, assign) bool catchZombies;
 
 /** List of Objective-C classes that should never be introspected.
  * Whenever a class in this list is encountered, only the class name will be

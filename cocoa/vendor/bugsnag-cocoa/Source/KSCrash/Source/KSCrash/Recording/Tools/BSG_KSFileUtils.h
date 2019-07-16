@@ -78,18 +78,6 @@ bool bsg_ksfuflushWriteBuffer(const int fd);
  */
 bool bsg_ksfureadBytesFromFD(const int fd, char *bytes, ssize_t length);
 
-/** Read an entire file.
- *
- * @param path The path to the file.
- *
- * @param data Place to store a pointer to the loaded data (must be freed).
- *
- * @param length Place to store the length of the loaded data.
- *
- * @return true if the operation was successful.
- */
-bool bsg_ksfureadEntireFile(const char *path, char **data, size_t *length);
-
 /** Write a string to a file.
  *
  * @param fd The file descriptor.
