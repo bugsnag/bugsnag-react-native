@@ -1,5 +1,5 @@
 # Bugsnag error monitoring & exception reporter for React Native
-[![Documentation](https://img.shields.io/badge/documentation-2.22.1-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
+[![Documentation](https://img.shields.io/badge/documentation-2.22.2-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
 
 Automatic [React Native crash reporting](https://www.bugsnag.com/platforms/react-native-error-reporting/) with Bugsnag helps you detect both native OS and JavaScript errors in your React Native apps.
 

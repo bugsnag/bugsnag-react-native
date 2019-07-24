@@ -12,7 +12,7 @@ android {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 26)
         versionCode 4
-        versionName '2.22.1'
+        versionName '2.22.2'
         consumerProguardFiles 'proguard-rules.pro'
     }
     lintOptions {
