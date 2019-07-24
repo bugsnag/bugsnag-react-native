@@ -1,6 +1,16 @@
 Changelog
 =========
 
+## 2.22.2 (2019-07-24)
+
+### Bug fixes
+
+* (Android) Upgrade to bugsnag-android v4.16.1
+  * Fix NPE causing crash when reporting a minimal error
+    [#534](https://github.com/bugsnag/bugsnag-android/pull/534)
+* (iOS) Access the version of React Native in a way that is compatible with React Native v0.50-0.54.
+  [#374](https://github.com/bugsnag/bugsnag-react-native/pull/374)
+
 ## 2.22.1 (2019-07-16)
 
 ### Bug fixes
