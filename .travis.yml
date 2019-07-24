@@ -64,3 +64,26 @@ jobs:
         - ./node_modules/.bin/react-native link
         - cd ios
         - xcodebuild -project BugsnagReactNativeExample.xcodeproj -scheme BugsnagReactNativeExample build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -UseModernBuildSystem=NO -quiet
+    - stage: build
+      language: objective-c
+      os: osx
+      osx_image: xcode9.2
+      cache:
+        - bundler
+        - cocoapods
+      xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
+      xcode_scheme: BugsnagReactNative
+      install:
+        - brew install yarn
+      before_script:
+        - npm install
+        - npm install babel-cli
+        - PATH="node_modules/bin:$PATH" && npm pack
+      script:
+        - cd examples/plain
+        - yarn add react-native@0.53.0
+        - yarn add ../../bugsnag-react-native-*.tgz
+        - yarn install
+        - ./node_modules/.bin/react-native link
+        - cd ios
+        - xcodebuild -project BugsnagReactNativeExample.xcodeproj -scheme BugsnagReactNativeExample build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -UseModernBuildSystem=NO -quiet
