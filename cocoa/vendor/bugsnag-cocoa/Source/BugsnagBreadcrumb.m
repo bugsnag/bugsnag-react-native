@@ -233,8 +233,8 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
     }
 }
 
-- (NSDictionary *)cachedBreadcrumbs {
-    __block NSDictionary *cache = nil;
+- (NSArray *)cachedBreadcrumbs {
+    __block NSArray *cache = nil;
     dispatch_barrier_sync(self.readWriteQueue, ^{
         NSError *error = nil;
         NSData *data = [NSData dataWithContentsOfFile:self.cachePath options:0 error:&error];
@@ -245,7 +245,7 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
             bsg_log_err(@"Failed to read breadcrumbs from disk: %@", error);
         }
     });
-    return cache;
+    return [cache isKindOfClass:[NSArray class]] ? cache : nil;
 }
 
 @synthesize capacity = _capacity;

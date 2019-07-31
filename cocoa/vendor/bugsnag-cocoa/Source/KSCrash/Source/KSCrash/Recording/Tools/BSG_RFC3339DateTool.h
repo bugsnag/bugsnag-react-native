@@ -53,12 +53,4 @@
  */
 + (NSString *)stringFromUNIXTimestamp:(unsigned long long)timestamp;
 
-/** Convert an RFC3339 string representation to a UNIX timestamp.
- *
- * @param string The string to convert.
- *
- * @return The timestamp.
- */
-+ (unsigned long long)UNIXTimestampFromString:(NSString *)string;
-
 @end

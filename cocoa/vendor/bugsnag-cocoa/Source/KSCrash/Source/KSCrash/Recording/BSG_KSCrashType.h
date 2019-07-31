@@ -30,7 +30,6 @@
  * - Fatal signal
  * - Uncaught C++ exception
  * - Uncaught Objective-C NSException
- * - Deadlock on the main thread
  * - User reported custom exception
  */
 typedef enum {
@@ -38,16 +37,13 @@ typedef enum {
     BSG_KSCrashTypeSignal = 0x02,
     BSG_KSCrashTypeCPPException = 0x04,
     BSG_KSCrashTypeNSException = 0x08,
-    BSG_KSCrashTypeMainThreadDeadlock = 0x10,
     BSG_KSCrashTypeUserReported = 0x20,
 } BSG_KSCrashType;
 
 #define BSG_KSCrashTypeAll                                                     \
     (BSG_KSCrashTypeMachException | BSG_KSCrashTypeSignal |                    \
      BSG_KSCrashTypeCPPException | BSG_KSCrashTypeNSException |                \
-     BSG_KSCrashTypeMainThreadDeadlock | BSG_KSCrashTypeUserReported)
-
-#define BSG_KSCrashTypeExperimental (BSG_KSCrashTypeMainThreadDeadlock)
+     BSG_KSCrashTypeUserReported)
 
 #define BSG_KSCrashTypeDebuggerUnsafe                                          \
     (BSG_KSCrashTypeMachException | BSG_KSCrashTypeNSException)
@@ -62,8 +58,7 @@ typedef enum {
 /** It is safe to catch these kinds of crashes in a production environment.
  * All other crash types should be considered experimental.
  */
-#define BSG_KSCrashTypeProductionSafe                                          \
-    (BSG_KSCrashTypeAll & (~BSG_KSCrashTypeExperimental))
+#define BSG_KSCrashTypeProductionSafe BSG_KSCrashTypeAll
 
 #define BSG_KSCrashTypeNone 0
 

@@ -94,40 +94,11 @@ void bsg_kscrash_reinstall(const char *const crashReportFilePath,
  */
 void bsg_kscrash_setUserInfoJSON(const char *const userInfoJSON);
 
-/** Set the maximum time to allow the main thread to run without returning.
- * If a task occupies the main thread for longer than this interval, the
- * watchdog will consider the queue deadlocked and shut down the app and write a
- * crash report.
- *
- * Warning: Make SURE that nothing in your app that runs on the main thread
- * takes longer to complete than this value or it WILL get shut down! This
- * includes your app startup process, so you may need to push app initialization
- * to another thread, or perhaps set this to a higher value until your
- * application has been fully initialized.
- *
- * 0 = Disabled.
- *
- * Default: 0
- */
-void bsg_kscrash_setDeadlockWatchdogInterval(double deadlockWatchdogInterval);
-
 /** Set whether or not to print a stack trace to stdout when a crash occurs.
  *
  * Default: false
  */
 void bsg_kscrash_setPrintTraceToStdout(bool printTraceToStdout);
-
-/** If true, search for thread names where appropriate.
- * Thread name searching is not async-safe, and so comes with the risk of
- * timing out and panicking in thread_lock().
- */
-void bsg_kscrash_setSearchThreadNames(bool shouldSearchThreadNames);
-
-/** If true, search for dispatch queue names where appropriate.
- * Queue name searching is not async-safe, and so comes with the risk of
- * timing out and panicking in thread_lock().
- */
-void bsg_kscrash_setSearchQueueNames(bool shouldSearchQueueNames);
 
 /** If true, introspect memory contents during a crash.
  * Any Objective-C objects or C strings near the stack pointer or referenced by
@@ -137,15 +108,6 @@ void bsg_kscrash_setSearchQueueNames(bool shouldSearchQueueNames);
  * Default: false
  */
 void bsg_kscrash_setIntrospectMemory(bool introspectMemory);
-
-/** List of Objective-C classes that should never be introspected.
- * Whenever a class in this list is encountered, only the class name will be
- * recorded. This can be useful for information security concerns.
- *
- * Default: NULL
- */
-void bsg_kscrash_setDoNotIntrospectClasses(const char **doNotIntrospectClasses,
-                                           size_t length);
 
 /** Set the callback to invoke upon a crash.
  *

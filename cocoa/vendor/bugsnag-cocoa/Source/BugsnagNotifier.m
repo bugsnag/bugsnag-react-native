@@ -27,6 +27,7 @@
 #import "BugsnagNotifier.h"
 #import "BSGConnectivity.h"
 #import "Bugsnag.h"
+#import "Private.h"
 #import "BugsnagCrashSentry.h"
 #import "BugsnagHandledState.h"
 #import "BugsnagLogger.h"
@@ -36,6 +37,7 @@
 #import "BSG_RFC3339DateTool.h"
 #import "BSG_KSCrashType.h"
 #import "BSG_KSCrashState.h"
+#import "BSG_KSSystemInfo.h"
 #import "BSG_KSMach.h"
 
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
@@ -44,7 +46,7 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.22.3";
+NSString *const NOTIFIER_VERSION = @"5.22.4";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSAttributeDepth = @"depth";
@@ -387,7 +389,16 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 #endif
 
     _started = YES;
-    if (self.configuration.reportOOMs && !bsg_ksmachisBeingTraced() && self.configuration.autoNotify) {
+    // autoNotify disables all unhandled event reporting
+    BOOL configuredToReportOOMs = self.configuration.reportOOMs && self.configuration.autoNotify;
+    // Disable if a debugger is enabled, since the development cycle of starting
+    // and restarting an app is also an uncatchable kill
+    BOOL noDebuggerEnabled = !bsg_ksmachisBeingTraced();
+    // Disable if in an app extension, since app extensions have a different
+    // app lifecycle and the heuristic used for finding app terminations rooted
+    // in fixable code does not apply
+    BOOL notInAppExtension = ![BSG_KSSystemInfo isRunningInAppExtension];
+    if (configuredToReportOOMs && noDebuggerEnabled && notInAppExtension) {
         [self.oomWatchdog enable];
     }
 
@@ -579,16 +590,29 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     static NSString *const BSGOutOfMemoryErrorClass = @"Out Of Memory";
     static NSString *const BSGOutOfMemoryMessageFormat = @"The app was likely terminated by the operating system while in the %@";
     NSMutableDictionary *lastLaunchInfo = [[self.oomWatchdog lastBootCachedFileInfo] mutableCopy];
-    BOOL wasInForeground = [[lastLaunchInfo valueForKeyPath:@"app.inForeground"] boolValue];
-    NSString *message = [NSString stringWithFormat:BSGOutOfMemoryMessageFormat, wasInForeground ? @"foreground" : @"background"];
-    BugsnagHandledState *handledState = [BugsnagHandledState
-        handledStateWithSeverityReason:LikelyOutOfMemory
-                              severity:BSGSeverityError
-                             attrValue:nil];
-    NSDictionary *crumbs = [self.configuration.breadcrumbs cachedBreadcrumbs];
+    NSArray *crumbs = [self.configuration.breadcrumbs cachedBreadcrumbs];
     if (crumbs.count > 0) {
         lastLaunchInfo[@"breadcrumbs"] = crumbs;
     }
+    for (NSDictionary *crumb in crumbs) {
+        if ([crumb isKindOfClass:[NSDictionary class]]
+            && [crumb[@"name"] isKindOfClass:[NSString class]]) {
+            NSString *name = crumb[@"name"];
+            // If the termination breadcrumb is set, the app entered a normal
+            // termination flow but expired before the watchdog sentinel could
+            // be updated. In this case, no report should be sent.
+            if ([name isEqualToString:kAppWillTerminate]) {
+                return;
+            }
+        }
+    }
+
+    BOOL wasInForeground = [[lastLaunchInfo valueForKeyPath:@"app.inForeground"] boolValue];
+    NSString *message = [NSString stringWithFormat:BSGOutOfMemoryMessageFormat, wasInForeground ? @"foreground" : @"background"];
+    BugsnagHandledState *handledState = [BugsnagHandledState
+                                         handledStateWithSeverityReason:LikelyOutOfMemory
+                                         severity:BSGSeverityError
+                                         attrValue:nil];
     NSDictionary *appState = @{@"oom": lastLaunchInfo, @"didOOM": @YES};
     [self.crashSentry reportUserException:BSGOutOfMemoryErrorClass
                                    reason:message

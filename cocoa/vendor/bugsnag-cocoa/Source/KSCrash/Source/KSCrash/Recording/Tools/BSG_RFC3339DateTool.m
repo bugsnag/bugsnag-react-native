@@ -63,9 +63,4 @@ static NSString *const kDateFormatterKey = @"RfcDateFormatter";
         [self stringFromDate:[NSDate dateWithTimeIntervalSince1970:timestamp]];
 }
 
-+ (unsigned long long)UNIXTimestampFromString:(NSString *)string {
-    return (unsigned long long)[[self dateFromString:string]
-        timeIntervalSince1970];
-}
-
 @end

@@ -45,7 +45,6 @@
 #pragma mark - Exception Types -
 
 #define BSG_KSCrashExcType_CPPException "cpp_exception"
-#define BSG_KSCrashExcType_Deadlock "deadlock"
 #define BSG_KSCrashExcType_Mach "mach"
 #define BSG_KSCrashExcType_NSException "nsexception"
 #define BSG_KSCrashExcType_Signal "signal"

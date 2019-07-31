@@ -28,7 +28,6 @@ NSUInteger const BSG_MAX_STORED_REPORTS = 12;
         BSG_KSCDeleteOnSucess;
     [BSG_KSCrash sharedInstance].onCrash = onCrash;
     [BSG_KSCrash sharedInstance].maxStoredReports = BSG_MAX_STORED_REPORTS;
-    [BSG_KSCrash sharedInstance].demangleLanguages = 0;
 
     if (!config.autoNotify) {
         bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeUserReported);

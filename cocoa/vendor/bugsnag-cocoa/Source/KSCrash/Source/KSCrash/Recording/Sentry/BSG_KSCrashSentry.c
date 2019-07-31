@@ -29,7 +29,6 @@
 #include "BSG_KSCrashSentry_Private.h"
 
 #include "BSG_KSCrashSentry_CPPException.h"
-#include "BSG_KSCrashSentry_Deadlock.h"
 #include "BSG_KSCrashSentry_NSException.h"
 #include "BSG_KSCrashSentry_MachException.h"
 #include "BSG_KSCrashSentry_Signal.h"
@@ -66,11 +65,6 @@ static BSG_CrashSentry bsg_g_sentries[] = {
     {
         BSG_KSCrashTypeNSException, bsg_kscrashsentry_installNSExceptionHandler,
         bsg_kscrashsentry_uninstallNSExceptionHandler,
-    },
-    {
-        BSG_KSCrashTypeMainThreadDeadlock,
-        bsg_kscrashsentry_installDeadlockHandler,
-        bsg_kscrashsentry_uninstallDeadlockHandler,
     },
     {
         BSG_KSCrashTypeUserReported,

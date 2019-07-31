@@ -73,4 +73,9 @@
  */
 + (NSString *)osBuildVersion;
 
+/**
+ * Whether the current main bundle is an iOS app extension
+ */
++ (BOOL)isRunningInAppExtension;
+
 @end

@@ -28,12 +28,6 @@
 #import "BSG_KSCrashReportFilter.h"
 #import "BSG_KSCrashReportStore.h"
 
-typedef enum {
-    BSG_KSCrashDemangleLanguageCPlusPlus = 1,
-    BSG_KSCrashDemangleLanguageSwift = 2,
-    BSG_KSCrashDemangleLanguageAll = ~1
-} BSG_KSCrashDemangleLanguage;
-
 /**
  * Advanced interface to the BSG_KSCrash system.
  */
@@ -71,11 +65,6 @@ typedef enum {
 /** Max number of reports to store on disk before throwing older reports out.
  * (default 5) */
 @property(nonatomic, readwrite, assign) int maxStoredReports;
-
-/** Which languages to demangle when getting stack traces (default
- * BSG_KSCrashDemangleLanguageAll) */
-@property(nonatomic, readwrite, assign)
-    BSG_KSCrashDemangleLanguage demangleLanguages;
 
 /** The total number of unsent reports. Note: This is an expensive operation.
  */

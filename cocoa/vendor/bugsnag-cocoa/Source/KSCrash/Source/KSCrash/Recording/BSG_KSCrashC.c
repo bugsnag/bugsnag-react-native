@@ -27,7 +27,6 @@
 #include "BSG_KSCrashC.h"
 
 #include "BSG_KSCrashReport.h"
-#include "BSG_KSCrashSentry_Deadlock.h"
 #include "BSG_KSCrashSentry_User.h"
 #include "BSG_KSMach.h"
 #include "BSG_KSObjC.h"
@@ -219,59 +218,12 @@ void bsg_kscrash_setUserInfoJSON(const char *const userInfoJSON) {
     bsg_ksstring_replace(&context->config.userInfoJSON, userInfoJSON);
 }
 
-void bsg_kscrash_setDeadlockWatchdogInterval(double deadlockWatchdogInterval) {
-    bsg_kscrashsentry_setDeadlockHandlerWatchdogInterval(
-        deadlockWatchdogInterval);
-}
-
 void bsg_kscrash_setPrintTraceToStdout(bool printTraceToStdout) {
     crashContext()->config.printTraceToStdout = printTraceToStdout;
 }
 
-void bsg_kscrash_setSearchThreadNames(bool shouldSearchThreadNames) {
-    crashContext()->config.searchThreadNames = shouldSearchThreadNames;
-}
-
-void bsg_kscrash_setSearchQueueNames(bool shouldSearchQueueNames) {
-    crashContext()->config.searchQueueNames = shouldSearchQueueNames;
-}
-
 void bsg_kscrash_setIntrospectMemory(bool introspectMemory) {
     crashContext()->config.introspectionRules.enabled = introspectMemory;
-}
-
-void bsg_kscrash_setDoNotIntrospectClasses(const char **doNotIntrospectClasses,
-                                           size_t length) {
-    const char **oldClasses =
-        crashContext()->config.introspectionRules.restrictedClasses;
-    size_t oldClassesLength =
-        crashContext()->config.introspectionRules.restrictedClassesCount;
-    const char **newClasses = nil;
-    size_t newClassesLength = 0;
-
-    if (doNotIntrospectClasses != nil && length > 0) {
-        newClassesLength = length;
-        newClasses = malloc(sizeof(*newClasses) * newClassesLength);
-        if (newClasses == nil) {
-            BSG_KSLOG_ERROR("Could not allocate memory");
-            return;
-        }
-
-        for (size_t i = 0; i < newClassesLength; i++) {
-            newClasses[i] = strdup(doNotIntrospectClasses[i]);
-        }
-    }
-
-    crashContext()->config.introspectionRules.restrictedClasses = newClasses;
-    crashContext()->config.introspectionRules.restrictedClassesCount =
-        newClassesLength;
-
-    if (oldClasses != nil) {
-        for (size_t i = 0; i < oldClassesLength; i++) {
-            free((void *)oldClasses[i]);
-        }
-        free(oldClasses);
-    }
 }
 
 void bsg_kscrash_setCrashNotifyCallback(

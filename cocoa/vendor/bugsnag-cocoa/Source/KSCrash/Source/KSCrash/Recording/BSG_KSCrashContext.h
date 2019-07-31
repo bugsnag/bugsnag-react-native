@@ -48,13 +48,6 @@ typedef struct {
      * along with their contents.
      */
     bool enabled;
-
-    /** List of classes that should never be introspected.
-     * Whenever a class in this list is encountered, only the class name will be
-     * recorded.
-     */
-    const char **restrictedClasses;
-    size_t restrictedClassesCount;
 } BSG_KSCrash_IntrospectionRules;
 
 typedef struct {
@@ -72,12 +65,6 @@ typedef struct {
 
     /** When writing the crash report, print a stack trace to STDOUT as well. */
     bool printTraceToStdout;
-
-    /** If true, do a non-async-safe search of thread names. */
-    bool searchThreadNames;
-
-    /** If true, do a non-async-safe search of queue names. */
-    bool searchQueueNames;
 
     /** The types of crashes that will be handled. */
     BSG_KSCrashType handlingCrashTypes;

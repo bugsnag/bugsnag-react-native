@@ -433,6 +433,26 @@
     return [self stringSysctl:@"kern.osversion"];
 }
 
++ (BOOL)isRunningInAppExtension {
+#if BSG_KSCRASH_HOST_IOS
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    // From the App Extension Programming Guide:
+    // > When you build an extension based on an Xcode template, you get an
+    // > extension bundle that ends in .appex.
+    return [[mainBundle executablePath] containsString:@".appex"]
+        // In the case that the extension bundle was renamed or generated
+        // outside of the Xcode template, check the Bundle OS Type Code:
+        // > This key consists of a four-letter code for the bundle type. For
+        // > apps, the code is APPL, for frameworks, it's FMWK, and for bundles,
+        // > it's BNDL.
+        // If the main bundle type is not "APPL", assume this is an extension
+        // context.
+        || ![[mainBundle infoDictionary][@"CFBundlePackageType"] isEqualToString:@"APPL"];
+#else
+    return NO;
+#endif
+}
+
 @end
 
 const char *bsg_kssysteminfo_toJSON(void) {

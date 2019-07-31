@@ -89,17 +89,13 @@
 @synthesize userInfo = _userInfo;
 @synthesize deleteBehaviorAfterSendAll = _deleteBehaviorAfterSendAll;
 @synthesize handlingCrashTypes = _handlingCrashTypes;
-@synthesize deadlockWatchdogInterval = _deadlockWatchdogInterval;
 @synthesize printTraceToStdout = _printTraceToStdout;
 @synthesize onCrash = _onCrash;
 @synthesize crashReportStore = _crashReportStore;
 @synthesize bundleName = _bundleName;
 @synthesize logFilePath = _logFilePath;
 @synthesize nextCrashID = _nextCrashID;
-@synthesize searchThreadNames = _searchThreadNames;
-@synthesize searchQueueNames = _searchQueueNames;
 @synthesize introspectMemory = _introspectMemory;
-@synthesize doNotIntrospectClasses = _doNotIntrospectClasses;
 @synthesize maxStoredReports = _maxStoredReports;
 @synthesize suspendThreadsForUserReported = _suspendThreadsForUserReported;
 @synthesize reportWhenDebuggerIsAttached = _reportWhenDebuggerIsAttached;
@@ -110,24 +106,6 @@
 // ============================================================================
 #pragma mark - Lifecycle -
 // ============================================================================
-
-- (void)setDemangleLanguages:(BSG_KSCrashDemangleLanguage)demangleLanguages {
-    self.crashReportStore.demangleCPP =
-        (demangleLanguages & BSG_KSCrashDemangleLanguageCPlusPlus) != 0;
-    self.crashReportStore.demangleSwift =
-        (demangleLanguages & BSG_KSCrashDemangleLanguageSwift) != 0;
-}
-
-- (BSG_KSCrashDemangleLanguage)demangleLanguages {
-    BSG_KSCrashDemangleLanguage languages = 0;
-    if (self.crashReportStore.demangleCPP) {
-        languages |= BSG_KSCrashDemangleLanguageCPlusPlus;
-    }
-    if (self.crashReportStore.demangleSwift) {
-        languages |= BSG_KSCrashDemangleLanguageSwift;
-    }
-    return languages;
-}
 
 IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
 
@@ -151,8 +129,6 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
         self.nextCrashID = [NSUUID UUID].UUIDString;
         self.crashReportStore = [BSG_KSCrashReportStore storeWithPath:storePath];
         self.deleteBehaviorAfterSendAll = BSG_KSCDeleteAlways;
-        self.searchThreadNames = NO;
-        self.searchQueueNames = NO;
         self.introspectMemory = YES;
         self.maxStoredReports = 5;
 
@@ -190,11 +166,6 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     _handlingCrashTypes = bsg_kscrash_setHandlingCrashTypes(handlingCrashTypes);
 }
 
-- (void)setDeadlockWatchdogInterval:(double)deadlockWatchdogInterval {
-    _deadlockWatchdogInterval = deadlockWatchdogInterval;
-    bsg_kscrash_setDeadlockWatchdogInterval(deadlockWatchdogInterval);
-}
-
 - (void)setPrintTraceToStdout:(bool)printTraceToStdout {
     _printTraceToStdout = printTraceToStdout;
     bsg_kscrash_setPrintTraceToStdout(printTraceToStdout);
@@ -203,16 +174,6 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
 - (void)setOnCrash:(BSGReportCallback)onCrash {
     _onCrash = onCrash;
     bsg_kscrash_setCrashNotifyCallback(onCrash);
-}
-
-- (void)setSearchThreadNames:(bool)searchThreadNames {
-    _searchThreadNames = searchThreadNames;
-    bsg_kscrash_setSearchThreadNames(searchThreadNames);
-}
-
-- (void)setSearchQueueNames:(bool)searchQueueNames {
-    _searchQueueNames = searchQueueNames;
-    bsg_kscrash_setSearchQueueNames(searchQueueNames);
 }
 
 - (void)setIntrospectMemory:(bool)introspectMemory {
@@ -240,23 +201,6 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
     _writeBinaryImagesForUserReported = writeBinaryImagesForUserReported;
     bsg_kscrash_setWriteBinaryImagesForUserReported(
         writeBinaryImagesForUserReported);
-}
-
-- (void)setDoNotIntrospectClasses:(NSArray *)doNotIntrospectClasses {
-    _doNotIntrospectClasses = doNotIntrospectClasses;
-    size_t count = [doNotIntrospectClasses count];
-    if (count == 0) {
-        bsg_kscrash_setDoNotIntrospectClasses(nil, 0);
-    } else {
-        NSMutableData *data =
-            [NSMutableData dataWithLength:count * sizeof(const char *)];
-        const char **classes = data.mutableBytes;
-        for (size_t i = 0; i < count; i++) {
-            classes[i] = [doNotIntrospectClasses[i]
-                cStringUsingEncoding:NSUTF8StringEncoding];
-        }
-        bsg_kscrash_setDoNotIntrospectClasses(classes, count);
-    }
 }
 
 - (NSString *)crashReportPath {
@@ -369,6 +313,8 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
                                     [self encodeAsJSONString:config],
                                     depth,
                                     terminateProgram);
+
+    free(callstack);
 
     // If bsg_kscrash_reportUserException() returns, we did not terminate.
     // Set up IDs and paths for the next crash.

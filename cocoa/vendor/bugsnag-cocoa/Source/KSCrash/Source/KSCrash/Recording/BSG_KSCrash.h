@@ -70,48 +70,6 @@ typedef enum {
  */
 @property(nonatomic, readwrite, assign) BSG_KSCrashType handlingCrashTypes;
 
-/** Maximum time to allow the main thread to run without returning.
- * If a task occupies the main thread for longer than this interval, the
- * watchdog will consider the queue deadlocked and shut down the app and write a
- * crash report.
- *
- * Warning: Make SURE that nothing in your app that runs on the main thread
- * takes longer to complete than this value or it WILL get shut down! This
- * includes your app startup process, so you may need to push app initialization
- * to another thread, or perhaps set this to a higher value until your
- * application has been fully initialized.
- *
- * WARNING: This is still causing false positives in some cases. Use at own
- * risk!
- *
- * 0 = Disabled.
- *
- * Default: 0
- */
-@property(nonatomic, readwrite, assign) double deadlockWatchdogInterval;
-
-/** If YES, attempt to fetch thread names for each running thread.
- *
- * WARNING: There is a chance that this will deadlock on a thread_lock() call!
- * If that happens, your crash report will be cut short.
- *
- * Enable at your own risk.
- *
- * Default: NO
- */
-@property(nonatomic, readwrite, assign) bool searchThreadNames;
-
-/** If YES, attempt to fetch dispatch queue names for each running thread.
- *
- * WARNING: There is a chance that this will deadlock on a thread_lock() call!
- * If that happens, your crash report will be cut short.
- *
- * Enable at your own risk.
- *
- * Default: NO
- */
-@property(nonatomic, readwrite, assign) bool searchQueueNames;
-
 /** If YES, introspect memory contents during a crash.
  * Any Objective-C objects or C strings near the stack pointer or referenced by
  * cpu registers or exceptions will be recorded in the crash report, along with
@@ -120,15 +78,6 @@ typedef enum {
  * Default: YES
  */
 @property(nonatomic, readwrite, assign) bool introspectMemory;
-
-
-/** List of Objective-C classes that should never be introspected.
- * Whenever a class in this list is encountered, only the class name will be
- * recorded. This can be useful for information security concerns.
- *
- * Default: nil
- */
-@property(nonatomic, readwrite, retain) NSArray *doNotIntrospectClasses;
 
 /** Get the singleton instance of the crash reporter.
  */

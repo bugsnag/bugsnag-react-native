@@ -39,21 +39,9 @@ static NSString *const kCrashReportSuffix = @"-CrashReport-";
 
 #pragma mark Properties
 
-@synthesize demangleSwift = _demangleSwift;
-@synthesize demangleCPP = _demangleCPP;
-
 + (BSG_KSCrashReportStore *)storeWithPath:(NSString *)path {
     return [[self alloc] initWithPath:path
                        filenameSuffix:kCrashReportSuffix];
-}
-
-- (instancetype)initWithPath:(NSString *)path
-              filenameSuffix:(NSString *)filenameSuffix {
-    if ((self = [super initWithPath:path filenameSuffix:filenameSuffix])) {
-        self.demangleCPP = YES;
-        self.demangleSwift = YES;
-    }
-    return self;
 }
 
 - (NSString *)recrashReportFilenameWithID:(NSString *)reportID {

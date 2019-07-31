@@ -33,13 +33,6 @@
  */
 @interface BSG_KSCrashReportStore : BugsnagFileStore
 
-/** If true, demangle any C++ symbols found in stack traces. */
-@property(nonatomic, readwrite, assign) BOOL demangleCPP;
-
-/** If true, demangle any Swift symbols found in stack traces. */
-@property(nonatomic, readwrite, assign) BOOL demangleSwift;
-
-
 + (BSG_KSCrashReportStore *)storeWithPath:(NSString *)path;
 
 

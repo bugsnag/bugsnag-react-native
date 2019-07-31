@@ -54,92 +54,6 @@ typedef enum {
 @synthesize name = _name;
 @synthesize params = _params;
 
-- (NSString *)descriptionForObjCCall {
-    if (![self.name isEqualToString:@"objc_msgSend"]) {
-        return nil;
-    }
-    BSG_KSCrashDoctorParam *receiverParam = self.params[0];
-    NSString *receiver = receiverParam.previousClassName;
-    if (receiver == nil) {
-        receiver = receiverParam.className;
-        if (receiver == nil) {
-            receiver = @"id";
-        }
-    }
-
-    BSG_KSCrashDoctorParam *selectorParam = self.params[1];
-    if (![selectorParam.type isEqualToString:@BSG_KSCrashMemType_String]) {
-        return nil;
-    }
-    NSArray *splitSelector =
-        [selectorParam.value componentsSeparatedByString:@":"];
-    int paramCount = (int)[splitSelector count] - 1;
-
-    NSMutableString *string = [NSMutableString
-            stringWithFormat:@"-[%@ %@", receiver, splitSelector[0]];
-    for (int paramNum = 0; paramNum < paramCount; paramNum++) {
-        [string appendString:@":"];
-        if (paramNum < 2) {
-            BSG_KSCrashDoctorParam *param =
-                    self.params[(NSUInteger) paramNum + 2];
-            if (param.value != nil) {
-                if ([param.type isEqualToString:@BSG_KSCrashMemType_String]) {
-                    [string appendFormat:@"\"%@\"", param.value];
-                } else {
-                    [string appendString:param.value];
-                }
-            } else if (param.previousClassName != nil) {
-                [string appendString:param.previousClassName];
-            } else if (param.className != nil) {
-                [string appendFormat:@"%@ (%@)", param.className,
-                                     param.isInstance ? @"instance" : @"class"];
-            } else {
-                [string appendString:@"?"];
-            }
-        } else {
-            [string appendString:@"?"];
-        }
-        if (paramNum < paramCount - 1) {
-            [string appendString:@" "];
-        }
-    }
-
-    [string appendString:@"]"];
-    return string;
-}
-
-- (NSString *)descriptionWithParamCount:(int)paramCount {
-    NSString *objCCall = [self descriptionForObjCCall];
-    if (objCCall != nil) {
-        return objCCall;
-    }
-
-    if (paramCount > (int)[self.params count]) {
-        paramCount = (int)[self.params count];
-    }
-    NSMutableString *str = [NSMutableString string];
-    [str appendFormat:@"Function: %@\n", self.name];
-    for (int i = 0; i < paramCount; i++) {
-        BSG_KSCrashDoctorParam *param =
-                self.params[(NSUInteger) i];
-        [str appendFormat:@"Param %d:  ", i + 1];
-        if (param.className != nil) {
-            [str appendFormat:@"%@ (%@) ", param.className,
-                              param.isInstance ? @"instance" : @"class"];
-        }
-        if (param.value != nil) {
-            [str appendFormat:@"%@ ", param.value];
-        }
-        if (param.previousClassName != nil) {
-            [str appendFormat:@"(was %@)", param.previousClassName];
-        }
-        if (i < paramCount - 1) {
-            [str appendString:@"\n"];
-        }
-    }
-    return str;
-}
-
 @end
 
 @implementation BSG_KSCrashDoctor
@@ -370,72 +284,10 @@ typedef enum {
     return NO;
 }
 
-- (BSG_KSCrashDoctorFunctionCall *)lastFunctionCall:(NSDictionary *)report {
-    BSG_KSCrashDoctorFunctionCall *function =
-        [[BSG_KSCrashDoctorFunctionCall alloc] init];
-    NSDictionary *lastStackEntry = [self lastStackEntry:report];
-    function.name = lastStackEntry[@BSG_KSCrashField_SymbolName];
-
-    NSDictionary *crashedThread = [self crashedThreadReport:report];
-    NSDictionary *notableAddresses =
-            crashedThread[@BSG_KSCrashField_NotableAddresses];
-    BSG_CPUFamily family = [self cpuFamily:report];
-    NSDictionary *registers =
-        [self basicRegistersFromThreadReport:crashedThread];
-    NSMutableArray *regNames = [NSMutableArray arrayWithCapacity:4];
-    for (int paramIndex = 0; paramIndex <= 3; paramIndex++) {
-        NSString *regName = [self registerNameForFamily:family paramIndex:paramIndex];
-        if (regName.length > 0) {
-            [regNames addObject:regName];
-        }
-    }
-    NSMutableArray *params = [NSMutableArray arrayWithCapacity:4];
-    for (NSString *regName in regNames) {
-        BSG_KSCrashDoctorParam *param = [[BSG_KSCrashDoctorParam alloc] init];
-        param.address =
-            (uintptr_t)[registers[regName] unsignedLongLongValue];
-        NSDictionary *notableAddress = notableAddresses[regName];
-        if (notableAddress == nil) {
-            param.value =
-                [NSString stringWithFormat:@"%p", (void *)param.address];
-        } else {
-            param.type = notableAddress[@BSG_KSCrashField_Type];
-            NSString *className =
-                    notableAddress[@BSG_KSCrashField_Class];
-            NSString *previousClass = notableAddress[@BSG_KSCrashField_LastDeallocObject];
-            NSString *value =
-                    notableAddress[@BSG_KSCrashField_Value];
-
-            if ([param.type isEqualToString:@BSG_KSCrashMemType_String]) {
-                param.value = value;
-            } else if ([param.type
-                           isEqualToString:@BSG_KSCrashMemType_Object]) {
-                param.className = className;
-                param.isInstance = YES;
-            } else if ([param.type isEqualToString:@BSG_KSCrashMemType_Class]) {
-                param.className = className;
-                param.isInstance = NO;
-            }
-            param.previousClassName = previousClass;
-        }
-
-        [params addObject:param];
-    }
-
-    function.params = params;
-    return function;
-}
-
 - (BOOL)isStackOverflow:(NSDictionary *)crashedThreadReport {
     NSDictionary *stack =
             crashedThreadReport[@BSG_KSCrashField_Stack];
     return [stack[@BSG_KSCrashField_Overflow] boolValue];
-}
-
-- (BOOL)isDeadlock:(NSDictionary *)report {
-    NSDictionary *errorReport = [self errorReport:report];
-    NSString *crashType = errorReport[@BSG_KSCrashField_Type];
-    return [@BSG_KSCrashExcType_Deadlock isEqualToString:crashType];
 }
 
 - (NSString *)appendOriginatingCall:(NSString *)string
@@ -453,11 +305,6 @@ typedef enum {
         NSString *lastFunctionName = [self lastInAppStackEntry:report][@BSG_KSCrashField_SymbolName];
         NSDictionary *crashedThreadReport = [self crashedThreadReport:report];
         NSDictionary *errorReport = [self errorReport:report];
-
-        if ([self isDeadlock:report]) {
-            return [NSString stringWithFormat:@"Main thread deadlocked in %@",
-                                              lastFunctionName];
-        }
 
         if ([self isStackOverflow:crashedThreadReport]) {
             return [NSString
