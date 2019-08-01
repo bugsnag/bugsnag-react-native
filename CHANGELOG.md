@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 2.22.4 (2019-08-01)
+
+### Bug fixes
+* (Android) Upgrade to bugsnag-android v4.17.2
+  * Fix potential segfaults when adding breadcrumb with NDK
+    [#546](https://github.com/bugsnag/bugsnag-android/pull/546)
+
 ## 2.22.3 (2019-07-31)
 
 ### Bug fixes
