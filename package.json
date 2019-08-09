@@ -21,7 +21,8 @@
     "cocoa/BugsnagReactNative.{h,m,xcodeproj}",
     "cocoa/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}",
     "cocoa/vendor/bugsnag-cocoa/iOS/{Bugsnag.xcodeproj,Info.plist,module.modulemap}",
-    "BugsnagReactNative.podspec"
+    "BugsnagReactNative.podspec",
+    "react-native.config.js"
   ],
   "scripts": {
     "prepublish": "mkdir -p lib && babel --source-maps --out-dir='lib' --ignore='__tests__' src",
