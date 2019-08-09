@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 2.22.5 (2019-08-09)
+
+This release add a react-native.config.js file to the package to ensure
+continued compatibility with react-native@0.60+. Reported in
+[#377](https://github.com/bugsnag/bugsnag-react-native/issues/377), updated in
+[#392](https://github.com/bugsnag/bugsnag-react-native/pull/392).
+
 ## 2.22.4 (2019-08-01)
 
 ### Bug fixes
