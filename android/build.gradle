@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.1'
+    }
+}
+
+
 apply plugin: 'com.android.library'
 
 def safeExtGet(prop, fallback) {
@@ -5,7 +17,6 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-    buildToolsVersion safeExtGet('buildToolsVersion', '27.0.3')
     compileSdkVersion safeExtGet('compileSdkVersion', 26)
 
     defaultConfig {
@@ -24,7 +35,7 @@ android {
 
 dependencies {
     api 'com.bugsnag:bugsnag-android:4.17.2'
-    implementation 'com.facebook.react:react-native:+'
+    androidTestImplementation 'junit:junit:4.12'
 }
 
 apply plugin: 'checkstyle'
@@ -39,4 +50,21 @@ task("checkstyle", type: Checkstyle) {
     include "**/*.java"
     exclude "**/external/**/*.java"
     classpath = files()
+}
+
+allprojects {
+    dependencies {
+        implementation 'com.facebook.react:react-native:+'
+
+        testImplementation 'junit:junit:4.12'
+        testImplementation 'org.mockito:mockito-core:2.28.2'
+    }
+    repositories {
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/../node_modules/react-native/android"
+        }
+        jcenter()
+        google()
+    }
 }
