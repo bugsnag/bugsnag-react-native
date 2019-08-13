@@ -64,6 +64,7 @@
     "jest": "^21.1.0",
     "standard": "^11.0.0",
     "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "react-native": "^0.59.9"
   }
 }
