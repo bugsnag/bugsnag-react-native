@@ -17,11 +17,11 @@ public class JavaScriptExceptionTest {
     @Test
     public void parseHermesException() throws Exception {
         String stacktrace = "Error: oh\n" +
-                "at anonymous (address at index.android.bundle:6:17468)\n" +
-                "at v (address at index.android.bundle:6:164)\n" +
-                "at d (address at index.android.bundle:2:1474)\n" +
+                "at anonymous (address at index.android.bundle:6:164)\n" +
+                "at v (address at index.android.bundle:2:1474)\n" +
+                "at d (address at index.android.bundle:2:876)\n" +
                 "at o (address at index.android.bundle:1:512)\n" +
-                "at global (address at index.android.bundle:4:352)\n";
+                "at global code (address at index.android.bundle:352:4)\n";
 
         JavaScriptException exc = new JavaScriptException("TypeError", "undefined is not a function", stacktrace);
         JSONObject json = streamToJson(exc);
