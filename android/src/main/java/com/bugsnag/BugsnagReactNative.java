@@ -1,10 +1,12 @@
 package com.bugsnag;
 
+import com.bugsnag.BugsnagReactNative;
 import com.bugsnag.android.BreadcrumbType;
 import com.bugsnag.android.Bugsnag;
 import com.bugsnag.android.Client;
 import com.bugsnag.android.Configuration;
 import com.bugsnag.android.InternalHooks;
+import com.bugsnag.android.JavaScriptException;
 
 import android.content.Context;
 
@@ -27,7 +29,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
     private ReactContext reactContext;
     private String libraryVersion;
     private String bugsnagAndroidVersion;
-    static final Logger logger = Logger.getLogger("bugsnag-react-native");
+    public static final Logger logger = Logger.getLogger("bugsnag-react-native");
 
     public static ReactPackage getPackage() {
         return new BugsnagPackage();
