@@ -31,14 +31,12 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
         writer.name("stacktrace");
         writer.beginArray();
 
-        boolean usesHermes = true;
-        // TODO should pass in global.HermesInternal from the JS layer in init
-
+        boolean isHermes = rawStacktrace.matches("(?s).*\\sat .* \\(.*\\d+:\\d+\\)\\s.*");
         for (String frame : rawStacktrace.split("\\n")) {
-            if (usesHermes) {
-                serialiseHermesFrame(writer, frame);
+            if (isHermes) {
+                serialiseHermesFrame(writer, frame.trim());
             } else {
-                serialiseJsCoreFrame(writer, frame);
+                serialiseJsCoreFrame(writer, frame.trim());
             }
         }
 
@@ -48,7 +46,10 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
 
     private void serialiseJsCoreFrame(JsonStream writer, String frame) throws IOException {
         // expected format is as follows:
-        // "$method@$filename:$lineNumber:$columnNumber\n"
+        //   release:
+        //     "$method@$filename:$lineNumber:$columnNumber"
+        //   dev:
+        //     "$method@?uri:$lineNumber:$columnNumber"
 
         writer.beginObject();
         String[] methodComponents = frame.split("@", 2);
@@ -86,37 +87,38 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
 
     private void serialiseHermesFrame(JsonStream writer, String frame) throws IOException {
         // expected format is as follows:
-        // "at $method (address at $filename:$lineNumber:$columnNumber)\n"
+        //   release
+        //     "at $method (address at $filename:$lineNumber:$columnNumber)"
+        //   dev
+        //     "at $method ($filename:$lineNumber:$columnNumber)"
 
-        int srcInfoStart = frame.lastIndexOf(" ");
+        int srcInfoStart = Math.max(frame.lastIndexOf(" "), frame.lastIndexOf("("));
         int srcInfoEnd = frame.lastIndexOf(")");
         boolean hasSrcInfo = srcInfoStart > -1 && srcInfoStart < srcInfoEnd;
 
         int methodStart = "at ".length();
-        int methodEnd = frame.indexOf(" (address");
+        int methodEnd = frame.indexOf(" (");
         boolean hasMethodInfo = methodStart < methodEnd;
 
         // serialise srcInfo
         if (hasSrcInfo || hasMethodInfo) {
             writer.beginObject();
             writer.name("method").value(frame.substring(methodStart, methodEnd));
-
             if (hasSrcInfo) {
-                String srcInfo = frame.substring(srcInfoStart, srcInfoEnd);
-                String[] data = srcInfo.split(":");
+                String srcInfo = frame.substring(srcInfoStart + 1, srcInfoEnd);
+                String file = srcInfo.replaceFirst(":\\d+:\\d+$", "");
 
-                if (data.length == 3) {
-                    writer.name("file").value(data[0].trim());
+                writer.name("file").value(file);
 
-                    Integer lineNumber = parseIntSafe(data[1]);
-                    Integer columnNumber = parseIntSafe(data[2]);
+                String[] chunks = srcInfo.split(":");
+                Integer lineNumber = parseIntSafe(chunks[chunks.length - 2]);
+                Integer columnNumber = parseIntSafe(chunks[chunks.length - 1]);
 
-                    if (lineNumber != null) {
-                        writer.name("lineNumber").value(lineNumber);
-                    }
-                    if (columnNumber != null) {
-                        writer.name("columnNumber").value(columnNumber);
-                    }
+                if (lineNumber != null) {
+                    writer.name("lineNumber").value(lineNumber);
+                }
+                if (columnNumber != null) {
+                    writer.name("columnNumber").value(columnNumber);
                 }
             }
             writer.endObject();
