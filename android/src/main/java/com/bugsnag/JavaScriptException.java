@@ -1,5 +1,6 @@
-package com.bugsnag;
+package com.bugsnag.android;
 
+import com.bugsnag.BugsnagReactNative;
 import com.bugsnag.android.JsonStream;
 
 import java.io.IOException;
@@ -7,26 +8,28 @@ import java.io.IOException;
 /**
  * Creates a streamable exception with a JavaScript stacktrace
  */
-class JavaScriptException extends Exception implements JsonStream.Streamable {
+public class JavaScriptException extends BugsnagException implements JsonStream.Streamable {
 
     private static final String EXCEPTION_TYPE = "browserjs";
     private static final long serialVersionUID = 1175784680140218622L;
 
-    private final String name;
     private final String rawStacktrace;
 
-    JavaScriptException(String name, String message, String rawStacktrace) {
-        super(message);
-        this.name = name;
+    /**
+     * Constructs a JavaScript exception - intended for internal use only.
+     */
+    public JavaScriptException(String name, String message, String rawStacktrace) {
+        super(name, message, new StackTraceElement[]{}); // stacktrace set later on
+        super.setType(EXCEPTION_TYPE);
         this.rawStacktrace = rawStacktrace;
     }
 
     @Override
     public void toStream(JsonStream writer) throws IOException {
         writer.beginObject();
-        writer.name("errorClass").value(name);
-        writer.name("message").value(getLocalizedMessage());
-        writer.name("type").value(EXCEPTION_TYPE);
+        writer.name("errorClass").value(getName());
+        writer.name("message").value(getMessage());
+        writer.name("type").value(getType());
 
         writer.name("stacktrace");
         writer.beginArray();
