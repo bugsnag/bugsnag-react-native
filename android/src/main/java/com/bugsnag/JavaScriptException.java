@@ -31,7 +31,13 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
         writer.name("stacktrace");
         writer.beginArray();
 
-        boolean isHermes = rawStacktrace.matches("(?s).*\\sat .* \\(.*\\d+:\\d+\\)\\s.*");
+        // this regex matches hermes-style stacktraces containing frames such as
+        //   "    at v (address at index.android.bundle:2:1474)"
+        // and
+        //   "    at verify (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:250:14)"
+        String hermesStacktraceFormatRe = "(?s).*\\sat .* \\(.*\\d+:\\d+\\)\\s.*";
+
+        boolean isHermes = rawStacktrace.matches(hermesStacktraceFormatRe);
         for (String frame : rawStacktrace.split("\\n")) {
             if (isHermes) {
                 serialiseHermesFrame(writer, frame.trim());
@@ -106,19 +112,24 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
             writer.name("method").value(frame.substring(methodStart, methodEnd));
             if (hasSrcInfo) {
                 String srcInfo = frame.substring(srcInfoStart + 1, srcInfoEnd);
-                String file = srcInfo.replaceFirst(":\\d+:\\d+$", "");
+                // matches `:123:34` at the end of a string such as "index.android.bundle:123:34"
+                // so that we can extract just the filename portion "index.android.bundle"
+                String lineColRe = ":\\d+:\\d+$";
+                String file = srcInfo.replaceFirst(lineColRe, "");
 
                 writer.name("file").value(file);
 
                 String[] chunks = srcInfo.split(":");
-                Integer lineNumber = parseIntSafe(chunks[chunks.length - 2]);
-                Integer columnNumber = parseIntSafe(chunks[chunks.length - 1]);
+                if (chunks.length >= 2) {
+                    Integer lineNumber = parseIntSafe(chunks[chunks.length - 2]);
+                    Integer columnNumber = parseIntSafe(chunks[chunks.length - 1]);
 
-                if (lineNumber != null) {
-                    writer.name("lineNumber").value(lineNumber);
-                }
-                if (columnNumber != null) {
-                    writer.name("columnNumber").value(columnNumber);
+                    if (lineNumber != null) {
+                        writer.name("lineNumber").value(lineNumber);
+                    }
+                    if (columnNumber != null) {
+                        writer.name("columnNumber").value(columnNumber);
+                    }
                 }
             }
             writer.endObject();
