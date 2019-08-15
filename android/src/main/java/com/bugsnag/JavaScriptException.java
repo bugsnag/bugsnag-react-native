@@ -125,11 +125,12 @@ class JavaScriptException extends Exception implements JsonStream.Streamable {
         }
     }
 
-    private Integer parseIntSafe(String n) {
+    private Integer parseIntSafe(String maybeInt) {
         try {
-            return Integer.parseInt(n);
+            return Integer.parseInt(maybeInt);
         } catch (NumberFormatException exc) {
-            BugsnagReactNative.logger.info(String.format("Expected an integer, got: '%s'", n));
+            BugsnagReactNative.logger.info(
+                String.format("Expected an integer, got: '%s'", maybeInt));
             return null;
         }
     }

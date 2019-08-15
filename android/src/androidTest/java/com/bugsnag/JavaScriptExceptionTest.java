@@ -1,5 +1,8 @@
 package com.bugsnag;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.bugsnag.android.JsonStream;
 
 import org.json.JSONArray;
@@ -10,21 +13,21 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class JavaScriptExceptionTest {
 
     @Test
     public void parseHermesExceptionRelease() throws Exception {
-        String stacktrace = "Error: oh\n" +
-                "    at anonymous (address at index.android.bundle:6:164)\n" +
-                "    at v (address at index.android.bundle:2:1474)\n" +
-                "    at d (address at index.android.bundle:2:876)\n" +
-                "    at o (address at index.android.bundle:1:512)\n" +
-                "    at global code (address at index.android.bundle:352:4)\n";
+        String stacktrace = "Error: oh\n"
+                + "    at anonymous (address at index.android.bundle:6:164)\n"
+                + "    at v (address at index.android.bundle:2:1474)\n"
+                + "    at d (address at index.android.bundle:2:876)\n"
+                + "    at o (address at index.android.bundle:1:512)\n"
+                + "    at global code (address at index.android.bundle:352:4)\n";
 
-        JavaScriptException exc = new JavaScriptException("TypeError", "undefined is not a function", stacktrace);
+        JavaScriptException exc = new JavaScriptException(
+            "TypeError",
+            "undefined is not a function",
+            stacktrace);
         JSONObject json = streamToJson(exc);
         validateExcJson(json);
         validateStacktraceJsonRelease(json);
@@ -32,14 +35,17 @@ public class JavaScriptExceptionTest {
 
     @Test
     public void parseHermesExceptionDev() throws Exception {
-        String stacktrace = "Error: oh\n" +
-                "    at anonymous (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:1014:20)\n" +
-                "    at loadModuleImplementation (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:250:14)\n" +
-                "    at guardedLoadModule (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:153:47)\n" +
-                "    at metroRequire (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:88:92)\n" +
-                "    at global (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:93532:4)\n";
+        String stacktrace = "Error: oh\n"
+                + "    at anonymous (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:1014:20)\n"
+                + "    at loadModuleImplementation (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:250:14)\n"
+                + "    at guardedLoadModule (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:153:47)\n"
+                + "    at metroRequire (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:88:92)\n"
+                + "    at global (http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:93532:4)\n";
 
-        JavaScriptException exc = new JavaScriptException("TypeError", "undefined is not a function", stacktrace);
+        JavaScriptException exc = new JavaScriptException(
+            "TypeError",
+            "undefined is not a function",
+            stacktrace);
         JSONObject json = streamToJson(exc);
         validateExcJson(json);
         validateStacktraceJsonDev(json);
@@ -47,13 +53,16 @@ public class JavaScriptExceptionTest {
 
     @Test
     public void parseStandardExceptionRelease() throws Exception {
-        String stacktrace = "index.android.bundle:6:164\n" +
-                "v@index.android.bundle:2:1474\n" +
-                "d@index.android.bundle:2:876\n" +
-                "o@index.android.bundle:1:512\n" +
-                "global code@index.android.bundle:352:4\n";
+        String stacktrace = "index.android.bundle:6:164\n"
+                + "v@index.android.bundle:2:1474\n"
+                + "d@index.android.bundle:2:876\n"
+                + "o@index.android.bundle:1:512\n"
+                + "global code@index.android.bundle:352:4\n";
 
-        JavaScriptException exc = new JavaScriptException("TypeError", "undefined is not a function", stacktrace);
+        JavaScriptException exc = new JavaScriptException(
+            "TypeError",
+            "undefined is not a function",
+            stacktrace);
         JSONObject json = streamToJson(exc);
         validateExcJson(json);
         validateStacktraceJsonRelease(json);
@@ -61,13 +70,16 @@ public class JavaScriptExceptionTest {
 
     @Test
     public void parseStandardExceptionDev() throws Exception {
-        String stacktrace = "http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:1014:20\n" +
-                "loadModuleImplementation@http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:250:14\n" +
-                "guardedLoadModule@http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:153:47\n" +
-                "metroRequire@http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:88:92\n" +
-                "global code@http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:93532:4";
+        String stacktrace = "http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:1014:20\n"
+                + "loadModuleImplementation@http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:250:14\n"
+                + "guardedLoadModule@http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:153:47\n"
+                + "metroRequire@http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:88:92\n"
+                + "global code@http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false:93532:4";
 
-        JavaScriptException exc = new JavaScriptException("TypeError", "undefined is not a function", stacktrace);
+        JavaScriptException exc = new JavaScriptException(
+            "TypeError",
+            "undefined is not a function",
+            stacktrace);
         JSONObject json = streamToJson(exc);
         validateExcJson(json);
         validateStacktraceJsonDev(json);
@@ -119,7 +131,7 @@ public class JavaScriptExceptionTest {
         assertEquals("index.android.bundle", frame4.get("file"));
     }
 
-    private void validateStacktraceJsonDev (JSONObject json) throws JSONException {
+    private void validateStacktraceJsonDev(JSONObject json) throws JSONException {
         // validate stacktrace
         JSONArray trace = json.getJSONArray("stacktrace");
         assertEquals(5, trace.length());
@@ -130,7 +142,7 @@ public class JavaScriptExceptionTest {
         assertEquals(20, frame0.get("columnNumber"));
         try {
             assertEquals("anonymous", frame0.get("method"));
-        } catch (JSONException e) {
+        } catch (JSONException ex) {
             // non-hermes stack in dev doesn't give a value for anonymous methods
         }
         assertEquals("http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false", frame0.get("file"));
@@ -160,7 +172,9 @@ public class JavaScriptExceptionTest {
         JSONObject frame4 = trace.getJSONObject(4);
         assertEquals(93532, frame4.get("lineNumber"));
         assertEquals(4, frame4.get("columnNumber"));
-        assertTrue(frame4.get("method").equals("global") || frame4.get("method").equals("global code"));
+        assertTrue(
+            frame4.get("method").equals("global")
+            || frame4.get("method").equals("global code"));
         assertEquals("http://10.0.2.2:8081/index.bundle?platform=android&dev=true&minify=false", frame4.get("file"));
     }
 
