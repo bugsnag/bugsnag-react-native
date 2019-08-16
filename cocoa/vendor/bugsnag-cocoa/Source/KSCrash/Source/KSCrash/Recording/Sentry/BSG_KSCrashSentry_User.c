@@ -25,6 +25,8 @@
 #include "BSG_KSCrashSentry_User.h"
 #include "BSG_KSCrashSentry_Private.h"
 #include "BSG_KSMach.h"
+#include "BSG_KSCrashC.h"
+#include "BSG_KSCrashIdentifier.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
@@ -34,6 +36,9 @@
 
 /** Context to fill with crash information. */
 static BSG_KSCrash_SentryContext *bsg_g_context;
+
+/** Lock for suspending threads from reportUserException() */
+static pthread_mutex_t bsg_suspend_threads_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 bool bsg_kscrashsentry_installUserExceptionHandler(
     BSG_KSCrash_SentryContext *const context) {
@@ -47,6 +52,30 @@ void bsg_kscrashsentry_uninstallUserExceptionHandler(void) {
     bsg_g_context = NULL;
 }
 
+/**
+ * Copies the global crash context, setting new crash report paths
+ */
+BSG_KSCrash_Context *bsg_kscrashsentry_generateReportContext() {
+    BSG_KSCrash_Context *localContext = malloc(sizeof(BSG_KSCrash_Context));
+    memcpy(localContext, crashContext(), sizeof(BSG_KSCrash_Context));
+    localContext->config.crashID = bsg_kscrash_generate_report_identifier();
+    localContext->config.crashReportFilePath =
+        bsg_kscrash_generate_report_path(localContext->config.crashID, false);
+    localContext->config.recrashReportFilePath =
+        bsg_kscrash_generate_report_path(localContext->config.crashID, true);
+
+    return localContext;
+}
+
+/**
+ * Frees a crash context
+ */
+void bsg_kscrashsentry_freeReportContext(BSG_KSCrash_Context *context) {
+    free((void *)context->config.crashID);
+    free((void *)context->config.crashReportFilePath);
+    free((void *)context->config.recrashReportFilePath);
+    free(context);
+}
 
 void bsg_kscrashsentry_reportUserException(const char *name,
                                            const char *reason,
@@ -64,21 +93,23 @@ void bsg_kscrashsentry_reportUserException(const char *name,
         BSG_KSLOG_WARN("User-reported exception sentry is not installed. "
                        "Exception has not been recorded.");
     } else {
+        BSG_KSCrash_Context *reportContext = bsg_kscrashsentry_generateReportContext();
+        BSG_KSCrash_SentryContext *localContext = &reportContext->crash;
+
         // We want these variables to persist until the onCrash
         // call later
         int callstackCount = 100;
         uintptr_t callstack[callstackCount];
-        
-        bsg_kscrashsentry_beginHandlingCrash(bsg_g_context);
 
-        if (bsg_g_context->suspendThreadsForUserReported) {
+        if (localContext->suspendThreadsForUserReported) {
+            pthread_mutex_lock(&bsg_suspend_threads_mutex);
             BSG_KSLOG_DEBUG("Suspending all threads");
             bsg_kscrashsentry_suspendThreads();
         }
 
         if (stackAddresses != NULL && stackLength > 0) {
-            bsg_g_context->stackTrace = stackAddresses;
-            bsg_g_context->stackTraceLength = (int)stackLength;
+            localContext->stackTrace = stackAddresses;
+            localContext->stackTraceLength = (int)stackLength;
         } else {
             BSG_KSLOG_DEBUG("Fetching call stack.");
             callstackCount = backtrace((void **)callstack, callstackCount);
@@ -88,37 +119,41 @@ void bsg_kscrashsentry_reportUserException(const char *name,
                 callstackCount = 0;
             }
             BSG_KSLOG_DEBUG("Filling out stack context entries.");
-            bsg_g_context->stackTrace = callstack;
-            bsg_g_context->stackTraceLength = callstackCount;
+            localContext->stackTrace = callstack;
+            localContext->stackTraceLength = callstackCount;
         }
 
         BSG_KSLOG_DEBUG("Filling out context.");
-        bsg_g_context->crashType = BSG_KSCrashTypeUserReported;
-        bsg_g_context->offendingThread = bsg_ksmachthread_self();
-        bsg_g_context->registersAreValid = false;
-        bsg_g_context->crashReason = reason;
-        bsg_g_context->userException.name = name;
-        bsg_g_context->userException.handledState = handledState;
-        bsg_g_context->userException.overrides = overrides;
-        bsg_g_context->userException.config = config;
-        bsg_g_context->userException.discardDepth = discardDepth;
-        bsg_g_context->userException.metadata = metadata;
-        bsg_g_context->userException.state = appState;
+        localContext->crashType = BSG_KSCrashTypeUserReported;
+        localContext->offendingThread = bsg_ksmachthread_self();
+        localContext->registersAreValid = false;
+        localContext->crashReason = reason;
+        localContext->userException.name = name;
+        localContext->userException.handledState = handledState;
+        localContext->userException.overrides = overrides;
+        localContext->userException.config = config;
+        localContext->userException.discardDepth = discardDepth;
+        localContext->userException.metadata = metadata;
+        localContext->userException.state = appState;
 
         BSG_KSLOG_DEBUG("Calling main crash handler.");
         char errorClass[21];
-        strncpy(errorClass, bsg_g_context->userException.name, sizeof(errorClass));
+        strncpy(errorClass, localContext->userException.name, sizeof(errorClass));
         // default to 'w'arning level severity
         char severityChar = severity != NULL && strlen(severity) > 0 ? severity[0] : 'w';
-        bsg_g_context->onCrash(severityChar, errorClass);
+        localContext->onCrash(severityChar, errorClass, reportContext);
+
+        bsg_kscrashsentry_freeReportContext(reportContext);
 
         if (terminateProgram) {
             bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);
             bsg_kscrashsentry_resumeThreads();
             abort();
         } else {
-            bsg_kscrashsentry_clearContext(bsg_g_context);
             bsg_kscrashsentry_resumeThreads();
+        }
+        if (localContext->suspendThreadsForUserReported) {
+            pthread_mutex_unlock(&bsg_suspend_threads_mutex);
         }
     }
 }

@@ -111,7 +111,7 @@
     if (session) {
         return session;
     } else {
-        if (self.generatedSession) {
+        if (!self.generatedSession) {
             _generatedSession = [NSURLSession
                     sessionWithConfiguration:[NSURLSessionConfiguration
                             defaultSessionConfiguration]];

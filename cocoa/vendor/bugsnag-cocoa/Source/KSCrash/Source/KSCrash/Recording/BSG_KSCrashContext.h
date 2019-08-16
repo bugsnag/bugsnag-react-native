@@ -76,6 +76,16 @@ typedef struct {
      * the report file. Application MUST NOT call async-unsafe methods!
      */
     BSGReportCallback onCrashNotify;
+
+    /**
+     * File path to write the crash report
+     */
+    const char *crashReportFilePath;
+
+    /**
+     * File path to write the recrash report, if the crash reporter crashes
+     */
+    const char *recrashReportFilePath;
 } BSG_KSCrash_Configuration;
 
 /** Contextual data used by the crash report writer.
