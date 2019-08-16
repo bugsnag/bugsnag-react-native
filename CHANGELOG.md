@@ -1,6 +1,18 @@
 Changelog
 =========
 
+## TBD
+
+## Bug fixes
+* Make JavaScriptException inherit from BugsnagException
+  [#393](https://github.com/bugsnag/bugsnag-react-native/pull/393)
+
+* (Android) Upgrade to bugsnag-android v4.18.0
+  * Migrate dependencies to androidx
+  [#554](https://github.com/bugsnag/bugsnag-android/pull/554)
+  * Improve ANR error message information
+    [#553](https://github.com/bugsnag/bugsnag-android/pull/553)
+
 ## 2.22.5 (2019-08-09)
 
 This release add a react-native.config.js file to the package to ensure
