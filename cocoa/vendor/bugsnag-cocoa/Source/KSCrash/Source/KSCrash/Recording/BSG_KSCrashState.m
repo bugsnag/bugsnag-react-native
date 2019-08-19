@@ -358,8 +358,11 @@ void bsg_kscrashstate_notifyAppCrash(BSG_KSCrashType type) {
         state->backgroundDurationSinceLaunch += duration;
         state->backgroundDurationSinceLastCrash += duration;
     }
-    state->crashedThisLaunch |= type != BSG_KSCrashTypeUserReported;
-    bsg_kscrashstate_i_saveState(state, stateFilePath);
+    BOOL didCrash = type != BSG_KSCrashTypeUserReported;
+    state->crashedThisLaunch |= didCrash;
+    if (didCrash) {
+        bsg_kscrashstate_i_saveState(state, stateFilePath);
+    }
 }
 
 const BSG_KSCrash_State *const bsg_kscrashstate_currentState(void) {

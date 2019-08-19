@@ -31,6 +31,7 @@
 
 #include "BSG_KSMach.h"
 #include "BSG_KSSignalInfo.h"
+#include "BSG_KSCrashC.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
@@ -118,7 +119,8 @@ void bsg_kssighndl_i_handleSignal(int sigNum, siginfo_t *signalInfo,
                 errorClass[i] = c;
             }
         }
-        bsg_g_context->onCrash('e', errorClass);
+        
+        bsg_g_context->onCrash('e', errorClass, crashContext());
 
         BSG_KSLOG_DEBUG(
             "Crash handling complete. Restoring original handlers.");

@@ -1,7 +1,11 @@
 Changelog
 =========
 
-## TBD
+## 2.22.6 (2019-08-19)
+
+### Enhancements
+* (Android) Add support for parsing Hermes stacktraces
+  [#394](https://github.com/bugsnag/bugsnag-react-native/pull/394)
 
 ## Bug fixes
 * Make JavaScriptException inherit from BugsnagException
@@ -12,6 +16,11 @@ Changelog
   [#554](https://github.com/bugsnag/bugsnag-android/pull/554)
   * Improve ANR error message information
     [#553](https://github.com/bugsnag/bugsnag-android/pull/553)
+
+* (iOS) Upgrade bugsnag-cocoa to v5.22.5
+  * Fix possible crash or deadlock arising from calling Bugsnag.notify() from
+    multiple queues concurrently.
+    [#401](https://github.com/bugsnag/bugsnag-cocoa/pull/401)
 
 ## 2.22.5 (2019-08-09)
 

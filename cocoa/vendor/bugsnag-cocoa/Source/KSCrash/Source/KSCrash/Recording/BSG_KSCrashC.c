@@ -49,12 +49,6 @@ static volatile sig_atomic_t bsg_g_installed = 0;
 static BSG_KSCrash_Context bsg_g_crashReportContext = {
     .config = {.handlingCrashTypes = BSG_KSCrashTypeProductionSafe}};
 
-/** Path to store the next crash report. */
-static char *bsg_g_crashReportFilePath;
-
-/** Path to store the next crash report (only if the crash manager crashes). */
-static char *bsg_g_recrashReportFilePath;
-
 /** Path to store the state file. */
 static char *bsg_g_stateFilePath;
 
@@ -65,7 +59,7 @@ static const int bsg_filepath_len = 512;
 static const int bsg_error_class_filepath_len = 21;
 static const char bsg_filepath_context_sep = '-';
 
-static inline BSG_KSCrash_Context *crashContext(void) {
+BSG_KSCrash_Context *crashContext(void) {
     return &bsg_g_crashReportContext;
 }
 
@@ -118,10 +112,8 @@ int bsg_create_filepath(char *base, char filepath[bsg_filepath_len], char severi
  *
  * This function gets passed as a callback to a crash handler.
  */
-void bsg_kscrash_i_onCrash(char severity, char *errorClass) {
+void bsg_kscrash_i_onCrash(char severity, char *errorClass, BSG_KSCrash_Context *context) {
     BSG_KSLOG_DEBUG("Updating application state to note crash.");
-
-    BSG_KSCrash_Context *context = crashContext();
 
     bsg_kscrashstate_notifyAppCrash(context->crash.crashType);
 
@@ -131,10 +123,10 @@ void bsg_kscrash_i_onCrash(char severity, char *errorClass) {
 
     if (context->crash.crashedDuringCrashHandling) {
         bsg_kscrashreport_writeMinimalReport(context,
-                                             bsg_g_recrashReportFilePath);
+                                             context->config.recrashReportFilePath);
     } else {
         char filepath[bsg_filepath_len];
-        bsg_create_filepath(bsg_g_crashReportFilePath, filepath, severity, errorClass);
+        bsg_create_filepath((char *)context->config.crashReportFilePath, filepath, severity, errorClass);
         bsg_kscrashreport_writeStandardReport(context, filepath);
     }
 }
@@ -186,11 +178,12 @@ void bsg_kscrash_reinstall(const char *const crashReportFilePath,
     BSG_KSLOG_TRACE("crashID = %s", crashID);
 
     bsg_ksstring_replace((const char **)&bsg_g_stateFilePath, stateFilePath);
-    bsg_ksstring_replace((const char **)&bsg_g_crashReportFilePath,
-                         crashReportFilePath);
-    bsg_ksstring_replace((const char **)&bsg_g_recrashReportFilePath,
-                         recrashReportFilePath);
+
     BSG_KSCrash_Context *context = crashContext();
+    bsg_ksstring_replace((const char **)&context->config.crashReportFilePath,
+                         crashReportFilePath);
+    bsg_ksstring_replace((const char **)&context->config.recrashReportFilePath,
+                         recrashReportFilePath);
     bsg_ksstring_replace(&context->config.crashID, crashID);
 
     if (!bsg_kscrashstate_init(bsg_g_stateFilePath, &context->state)) {
@@ -206,7 +199,7 @@ BSG_KSCrashType bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashType crashTypes) {
     if (bsg_g_installed) {
         bsg_kscrashsentry_uninstall(~crashTypes);
         crashTypes = bsg_kscrashsentry_installWithContext(
-            &context->crash, crashTypes, bsg_kscrash_i_onCrash);
+            &context->crash, crashTypes, (void(*)(char, char *, void *))bsg_kscrash_i_onCrash);
     }
 
     return crashTypes;

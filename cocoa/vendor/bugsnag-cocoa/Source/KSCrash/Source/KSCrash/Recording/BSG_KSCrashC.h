@@ -176,6 +176,11 @@ void bsg_kscrash_setThreadTracingEnabled(bool threadTracingEnabled);
 void bsg_kscrash_setWriteBinaryImagesForUserReported(
     bool writeBinaryImagesForUserReported);
 
+/**
+ * The current crash context
+ */
+BSG_KSCrash_Context *crashContext(void);
+
 #ifdef __cplusplus
 }
 #endif
