@@ -31,6 +31,7 @@ android {
         abortOnError true
         warningsAsErrors true
         baseline file("lint-baseline.xml")
+        disable "GradleDependency", "NewerVersionAvailable"
     }
 }
 
