@@ -1,6 +1,12 @@
 Changelog
 =========
 
+## 2.23.0 (2019-08-27)
+
+* (Android) Upgrade to bugsnag-android v4.19.0
+  * Report internal SDK errors to bugsnag
+    [#570](https://github.com/bugsnag/bugsnag-android/pull/570)
+
 ## 2.22.6 (2019-08-19)
 
 ### Enhancements
