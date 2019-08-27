@@ -3,6 +3,7 @@ package com.bugsnag;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import com.bugsnag.android.JavaScriptException;
 import com.bugsnag.android.JsonStream;
 
 import org.json.JSONArray;
