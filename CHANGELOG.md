@@ -1,6 +1,17 @@
 Changelog
 =========
 
+## 2.23.1 (2019-09-03)
+
+### Bug fixes
+
+* (Android) Upgrade to bugsnag-android v4.19.1
+  * Fix deserialization of custom stackframe fields in cached error reports
+    [#576](https://github.com/bugsnag/bugsnag-android/pull/576)
+
+  * Fix potential null pointer exception if `setMetaData` is called with a null
+    value
+
 ## 2.23.0 (2019-08-27)
 
 * (Android) Upgrade to bugsnag-android v4.19.0
