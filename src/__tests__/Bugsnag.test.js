@@ -54,7 +54,7 @@ test('handleUncaughtErrors(): error handler calls notify(…) correctly', () => 
   c.notify = jest.fn()
   handler(new Error('boom!'), false)
 
-  expect(c.notify).toHaveBeenCalledWith(expect.any(Error), null, true, expect.any(Function), {
+  expect(c.notify).toHaveBeenCalledWith(expect.any(Error), expect.any(Function), true, expect.any(Function), {
     originalSeverity: 'error',
     severityReason: 'unhandledException',
     unhandled: true
