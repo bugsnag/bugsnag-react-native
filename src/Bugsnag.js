@@ -46,7 +46,9 @@ export class Client {
 
       ErrorUtils.setGlobalHandler((error, isFatal) => {
         if (this.config.autoNotify && this.config.shouldNotify()) {
-          this.notify(error, null, true, () => {
+          this.notify(error, (report) => {
+            report.addMetadata('Additional context', 'isFatal', isFatal)
+          }, true, () => {
             if (previousHandler) {
               // Wait 150ms before terminating app, allowing native processing
               // to complete, if any. On iOS in particular, there is no
