@@ -5,6 +5,15 @@ Changelog
 
 ### Bug fixes
 
+* (Android) Upgrade bugsnag-android to v4.20.0
+  * Buffer IO when reading from cached error files, improving SDK performance
+    [bugsnag-android#573](https://github.com/bugsnag/bugsnag-android/pull/573)
+  * Fix `freeDisk` calculation to show free space rather than total space
+    [bugsnag-android#589](https://github.com/bugsnag/bugsnag-android/pull/589)
+  * Fix duplicate reports possibly being sent when many launch crashes are
+    delivered in low connectivity situations
+    [bugsnag-android#593](https://github.com/bugsnag/bugsnag-android/pull/593)
+
 * (iOS) Upgrade bugsnag-cocoa to v5.22.6
   * Ensure UIKit APIs are not called from background threads when
     initializing only in the JavaScript layer when using `react-native@0.60+`
