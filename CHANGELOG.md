@@ -1,6 +1,20 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* (iOS) Upgrade bugsnag-cocoa to v5.22.6
+  * Ensure UIKit APIs are not called from background threads when
+    initializing only in the JavaScript layer when using `react-native@0.60+`
+    [#396](https://github.com/bugsnag/bugsnag-react-native/issues/396)
+  * Fix bug in `notifyReleaseStages` where if the release stage of a build was
+    changed after `start()`, only the initial value was used to determine whether
+    to send a report
+    [bugsnag-cocoa#405](https://github.com/bugsnag/bugsnag-cocoa/issues/405)
+    [bugsnag-cocoa#412](https://github.com/bugsnag/bugsnag-cocoa/issues/412)
+
 ## 2.23.1 (2019-09-03)
 
 ### Bug fixes

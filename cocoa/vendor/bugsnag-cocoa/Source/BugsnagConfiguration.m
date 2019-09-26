@@ -143,6 +143,22 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
     }
 }
 
+@synthesize autoNotify = _autoNotify;
+
+- (BOOL)autoNotify {
+    return _autoNotify;
+}
+
+- (void)setAutoNotify:(BOOL)shouldAutoNotify {
+    if (shouldAutoNotify == _autoNotify) {
+        return;
+    }
+    [self willChangeValueForKey:NSStringFromSelector(@selector(autoNotify))];
+    _autoNotify = shouldAutoNotify;
+    [[Bugsnag notifier] updateCrashDetectionSettings];
+    [self didChangeValueForKey:NSStringFromSelector(@selector(autoNotify))];
+}
+
 @synthesize notifyReleaseStages = _notifyReleaseStages;
 
 - (NSArray *)notifyReleaseStages {

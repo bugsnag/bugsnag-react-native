@@ -90,17 +90,17 @@ NSDictionary *BSGParseApp(NSDictionary *report) {
     return appState;
 }
 
-NSDictionary *BSGParseAppState(NSDictionary *report, NSString *preferredVersion) {
+NSDictionary *BSGParseAppState(NSDictionary *report, NSString *preferredVersion, NSString *releaseStage, NSString *codeBundleId) {
     NSMutableDictionary *app = [NSMutableDictionary dictionary];
 
     NSString *version = preferredVersion ?: report[@"CFBundleShortVersionString"];
 
     BSGDictSetSafeObject(app, report[@"CFBundleVersion"], @"bundleVersion");
-    BSGDictSetSafeObject(app, [Bugsnag configuration].releaseStage,
+    BSGDictSetSafeObject(app, releaseStage,
                          BSGKeyReleaseStage);
     BSGDictSetSafeObject(app, version, BSGKeyVersion);
     
-    BSGDictSetSafeObject(app, [Bugsnag configuration].codeBundleId, @"codeBundleId");
+    BSGDictSetSafeObject(app, codeBundleId, @"codeBundleId");
     
     NSString *notifierType;
 #if TARGET_OS_TV

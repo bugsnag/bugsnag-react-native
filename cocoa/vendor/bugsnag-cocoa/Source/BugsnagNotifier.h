@@ -121,4 +121,8 @@
  */
 - (void)updateAutomaticBreadcrumbDetectionSettings;
 
+/**
+ * Enable or disable crash reporting based on configuration state
+ */
+- (void)updateCrashDetectionSettings;
 @end

@@ -102,6 +102,14 @@ NSString *BSGParseErrorMessage(NSDictionary *report, NSDictionary *error,
     return error[BSGKeyReason] ?: @"";
 }
 
+id BSGLoadConfigValue(NSDictionary *report, NSString *valueName) {
+    NSString *keypath = [NSString stringWithFormat:@"user.config.%@", valueName];
+    NSString *fallbackKeypath = [NSString stringWithFormat:@"user.config.config.%@", valueName];
+
+    return [report valueForKeyPath:keypath]
+    ?: [report valueForKeyPath:fallbackKeypath]; // some custom values are nested
+}
+
 NSString *BSGParseContext(NSDictionary *report, NSDictionary *metaData) {
     id context = [report valueForKeyPath:@"user.overrides.context"];
     if ([context isKindOfClass:[NSString class]])
@@ -109,7 +117,7 @@ NSString *BSGParseContext(NSDictionary *report, NSDictionary *metaData) {
     context = metaData[BSGKeyContext];
     if ([context isKindOfClass:[NSString class]])
         return context;
-    context = [report valueForKeyPath:@"user.config.context"];
+    context = BSGLoadConfigValue(report, @"context");
     if ([context isKindOfClass:[NSString class]])
         return context;
     return nil;
@@ -132,7 +140,7 @@ NSArray *BSGParseBreadcrumbs(NSDictionary *report) {
 
 NSString *BSGParseReleaseStage(NSDictionary *report) {
     return [report valueForKeyPath:@"user.overrides.releaseStage"]
-               ?: [report valueForKeyPath:@"user.config.releaseStage"];
+               ?: BSGLoadConfigValue(report, @"releaseStage");
 }
 
 BSGSeverity BSGParseSeverity(NSString *severity) {
@@ -253,8 +261,7 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
             }
         } else {
             FallbackReportData *fallback = [[FallbackReportData alloc] initWithMetadata:metadata];
-            _notifyReleaseStages =
-                [report valueForKeyPath:@"user.config.notifyReleaseStages"];
+            _notifyReleaseStages = BSGLoadConfigValue(report, @"notifyReleaseStages");
             _releaseStage = BSGParseReleaseStage(report);
             _incomplete = report.count == 0;
             _threads = [report valueForKeyPath:@"crash.threads"];
@@ -276,7 +283,10 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
             _deviceState = BSGParseDeviceState(report);
             _device = BSGParseDevice(report);
             _app = BSGParseApp(report);
-            _appState = BSGParseAppState(report[BSGKeySystem], [report valueForKeyPath:@"user.config.appVersion"]);
+            _appState = BSGParseAppState(report[BSGKeySystem],
+                                         BSGLoadConfigValue(report, @"appVersion"),
+                                         _releaseStage, // Already loaded from config
+                                         BSGLoadConfigValue(report, @"codeBundleId"));
             _groupingHash = BSGParseGroupingHash(report, _metaData);
             _overrides = [report valueForKeyPath:@"user.overrides"];
             _customException = BSGParseCustomException(report, [_errorClass copy],

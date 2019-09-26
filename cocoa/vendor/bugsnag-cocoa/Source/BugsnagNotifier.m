@@ -35,6 +35,7 @@
 #import "BugsnagSessionTracker.h"
 #import "BSGOutOfMemoryWatchdog.h"
 #import "BSG_RFC3339DateTool.h"
+#import "BSG_KSCrashC.h"
 #import "BSG_KSCrashType.h"
 #import "BSG_KSCrashState.h"
 #import "BSG_KSSystemInfo.h"
@@ -46,7 +47,7 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.22.5";
+NSString *const NOTIFIER_VERSION = @"5.22.6";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSAttributeDepth = @"depth";
@@ -803,6 +804,21 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     }
 }
 #endif
+
+- (void)updateCrashDetectionSettings {
+    if (self.configuration.autoNotify) {
+        // Enable all crash detection
+        bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeAll);
+        if (self.configuration.reportOOMs) {
+            [self.oomWatchdog enable];
+        }
+    } else {
+        // Only enable support for notify()-based reports
+        bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeUserReported);
+        // autoNotify gates all unhandled report detection
+        [self.oomWatchdog disable];
+    }
+}
 
 - (void)updateAutomaticBreadcrumbDetectionSettings {
     if ([self.configuration automaticallyCollectBreadcrumbs]) {

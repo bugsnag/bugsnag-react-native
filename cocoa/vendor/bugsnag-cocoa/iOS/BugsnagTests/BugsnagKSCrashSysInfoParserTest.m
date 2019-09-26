@@ -50,4 +50,46 @@ NSNumber * _Nullable BSGDeviceFreeSpace(NSSearchPathDirectory directory);
     XCTAssertNil(freeBytes, @"expect nil when fails to retrieve free space for the directory");
 }
 
+- (void)testParseAppInfo {
+    NSDictionary *rawInfo = @{
+        @"CFBundleShortVersionString":@"4.1.1",
+        @"CFBundleVersion":@"4.1.1.2362",
+        @"extra":@"foo",
+    };
+    NSDictionary *state = BSGParseAppState(rawInfo, nil, @"prod", nil);
+    XCTAssertEqual(state.count, 5);
+    XCTAssertEqualObjects(state[@"releaseStage"], @"prod");
+    XCTAssertEqualObjects(state[@"version"], @"4.1.1");
+    XCTAssertEqualObjects(state[@"bundleVersion"], @"4.1.1.2362");
+    XCTAssertEqual(state[@"codeBundleId"], [NSNull null]);
+#if TARGET_OS_TV
+    XCTAssertEqualObjects(state[@"type"], @"tvOS");
+#elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
+    XCTAssertEqualObjects(state[@"type"], @"iOS");
+#elif TARGET_OS_MAC
+    XCTAssertEqualObjects(state[@"type"], @"macOS");
+#endif
+}
+
+- (void)testParseAppInfoPreferredValues {
+    NSDictionary *rawInfo = @{
+        @"CFBundleShortVersionString":@"4.1.1",
+        @"CFBundleVersion":@"4.1.1.2362",
+        @"extra":@"foo",
+    };
+    NSDictionary *state = BSGParseAppState(rawInfo, @"2.0", @"prod", @"4.2.0-cbd");
+    XCTAssertEqual(state.count, 5);
+    XCTAssertEqualObjects(state[@"releaseStage"], @"prod");
+    XCTAssertEqualObjects(state[@"version"], @"2.0");
+    XCTAssertEqualObjects(state[@"bundleVersion"], @"4.1.1.2362");
+    XCTAssertEqualObjects(state[@"codeBundleId"], @"4.2.0-cbd");
+#if TARGET_OS_TV
+    XCTAssertEqualObjects(state[@"type"], @"tvOS");
+#elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
+    XCTAssertEqualObjects(state[@"type"], @"iOS");
+#elif TARGET_OS_MAC
+    XCTAssertEqualObjects(state[@"type"], @"macOS");
+#endif
+}
+
 @end
