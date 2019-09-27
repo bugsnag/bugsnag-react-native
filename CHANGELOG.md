@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* Use the correct android version in Notifier payload
+  [bugsnag-react-native#409](https://github.com/bugsnag/bugsnag-react-native/pull/409)
+
 ## 2.23.2 (2019-09-26)
 
 ### Bug fixes
