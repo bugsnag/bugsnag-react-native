@@ -7,6 +7,7 @@ import com.bugsnag.android.Client;
 import com.bugsnag.android.Configuration;
 import com.bugsnag.android.InternalHooks;
 import com.bugsnag.android.JavaScriptException;
+import com.bugsnag.android.Notifier;
 
 import android.content.Context;
 
@@ -120,7 +121,7 @@ public class BugsnagReactNative extends ReactContextBaseJavaModule {
         }
         Client client = getClient(apiKey);
         libraryVersion = options.getString("version");
-        bugsnagAndroidVersion = client.getClass().getPackage().getSpecificationVersion();
+        bugsnagAndroidVersion = Notifier.getInstance().getVersion();
         configureRuntimeOptions(client, options);
         InternalHooks.configureClient(client);
 
