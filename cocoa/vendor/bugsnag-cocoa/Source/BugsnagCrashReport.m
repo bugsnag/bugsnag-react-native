@@ -384,7 +384,7 @@ initWithErrorName:(NSString *_Nonnull)name
        toTabWithName:(NSString *)tabName {
     NSMutableDictionary *allMetadata = [self.metaData mutableCopy];
     NSMutableDictionary *allTabData =
-        allMetadata[tabName] ?: [NSMutableDictionary new];
+        [allMetadata[tabName] mutableCopy] ?: [NSMutableDictionary new];
     if (value) {
         id cleanedValue = BSGSanitizeObject(value);
         if (!cleanedValue) {

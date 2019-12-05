@@ -33,6 +33,6 @@
 @interface BugsnagSink : NSObject <BSG_KSCrashReportFilter>
 
 - (instancetype)initWithApiClient:(BugsnagErrorReportApiClient *)apiClient;
-@property(nonatomic) BugsnagErrorReportApiClient *apiClient;
+@property(nonatomic, strong) BugsnagErrorReportApiClient *apiClient;
 
 @end

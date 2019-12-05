@@ -26,6 +26,7 @@
 
 #import "BugsnagSink.h"
 #import "Bugsnag.h"
+#import "BugsnagLogger.h"
 #import "BugsnagCollections.h"
 #import "BugsnagNotifier.h"
 #import "BugsnagKeys.h"
@@ -101,9 +102,13 @@
             continue;
         BOOL shouldSend = YES;
         for (BugsnagBeforeSendBlock block in configuration.beforeSendBlocks) {
-            shouldSend = block(report, bugsnagReport);
-            if (!shouldSend)
-                break;
+            @try {
+                shouldSend = block(report, bugsnagReport);
+                if (!shouldSend)
+                    break;
+            } @catch (NSException *exception) {
+                bsg_log_err(@"Error from beforeSend callback: %@", exception);
+            }
         }
         if (shouldSend) {
             [bugsnagReports addObject:bugsnagReport];

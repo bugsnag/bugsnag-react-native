@@ -68,7 +68,6 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
         _breadcrumbs = [BugsnagBreadcrumbs new];
         _automaticallyCollectBreadcrumbs = YES;
         _shouldAutoCaptureSessions = YES;
-        _reportBackgroundOOMs = NO;
 #if !DEBUG
         _reportOOMs = YES;
 #endif

@@ -30,10 +30,14 @@
 #include "BSG_KSJSONCodec.h"
 #include "BSG_KSJSONCodecObjC.h"
 #include "BSG_KSMach.h"
+#include "BSG_KSSystemInfo.h"
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
 
+#if (TARGET_OS_TV || TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+#import <UIKit/UIKit.h>
+#endif
 #include <errno.h>
 #include <fcntl.h>
 #include <mach/mach_time.h>
@@ -298,7 +302,14 @@ bool bsg_kscrashstate_init(const char *const stateFilePath,
     // Simulate first transition to foreground
     state->launchesSinceLastCrash++;
     state->sessionsSinceLastCrash++;
+#if (TARGET_OS_TV || TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+    // On iOS/tvOS, the app may have launched in the background due to a fetch
+    // event or notification
+    UIApplicationState appState = [BSG_KSSystemInfo currentAppState];
+    state->applicationIsInForeground = [BSG_KSSystemInfo isInForeground:appState];
+#else
     state->applicationIsInForeground = true;
+#endif
 
     return bsg_kscrashstate_i_saveState(state, stateFilePath);
 }

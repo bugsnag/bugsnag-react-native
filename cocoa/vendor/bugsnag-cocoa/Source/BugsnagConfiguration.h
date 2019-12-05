@@ -166,9 +166,10 @@ NSArray<BeforeSendSession> *beforeSendSessionBlocks;
 
 /**
  * Whether the app should report out of memory events which terminate the app
- * while the app is in the background. This setting has no effect when reportOOMs is NO.
+ * while the app is in the background. Setting this property has no effect.
  */
-@property BOOL reportBackgroundOOMs;
+@property BOOL reportBackgroundOOMs
+__deprecated_msg("This detection option is unreliable and should no longer be used.");
 
 /**
  * Retrieves the endpoint used to notify Bugsnag of errors

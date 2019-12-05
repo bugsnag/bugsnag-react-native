@@ -14,6 +14,25 @@ Changelog
     [bugsnag-android#609](https://github.com/bugsnag/bugsnag-android/pull/609)
   * Prevent internal error reporting of FileNotFoundException during serialization
     [bugsnag-android#605](https://github.com/bugsnag/bugsnag-android/pull/605)
+* (iOS) Upgrade bugsnag-cocoa to v5.22.10
+  * Fix unrecognized selector crash when adding metadata
+    [bugsnag-cocoa#430](https://github.com/bugsnag/bugsnag-cocoa/pull/430)
+  * Deprecate `config.reportBackgroundOOMs` property - designating any app
+    termination as a possible error condition can cause a lot of false positives,
+    especially since the app can die for many genuine reasons, especially when
+    running only in the background.
+    [bugsnag-cocoa#425](https://github.com/bugsnag/bugsnag-cocoa/pull/425)
+  * Fix use-after-free in `notify()` logic which could lead to a deadlock
+    [bugsnag-cocoa#420](https://github.com/bugsnag/bugsnag-cocoa/pull/420)
+  * Reduce severity of log message about thread status from 'error' to 'debug' as
+    it does not necessarily indicate a problem and is only used for debugging.
+    [bugsnag-cocoa#421](https://github.com/bugsnag/bugsnag-cocoa/pull/421)
+  * Show correct value for `app.inForeground` when an app launches and crashes in
+    the background without ever coming to the foreground.
+    [bugsnag-cocoa#415](https://github.com/bugsnag/bugsnag-cocoa/pull/415)
+  * Fix improperly retained properties which could result in a crash due to
+    premature deallocation
+    [bugsnag-cocoa#416](https://github.com/bugsnag/bugsnag-cocoa/pull/416)
 
 ## 2.23.2 (2019-09-26)
 

@@ -56,6 +56,9 @@
 #define BSG_KSSystemField_BuildType "build_type"
 
 #import <Foundation/Foundation.h>
+#if TARGET_OS_TV || TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#endif
 
 /**
  * Provides system information useful for a crash report.
@@ -77,5 +80,14 @@
  * Whether the current main bundle is an iOS app extension
  */
 + (BOOL)isRunningInAppExtension;
+
+#if TARGET_OS_TV || TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
++ (UIApplicationState)currentAppState;
+
+/**
+ * YES if the app is currently shown in the foreground
+ */
++ (BOOL)isInForeground:(UIApplicationState)state;
+#endif
 
 @end

@@ -143,8 +143,6 @@ void bsg_kscrashsentry_reportUserException(const char *name,
         char severityChar = severity != NULL && strlen(severity) > 0 ? severity[0] : 'w';
         localContext->onCrash(severityChar, errorClass, reportContext);
 
-        bsg_kscrashsentry_freeReportContext(reportContext);
-
         if (terminateProgram) {
             bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);
             bsg_kscrashsentry_resumeThreads();
@@ -155,5 +153,7 @@ void bsg_kscrashsentry_reportUserException(const char *name,
         if (localContext->suspendThreadsForUserReported) {
             pthread_mutex_unlock(&bsg_suspend_threads_mutex);
         }
+
+        bsg_kscrashsentry_freeReportContext(reportContext);
     }
 }

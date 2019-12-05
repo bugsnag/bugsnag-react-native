@@ -35,12 +35,12 @@
 
 @property(nonatomic, readwrite, retain)
     BugsnagConfiguration *_Nullable configuration;
-@property(nonatomic, readwrite, retain) BugsnagMetaData *_Nonnull state;
-@property(nonatomic, readwrite, retain) NSDictionary *_Nonnull details;
-@property(nonatomic, readwrite, retain) NSLock *_Nonnull metaDataLock;
-@property(nonatomic, readonly) BugsnagSessionTracker *_Nonnull sessionTracker;
+@property(nonatomic, readwrite, strong) BugsnagMetaData *_Nonnull state;
+@property(nonatomic, readwrite, strong) NSDictionary *_Nonnull details;
+@property(nonatomic, readwrite, strong) NSLock *_Nonnull metaDataLock;
+@property(nonatomic, readonly, strong) BugsnagSessionTracker *_Nonnull sessionTracker;
 
-@property(nonatomic) BSGConnectivity *_Nonnull networkReachable;
+@property(nonatomic, strong) BSGConnectivity *_Nonnull networkReachable;
 @property(readonly) BOOL started;
 
 - (instancetype _Nonnull)initWithConfiguration:

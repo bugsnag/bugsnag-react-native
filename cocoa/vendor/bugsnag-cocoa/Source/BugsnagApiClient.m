@@ -13,7 +13,7 @@
 @end
 
 @interface BugsnagApiClient()
-@property (nonatomic) NSURLSession *generatedSession;
+@property (nonatomic, strong) NSURLSession *generatedSession;
 @end
 
 @implementation BugsnagApiClient
