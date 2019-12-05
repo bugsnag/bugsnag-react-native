@@ -7,6 +7,13 @@ Changelog
 
 * Use the correct android version in Notifier payload
   [bugsnag-react-native#409](https://github.com/bugsnag/bugsnag-react-native/pull/409)
+* (Android) Upgrade bugsnag-android to v4.21.1
+  * Allow overriding the versionCode via Configuration
+    [bugsnag-android#610](https://github.com/bugsnag/bugsnag-android/pull/610)
+  * Delete cached error reports if an Exception is thrown during disk IO, preventing delivery of empty/partial reports on the next app launch.
+    [bugsnag-android#609](https://github.com/bugsnag/bugsnag-android/pull/609)
+  * Prevent internal error reporting of FileNotFoundException during serialization
+    [bugsnag-android#605](https://github.com/bugsnag/bugsnag-android/pull/605)
 
 ## 2.23.2 (2019-09-26)
 
