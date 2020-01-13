@@ -20,6 +20,7 @@
     "android",
     "cocoa/BugsnagReactNative.{h,m,xcodeproj}",
     "cocoa/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}",
+    "cocoa/vendor/bugsnag-cocoa/Configurations/Config.xcconfig",
     "cocoa/vendor/bugsnag-cocoa/iOS/{Bugsnag.xcodeproj,Info.plist,module.modulemap}",
     "BugsnagReactNative.podspec",
     "react-native.config.js"

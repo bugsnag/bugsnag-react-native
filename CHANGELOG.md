@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* (iOS) Fix a packaging issue introduced in 2.23.3 which prevented apps using
+  React Native 0.59 and below from building successfully
+
 ## 2.23.4 (2020-01-06)
 
 ### Bug fixes
