@@ -44,46 +44,48 @@ jobs:
         -
     - stage: build
       language: objective-c
+      env:
+        - REACT_NATIVE_VERSION=0.53.0
+      name: React Native 0.53.0
       os: osx
       osx_image: xcode10
       cache:
         - bundler
-        - cocoapods
-      xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
-      xcode_scheme: BugsnagReactNative
       install:
-        - brew install yarn
-      before_script:
         - npm install
         - npm install babel-cli
+      before_script:
         - PATH="node_modules/bin:$PATH" && npm pack
       script:
-        - cd examples/plain
-        - yarn add ../../bugsnag-react-native-*.tgz
-        - yarn install
-        - ./node_modules/.bin/react-native link
-        - cd ios
-        - xcodebuild -project BugsnagReactNativeExample.xcodeproj -scheme BugsnagReactNativeExample build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -UseModernBuildSystem=NO -quiet
+        - ./test/test-react-native-link-build.sh
     - stage: build
       language: objective-c
+      env:
+        - REACT_NATIVE_VERSION=0.59.10
+      name: React Native 0.59.10
       os: osx
-      osx_image: xcode9.2
+      osx_image: xcode10
       cache:
         - bundler
-        - cocoapods
-      xcode_project: ./cocoa/BugsnagReactNative.xcodeproj
-      xcode_scheme: BugsnagReactNative
       install:
-        - brew install yarn
-      before_script:
         - npm install
         - npm install babel-cli
+      before_script:
         - PATH="node_modules/bin:$PATH" && npm pack
       script:
-        - cd examples/plain
-        - yarn add react-native@0.53.0
-        - yarn add ../../bugsnag-react-native-*.tgz
-        - yarn install
-        - ./node_modules/.bin/react-native link
-        - cd ios
-        - xcodebuild -project BugsnagReactNativeExample.xcodeproj -scheme BugsnagReactNativeExample build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -UseModernBuildSystem=NO -quiet
+        - ./test/test-react-native-link-build.sh
+    - stage: build
+      language: objective-c
+      name: React Native 0.61.5
+      os: osx
+      osx_image: xcode11
+      cache:
+        - bundler
+      install:
+        - npm install
+        - npm install babel-cli
+        - gem install cocoapods
+      before_script:
+        - PATH="node_modules/bin:$PATH" && npm pack
+      script:
+        - ./test/test-react-native-pod-build.sh
