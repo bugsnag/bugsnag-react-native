@@ -8,6 +8,44 @@ Changelog
 * Add missing argument to `BeforeSend` type definition
   [bugsnag-react-native#432](https://github.com/bugsnag/bugsnag-react-native/pull/432)
 
+## 2.23.5 (2020-01-13)
+
+### Bug fixes
+
+* (iOS) Fix a packaging issue introduced in 2.23.3 which prevented apps using
+  React Native 0.59 and below from building successfully
+  [#441](https://github.com/bugsnag/bugsnag-react-native/pull/441)
+
+
+## 2.23.4 (2020-01-06)
+
+### Bug fixes
+
+* (Android) Upgrade bugsnag-android to v4.22.2
+  * Fix: address CVE-2019-10101 by increasing Kotlin version to 1.3.61
+    [#739](https://github.com/bugsnag/bugsnag-android/pull/739)
+  * Catch throwables when invoking methods on system services
+    [#623](https://github.com/bugsnag/bugsnag-android/pull/623)
+  * Fix possible crash when recording reports and breadcrumbs containing values
+    using different text encodings or UTF-8 control characters, followed by a 
+    C/C++ crash.
+    [#584](https://github.com/bugsnag/bugsnag-android/pull/584)
+  * Fix crash when calling `NativeInterface.clearTab()` (from an integration
+    library)
+    [#582](https://github.com/bugsnag/bugsnag-android/pull/582)
+  * Fix abort() in native code when storing breadcrumbs with null values in
+    metadata
+    [#510](https://github.com/bugsnag/bugsnag-android/pull/510)
+  * Fix potential segfaults when adding breadcrumb with NDK
+    [#546](https://github.com/bugsnag/bugsnag-android/pull/546)
+  * Convert metadata to map when notifying the NDK observer
+    [#513](https://github.com/bugsnag/bugsnag-android/pull/513)
+  * Prevent overwrite of signal mask when installing ANR handler
+    [#520](https://github.com/bugsnag/bugsnag-android/pull/520)
+  * Fix possible null pointer exception when creating a breadcrumb without
+    metadata
+    [#585](https://github.com/bugsnag/bugsnag-android/pull/585)
+
 ## 2.23.3 (2019-12-05)
 
 ### Bug fixes

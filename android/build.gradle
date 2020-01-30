@@ -23,7 +23,7 @@ android {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 28)
         versionCode 4
-        versionName '2.23.3'
+        versionName '2.23.5'
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    api 'com.bugsnag:bugsnag-android:4.21.1'
+    api 'com.bugsnag:bugsnag-android:4.22.2'
     implementation 'com.facebook.react:react-native:+'
 
     androidTestImplementation 'junit:junit:4.12'
