@@ -69,8 +69,7 @@ NSMutableDictionary *BSGFormatFrame(NSDictionary *frame,
 }
 
 NSString *_Nonnull BSGParseErrorClass(NSDictionary *error,
-                                      NSString *errorType,
-                                      NSString *fallbackValue) {
+                                      NSString *errorType) {
     NSString *errorClass;
 
     if ([errorType isEqualToString:BSGKeyCppException]) {
@@ -86,7 +85,7 @@ NSString *_Nonnull BSGParseErrorClass(NSDictionary *error,
     }
 
     if (!errorClass) { // use a default value
-        errorClass = fallbackValue.length > 0 ? fallbackValue : @"Exception";
+        errorClass = @"Exception";
     }
     return errorClass;
 }
@@ -192,13 +191,6 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
 - (instancetype)initWithClass:(NSString *_Nonnull)errorClass message:(NSString *_Nonnull)errorMessage NS_DESIGNATED_INITIALIZER;
 @end
 
-@interface FallbackReportData : NSObject
-@property (nonatomic, strong) NSString *errorClass;
-@property (nonatomic, getter=isUnhandled) BOOL unhandled;
-@property (nonatomic) BSGSeverity severity;
-- (instancetype)initWithMetadata:(NSString *)metadata;
-@end
-
 @interface BugsnagCrashReport ()
 
 /**
@@ -232,17 +224,21 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
 
 @implementation BugsnagCrashReport
 
-- (instancetype)initWithKSReport:(NSDictionary *)report {
-    return [self initWithKSReport:report fileMetadata:@""];
-}
-
 - (instancetype)initWithKSReport:(NSDictionary *)report
                     fileMetadata:(NSString *)metadata {
+    return [self initWithKSReport:report];
+}
+
+- (instancetype)initWithKSReport:(NSDictionary *)report {
+    if (report.count == 0) {
+        return nil; // report is empty
+    }
+
     if (self = [super init]) {
         _error = [report valueForKeyPath:@"crash.error"];
         _errorType = _error[BSGKeyType];
         if ([[report valueForKeyPath:@"user.state.didOOM"] boolValue]) {
-            _errorClass = BSGParseErrorClass(_error, _errorType, nil);
+            _errorClass = BSGParseErrorClass(_error, _errorType);
             _errorMessage = BSGParseErrorMessage(report, _error, _errorType);
             _breadcrumbs = [report valueForKeyPath:@"user.state.oom.breadcrumbs"];
             _app = [report valueForKeyPath:@"user.state.oom.app"];
@@ -260,17 +256,15 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
                 }
             }
         } else {
-            FallbackReportData *fallback = [[FallbackReportData alloc] initWithMetadata:metadata];
             _notifyReleaseStages = BSGLoadConfigValue(report, @"notifyReleaseStages");
             _releaseStage = BSGParseReleaseStage(report);
-            _incomplete = report.count == 0;
             _threads = [report valueForKeyPath:@"crash.threads"];
             RegisterErrorData *data = [RegisterErrorData errorDataFromThreads:_threads];
             if (data) {
-                _errorClass = data.errorClass ?: fallback.errorClass;
+                _errorClass = data.errorClass ;
                 _errorMessage = data.errorMessage;
             } else {
-                _errorClass = BSGParseErrorClass(_error, _errorType, fallback.errorClass);
+                _errorClass = BSGParseErrorClass(_error, _errorType);
                 _errorMessage = BSGParseErrorMessage(report, _error, _errorType);
             }
             _binaryImages = report[@"binary_images"];
@@ -302,7 +296,7 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
                 // only makes sense to use serialised value for handled exceptions
                 _depth = [[report valueForKeyPath:@"user.depth"]
                         unsignedIntegerValue];
-            } else if (_errorType != nil) { // the event was unhandled.
+            } else { // the event was unhandled.
                 BOOL isSignal = [BSGKeySignal isEqualToString:_errorType];
                 SeverityReasonType severityReason =
                     isSignal ? Signal : UnhandledException;
@@ -311,11 +305,6 @@ static NSString *const DEFAULT_EXCEPTION_TYPE = @"cocoa";
                                           severity:BSGSeverityError
                                          attrValue:_errorClass];
                 _depth = 0;
-            } else { // Incomplete report
-                SeverityReasonType severityReason = [fallback isUnhandled] ? UnhandledException : HandledError;
-                _handledState = [BugsnagHandledState handledStateWithSeverityReason:severityReason
-                                                                           severity:fallback.severity
-                                                                          attrValue:nil];
             }
             _severity = _handledState.currentSeverity;
 
@@ -528,10 +517,6 @@ initWithErrorName:(NSString *_Nonnull)name
     BSGDictSetSafeObject(event, [self breadcrumbs], BSGKeyBreadcrumbs);
     BSGDictSetSafeObject(event, metaData, BSGKeyMetaData);
 
-    if ([self isIncomplete]) {
-        BSGDictSetSafeObject(event, @YES, BSGKeyIncomplete);
-    }
-
     NSDictionary *device = BSGDictMerge(self.device, self.deviceState);
     BSGDictSetSafeObject(event, device, BSGKeyDevice);
     
@@ -665,42 +650,6 @@ initWithErrorName:(NSString *_Nonnull)name
 
 - (NSString *_Nullable)enhancedErrorMessageForThread:(NSDictionary *_Nullable)thread {
     return [self errorMessage];
-}
-
-@end
-
-@implementation FallbackReportData
-
-- (instancetype)initWithMetadata:(NSString *)metadata {
-    if (self = [super init]) {
-        NSString *separator = @"-";
-        NSString *location = metadata;
-        NSRange range = [location rangeOfString:separator options:NSBackwardsSearch];
-        if (range.location != NSNotFound) {
-            _errorClass = [location substringFromIndex:range.location + 1];
-            location = [location substringToIndex:range.location];
-        }
-        range = [location rangeOfString:separator options:NSBackwardsSearch];
-        if (range.location != NSNotFound) {
-            NSString *value = [location substringFromIndex:range.location + 1];
-            _unhandled = ![value isEqualToString:@"h"];
-            location = [location substringToIndex:range.location + 1];
-        } else {
-            _unhandled = YES;
-        }
-        range = [location rangeOfString:separator options:NSBackwardsSearch];
-        if (range.location != NSNotFound) {
-            NSString *value = [location substringFromIndex:range.location];
-            if ([value isEqualToString:@"w"]) {
-                _severity = BSGSeverityWarning;
-            } else if ([value isEqualToString:@"i"]) {
-                _severity = BSGSeverityInfo;
-            } else {
-                _severity = BSGSeverityError;
-            }
-        }
-    }
-    return self;
 }
 
 @end

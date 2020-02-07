@@ -137,11 +137,7 @@ void bsg_kscrashsentry_reportUserException(const char *name,
         localContext->userException.state = appState;
 
         BSG_KSLOG_DEBUG("Calling main crash handler.");
-        char errorClass[21];
-        strncpy(errorClass, localContext->userException.name, sizeof(errorClass));
-        // default to 'w'arning level severity
-        char severityChar = severity != NULL && strlen(severity) > 0 ? severity[0] : 'w';
-        localContext->onCrash(severityChar, errorClass, reportContext);
+        localContext->onCrash(reportContext);
 
         if (terminateProgram) {
             bsg_kscrashsentry_uninstall(BSG_KSCrashTypeAll);

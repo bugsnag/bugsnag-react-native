@@ -1,12 +1,40 @@
 Changelog
 =========
 
-## TBD
+## 2.23.6 (2020-02-10)
 
 ### Bug fixes
 
+* (iOS) Fix include for RCTVersion.h to work in custom Podfiles on all versions of React Native
+  [#443](https://github.com/bugsnag/bugsnag-react-native/pull/443)
 * Add missing argument to `BeforeSend` type definition
   [bugsnag-react-native#432](https://github.com/bugsnag/bugsnag-react-native/pull/432)
+* (Android) Upgrade bugsnag-android to v4.22.3
+  * Allow disabling previous signal handler invocation for Unity ANRs
+  [#743](https://github.com/bugsnag/bugsnag-android/pull/743)
+  * Avoid polling when detecting ANRs by invoking JNI from SIGQUIT handler
+  [#741](https://github.com/bugsnag/bugsnag-android/pull/741)
+* (iOS) Upgrade bugsnag-cocoa to v5.23.0
+    - This release removes support for reporting 'partial' or 'minimal' crash reports
+  where the crash report could not be entirely written (due to disk space or other
+  issues like the device battery dying). While sometimes the reports could point
+  in the right direction for debugging, they could also be confusing or not enough
+  information to pursue and close the issue successfully.
+
+  - This release  also renames a few configuration properties to align better with the
+  intended use and other Bugsnag libraries, so people who use more than one
+  platform can easily find related functionality in a different library. The old
+  names are deprecated but still supported until the next major release.
+  [#435](https://github.com/bugsnag/bugsnag-cocoa/pull/435)
+
+  * `Bugsnag.setBreadcrumbCapacity()` is now `setMaxBreadcrumbs()` on the
+    `BugsnagConfiguration` class. In addition, the default number of breadcrumbs
+    saved has been raised to 25 and limited to no more than 100.
+  * `BugsnagConfiguration.autoNotify` is now named
+    `BugsnagConfiguration.autoDetectErrors`
+  * `BugsnagConfiguration.autoCaptureSessions` is now named
+    `BugsnagConfiguration.autoDetectSessions`
+
 
 ## 2.23.5 (2020-01-13)
 
@@ -15,8 +43,6 @@ Changelog
 * (iOS) Fix a packaging issue introduced in 2.23.3 which prevented apps using
   React Native 0.59 and below from building successfully
   [#441](https://github.com/bugsnag/bugsnag-react-native/pull/441)
-
-
 ## 2.23.4 (2020-01-06)
 
 ### Bug fixes
@@ -27,7 +53,7 @@ Changelog
   * Catch throwables when invoking methods on system services
     [#623](https://github.com/bugsnag/bugsnag-android/pull/623)
   * Fix possible crash when recording reports and breadcrumbs containing values
-    using different text encodings or UTF-8 control characters, followed by a 
+    using different text encodings or UTF-8 control characters, followed by a
     C/C++ crash.
     [#584](https://github.com/bugsnag/bugsnag-android/pull/584)
   * Fix crash when calling `NativeInterface.clearTab()` (from an integration

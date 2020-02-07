@@ -4,6 +4,7 @@ module Bugsnag {
     header "BugsnagConfiguration.h"
     header "BugsnagMetaData.h"
     header "BugsnagBreadcrumb.h"
+    header "BugsnagPlugin.h"
 
     export *
     module * { export * }

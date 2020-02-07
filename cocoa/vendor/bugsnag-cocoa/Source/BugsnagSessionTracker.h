@@ -39,7 +39,7 @@ extern NSString *const BSGSessionUpdateNotification;
 
 /**
  Record a new auto-captured session if neededed. Auto-captured sessions are only
- recorded and sent if -[BugsnagConfiguration shouldAutoCaptureSessions] is YES
+ recorded and sent if -[BugsnagConfiguration autoTrackSessions] is YES
  */
 - (void)startNewSessionIfAutoCaptureEnabled;
 
