@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## TBD
+
+### Bug fixes
+
+* Add missing argument to `BeforeSend` type definition
+  [bugsnag-react-native#432](https://github.com/bugsnag/bugsnag-react-native/pull/432)
+
 ## 2.23.5 (2020-01-13)
 
 ### Bug fixes

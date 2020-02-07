@@ -57,7 +57,7 @@ export class Configuration {
   public toJSON(): any;
 }
 
-type BeforeSend = (report: Report) => boolean | void;
+type BeforeSend = (report: Report, error: Error) => boolean | void;
 
 export class StandardDelivery {
   public endpoint: string;
