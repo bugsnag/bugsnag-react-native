@@ -178,7 +178,7 @@ NSString *BSGBreadcrumbTypeValue(BSGBreadcrumbType type) {
 
 @implementation BugsnagBreadcrumbs
 
-NSUInteger BreadcrumbsDefaultCapacity = 20;
+NSUInteger BreadcrumbsDefaultCapacity = 25;
 
 - (instancetype)init {
     static NSString *const BSGBreadcrumbCacheFileName = @"bugsnag_breadcrumbs.json";
@@ -263,7 +263,7 @@ NSUInteger BreadcrumbsDefaultCapacity = 20;
         }
         [self resizeToFitCapacity:capacity];
         [self willChangeValueForKey:NSStringFromSelector(@selector(capacity))];
-        _capacity = capacity;
+        _capacity = MIN(100, capacity);
         [self didChangeValueForKey:NSStringFromSelector(@selector(capacity))];
     }
 }

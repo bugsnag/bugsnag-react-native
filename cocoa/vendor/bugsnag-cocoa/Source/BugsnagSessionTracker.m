@@ -91,7 +91,7 @@ NSString *const BSGSessionUpdateNotification = @"BugsnagSessionChanged";
 }
 
 - (void)startNewSessionIfAutoCaptureEnabled {
-    if (self.config.shouldAutoCaptureSessions  && [self.config shouldSendReports]) {
+    if (self.config.autoTrackSessions) {
         [self startNewSessionWithAutoCaptureValue:YES];
     }
 }

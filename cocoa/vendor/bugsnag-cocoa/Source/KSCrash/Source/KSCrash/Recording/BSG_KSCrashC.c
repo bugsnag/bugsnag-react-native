@@ -55,51 +55,8 @@ static char *bsg_g_stateFilePath;
 // ============================================================================
 #pragma mark - Utility -
 // ============================================================================
-static const int bsg_filepath_len = 512;
-static const int bsg_error_class_filepath_len = 21;
-static const char bsg_filepath_context_sep = '-';
-
 BSG_KSCrash_Context *crashContext(void) {
     return &bsg_g_crashReportContext;
-}
-
-int bsg_create_filepath(char *base, char filepath[bsg_filepath_len], char severity, char error_class[bsg_error_class_filepath_len]) {
-    int length;
-    for (length = 0; length < bsg_filepath_len; length++) {
-        if (base[length] == '\0') {
-            break;
-        }
-        filepath[length] = base[length];
-    }
-    if (length > 5) // Remove initial .json from path
-        length -= 5;
-
-    // append contextual info
-    BSG_KSCrash_Context *context = crashContext();
-    filepath[length++] = bsg_filepath_context_sep;
-    filepath[length++] = severity;
-    filepath[length++] = bsg_filepath_context_sep;
-    // 'h' for handled vs 'u'nhandled
-    filepath[length++] = context->crash.crashType == BSG_KSCrashTypeUserReported ? 'h' : 'u';
-    filepath[length++] = bsg_filepath_context_sep;
-    for (int i = 0; error_class != NULL && i < bsg_error_class_filepath_len; i++) {
-        char c = error_class[i];
-        if (c == '\0')
-            break;
-        else if (c == 47 || c > 126 || c <= 0)
-            // disallow '/' and characters outside of the ascii range
-            continue;
-        filepath[length++] = c;
-    }
-    // add suffix
-    filepath[length++] = '.';
-    filepath[length++] = 'j';
-    filepath[length++] = 's';
-    filepath[length++] = 'o';
-    filepath[length++] = 'n';
-    filepath[length++] = '\0';
-
-    return length;
 }
 
 // ============================================================================
@@ -112,7 +69,7 @@ int bsg_create_filepath(char *base, char filepath[bsg_filepath_len], char severi
  *
  * This function gets passed as a callback to a crash handler.
  */
-void bsg_kscrash_i_onCrash(char severity, char *errorClass, BSG_KSCrash_Context *context) {
+void bsg_kscrash_i_onCrash(BSG_KSCrash_Context *context) {
     BSG_KSLOG_DEBUG("Updating application state to note crash.");
 
     bsg_kscrashstate_notifyAppCrash(context->crash.crashType);
@@ -125,9 +82,7 @@ void bsg_kscrash_i_onCrash(char severity, char *errorClass, BSG_KSCrash_Context 
         bsg_kscrashreport_writeMinimalReport(context,
                                              context->config.recrashReportFilePath);
     } else {
-        char filepath[bsg_filepath_len];
-        bsg_create_filepath((char *)context->config.crashReportFilePath, filepath, severity, errorClass);
-        bsg_kscrashreport_writeStandardReport(context, filepath);
+        bsg_kscrashreport_writeStandardReport(context, context->config.crashReportFilePath);
     }
 }
 
@@ -199,7 +154,7 @@ BSG_KSCrashType bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashType crashTypes) {
     if (bsg_g_installed) {
         bsg_kscrashsentry_uninstall(~crashTypes);
         crashTypes = bsg_kscrashsentry_installWithContext(
-            &context->crash, crashTypes, (void(*)(char, char *, void *))bsg_kscrash_i_onCrash);
+            &context->crash, crashTypes, (void(*)(void *))bsg_kscrash_i_onCrash);
     }
 
     return crashTypes;

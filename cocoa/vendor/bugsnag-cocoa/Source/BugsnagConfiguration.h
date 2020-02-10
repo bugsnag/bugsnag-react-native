@@ -147,16 +147,16 @@ NSArray<BeforeSendSession> *beforeSendSessionBlocks;
     (const BSG_KSCrashReportWriter *_Nonnull writer);
 
 /**
- *  YES if uncaught exceptions should be reported automatically
+ *  YES if uncaught exceptions and other crashes should be reported automatically
  */
-@property BOOL autoNotify;
+@property BOOL autoDetectErrors;
 
 /**
  * Determines whether app sessions should be tracked automatically. By default this value is true.
  * If this value is updated after +[Bugsnag start] is called, only subsequent automatic sessions
  * will be captured.
  */
-@property BOOL shouldAutoCaptureSessions;
+@property BOOL autoTrackSessions;
 
 /**
  * Whether the app should report out of memory events which terminate the app
@@ -245,8 +245,28 @@ __deprecated_msg("This detection option is unreliable and should no longer be us
  */
 - (BOOL)shouldSendReports;
 
+/**
+ * The maximum number of breadcrumbs to keep and sent to Bugsnag.
+ * By default, we'll keep and send the 25 most recent breadcrumb log
+ * messages.
+ */
+@property NSUInteger maxBreadcrumbs;
+
 - (void)addBeforeNotifyHook:(BugsnagBeforeNotifyHook _Nonnull)hook
     __deprecated_msg("Use addBeforeSendBlock: instead.");
+
+/**
+ * Determines whether app sessions should be tracked automatically. By default this value is true.
+ * If this value is updated after +[Bugsnag start] is called, only subsequent automatic sessions
+ * will be captured.
+ */
+@property BOOL shouldAutoCaptureSessions __deprecated_msg("Use autoTrackSessions instead");
+
+/**
+ *  YES if uncaught exceptions should be reported automatically
+ */
+@property BOOL autoNotify __deprecated_msg("Use autoDetectErrors instead");
+
 /**
  *  Hooks for processing raw report data before it is sent to Bugsnag
  */

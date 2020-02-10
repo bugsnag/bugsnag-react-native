@@ -59,7 +59,7 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
         _config = [[BugsnagMetaData alloc] init];
         _apiKey = @"";
         _sessionURL = [NSURL URLWithString:@"https://sessions.bugsnag.com"];
-        _autoNotify = YES;
+        _autoDetectErrors = YES;
         _notifyURL = [NSURL URLWithString:BSGDefaultNotifyUrl];
         _beforeNotifyHooks = [NSMutableArray new];
         _beforeSendBlocks = [NSMutableArray new];
@@ -67,7 +67,7 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
         _notifyReleaseStages = nil;
         _breadcrumbs = [BugsnagBreadcrumbs new];
         _automaticallyCollectBreadcrumbs = YES;
-        _shouldAutoCaptureSessions = YES;
+        _autoTrackSessions = YES;
 #if !DEBUG
         _reportOOMs = YES;
 #endif
@@ -142,20 +142,28 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
     }
 }
 
-@synthesize autoNotify = _autoNotify;
+@synthesize autoDetectErrors = _autoDetectErrors;
 
-- (BOOL)autoNotify {
-    return _autoNotify;
+- (BOOL)autoDetectErrors {
+    return _autoDetectErrors;
 }
 
-- (void)setAutoNotify:(BOOL)shouldAutoNotify {
-    if (shouldAutoNotify == _autoNotify) {
+- (void)setAutoDetectErrors:(BOOL)autoDetectErrors {
+    if (autoDetectErrors == _autoDetectErrors) {
         return;
     }
-    [self willChangeValueForKey:NSStringFromSelector(@selector(autoNotify))];
-    _autoNotify = shouldAutoNotify;
+    [self willChangeValueForKey:NSStringFromSelector(@selector(autoDetectErrors))];
+    _autoDetectErrors = autoDetectErrors;
     [[Bugsnag notifier] updateCrashDetectionSettings];
-    [self didChangeValueForKey:NSStringFromSelector(@selector(autoNotify))];
+    [self didChangeValueForKey:NSStringFromSelector(@selector(autoDetectErrors))];
+}
+
+- (BOOL)autoNotify {
+    return self.autoDetectErrors;
+}
+
+- (void)setAutoNotify:(BOOL)autoNotify {
+    self.autoDetectErrors = autoNotify;
 }
 
 @synthesize notifyReleaseStages = _notifyReleaseStages;
@@ -175,6 +183,14 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
                         withValue:notifyReleaseStagesCopy
                     toTabWithName:BSGKeyConfig];
     }
+}
+
+- (void)setShouldAutoCaptureSessions:(BOOL)shouldAutoCaptureSessions {
+    self.autoTrackSessions = shouldAutoCaptureSessions;
+}
+
+- (BOOL)shouldAutoCaptureSessions {
+    return self.autoTrackSessions;
 }
 
 @synthesize automaticallyCollectBreadcrumbs = _automaticallyCollectBreadcrumbs;
@@ -280,6 +296,14 @@ static NSString *const kHeaderApiSentAt = @"Bugsnag-Sent-At";
 
 - (BOOL)hasValidApiKey {
     return [_apiKey length] > 0;
+}
+
+- (NSUInteger)maxBreadcrumbs {
+    return self.breadcrumbs.capacity;
+}
+
+- (void)setMaxBreadcrumbs:(NSUInteger)capacity {
+    self.breadcrumbs.capacity = capacity;
 }
 
 @end

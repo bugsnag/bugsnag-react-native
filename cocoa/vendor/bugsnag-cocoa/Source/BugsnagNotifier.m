@@ -47,7 +47,7 @@
 #import <AppKit/AppKit.h>
 #endif
 
-NSString *const NOTIFIER_VERSION = @"5.22.10";
+NSString *const NOTIFIER_VERSION = @"5.23.0";
 NSString *const NOTIFIER_URL = @"https://github.com/bugsnag/bugsnag-cocoa";
 NSString *const BSTabCrash = @"crash";
 NSString *const BSAttributeDepth = @"depth";
@@ -218,11 +218,22 @@ void BSGWriteSessionCrashData(BugsnagSession *session) {
     if ((self = [super init])) {
         self.configuration = initConfiguration;
         self.state = [[BugsnagMetaData alloc] init];
+        NSString *notifierName =
+#if TARGET_OS_TV
+            @"tvOS Bugsnag Notifier";
+#elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
+            @"iOS Bugsnag Notifier";
+#elif TARGET_OS_MAC
+            @"OSX Bugsnag Notifier";
+#else
+            @"Bugsnag Objective-C";
+#endif
         self.details = [@{
-            BSGKeyName : @"Bugsnag Objective-C",
+            BSGKeyName : notifierName,
             BSGKeyVersion : NOTIFIER_VERSION,
             BSGKeyUrl : NOTIFIER_URL
         } mutableCopy];
+
 
         NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(
                                 NSCachesDirectory, NSUserDomainMask, YES) firstObject];
@@ -340,12 +351,9 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     [self watchLifecycleEvents:center];
 
 #if TARGET_OS_TV
-    [self.details setValue:@"tvOS Bugsnag Notifier" forKey:BSGKeyName];
     [self addTerminationObserver:UIApplicationWillTerminateNotification];
 
 #elif TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-    [self.details setValue:@"iOS Bugsnag Notifier" forKey:BSGKeyName];
-
     [center addObserver:self
                selector:@selector(batteryChanged:)
                    name:UIDeviceBatteryStateDidChangeNotification
@@ -374,8 +382,6 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     [self addTerminationObserver:UIApplicationWillTerminateNotification];
 
 #elif TARGET_OS_MAC
-    [self.details setValue:@"OSX Bugsnag Notifier" forKey:BSGKeyName];
-
     [center addObserver:self
                selector:@selector(willEnterForeground:)
                    name:NSApplicationDidBecomeActiveNotification
@@ -390,8 +396,8 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 #endif
 
     _started = YES;
-    // autoNotify disables all unhandled event reporting
-    BOOL configuredToReportOOMs = self.configuration.reportOOMs && self.configuration.autoNotify;
+    // autoDetectErrors disables all unhandled event reporting
+    BOOL configuredToReportOOMs = self.configuration.reportOOMs && self.configuration.autoDetectErrors;
     // Disable if a debugger is enabled, since the development cycle of starting
     // and restarting an app is also an uncatchable kill
     BOOL noDebuggerEnabled = !bsg_ksmachisBeingTraced();
@@ -806,7 +812,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
 #endif
 
 - (void)updateCrashDetectionSettings {
-    if (self.configuration.autoNotify) {
+    if (self.configuration.autoDetectErrors) {
         // Enable all crash detection
         bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeAll);
         if (self.configuration.reportOOMs) {
@@ -815,7 +821,7 @@ NSString *const kAppWillTerminate = @"App Will Terminate";
     } else {
         // Only enable support for notify()-based reports
         bsg_kscrash_setHandlingCrashTypes(BSG_KSCrashTypeUserReported);
-        // autoNotify gates all unhandled report detection
+        // autoDetectErrors gates all unhandled report detection
         [self.oomWatchdog disable];
     }
 }

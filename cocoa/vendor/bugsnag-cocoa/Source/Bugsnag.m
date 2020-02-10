@@ -29,12 +29,15 @@
 #import "BugsnagLogger.h"
 #import "BugsnagNotifier.h"
 #import "BugsnagKeys.h"
+#import "BugsnagPlugin.h"
 
 static BugsnagNotifier *bsg_g_bugsnag_notifier = NULL;
+static NSMutableArray <id<BugsnagPlugin>> *registeredPlugins;
 
 @interface Bugsnag ()
 + (BugsnagNotifier *)notifier;
 + (BOOL)bugsnagStarted;
++ (void)registerPlugin:(id<BugsnagPlugin>)plugin;
 @end
 
 @interface NSDictionary (BSGKSMerge)
@@ -54,6 +57,7 @@ static BugsnagNotifier *bsg_g_bugsnag_notifier = NULL;
         if ([configuration hasValidApiKey]) {
             bsg_g_bugsnag_notifier =
                     [[BugsnagNotifier alloc] initWithConfiguration:configuration];
+            [self startPlugins];
             [bsg_g_bugsnag_notifier start];
         } else {
             bsg_log_err(@"Bugsnag not initialized - a valid API key must be supplied.");
@@ -74,6 +78,21 @@ static BugsnagNotifier *bsg_g_bugsnag_notifier = NULL;
 
 + (BugsnagNotifier *)notifier {
     return bsg_g_bugsnag_notifier;
+}
+
++ (void)registerPlugin:(id<BugsnagPlugin>)plugin {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        registeredPlugins = [NSMutableArray new];
+    });
+    [registeredPlugins addObject:plugin];
+}
+
++ (void)startPlugins {
+    for (id<BugsnagPlugin> plugin in registeredPlugins) {
+        if (![plugin isStarted])
+            [plugin start];
+    }
 }
 
 + (BOOL)appDidCrashLastLaunch {
@@ -217,7 +236,7 @@ static BugsnagNotifier *bsg_g_bugsnag_notifier = NULL;
 
 + (void)setBreadcrumbCapacity:(NSUInteger)capacity {
     if ([self bugsnagStarted]) {
-        self.notifier.configuration.breadcrumbs.capacity = capacity;
+        [self.notifier.configuration setMaxBreadcrumbs:capacity];
     }
 }
 
