@@ -21,7 +21,9 @@ Pod::Spec.new do |s|
   s.source_files = 'cocoa/BugsnagReactNative.{h,m}',
                    'cocoa/vendor/bugsnag-cocoa/Source/**/*.{h,m,mm,cpp,c}',
 
-  s.public_header_files = 'cocoa/**/{Bugsnag,BugsnagReactNative,BugsnagMetaData,BugsnagConfiguration,BugsnagBreadcrumb,BugsnagCrashReport,BSG_KSCrashReportWriter}.h'
+  s.public_header_files = 'cocoa/**/BugsnagReactNative.h' + 
+                          'cocoa/**/BSG_KSCrashReportWriter.h,' + 
+                          'cocoa/**/Bugsnag{,MetaData,Configuration,Breadcrumb,CrashReport,Plugin}.h'
 
   # If Bugsnag is previously installed via CocoaPods, use the Core subspec.
   s.subspec 'Core' do |core|
