@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 2.23.7 (TBC)
+
+### Bug fixes
+
+* Add missing `BugsnagPlugin.h` header to podspec file
+  [#450](https://github.com/bugsnag/bugsnag-react-native/pull/450)
+
 ## 2.23.6 (2020-02-10)
 
 ### Bug fixes
