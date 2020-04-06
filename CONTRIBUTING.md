@@ -99,6 +99,8 @@ make ANDROID_VERSION=X IOS_VERSION=X upgrade_vendor
 ```
 
 - Upgrade TypeScript definitions if the JavaScript has changed.
+- Update `BugsnagReactNative.podspec` if the public headers have changed inside
+  bugsnag-cocoa's own podspec.
 
 ### Release Checklist
 
