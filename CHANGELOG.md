@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 2.23.8 (TBC)
+
+* Fix missing comma in podspec headers list
+  [#456](https://github.com/bugsnag/bugsnag-react-native/pull/456)
+
 ## 2.23.7 (2020-04-07)
 
 ### Bug fixes
