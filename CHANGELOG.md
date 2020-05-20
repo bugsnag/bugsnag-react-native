@@ -1,10 +1,16 @@
 Changelog
 =========
 
-## 2.23.8 (TBC)
+## 2.23.8 (2020-05-20)
+
+## Bug fixes
 
 * Fix missing comma in podspec headers list
   [#456](https://github.com/bugsnag/bugsnag-react-native/pull/456)
+
+* (iOS) Fix an issue where an app could deadlock during a crash if unfavorable 
+  timing caused DYLD lock contention.
+  [#580](https://github.com/bugsnag/bugsnag-cocoa/pull/580)
 
 ## 2.23.7 (2020-04-07)
 
@@ -47,7 +53,6 @@ Changelog
   * `BugsnagConfiguration.autoCaptureSessions` is now named
     `BugsnagConfiguration.autoDetectSessions`
 
-
 ## 2.23.5 (2020-01-13)
 
 ### Bug fixes
@@ -55,6 +60,7 @@ Changelog
 * (iOS) Fix a packaging issue introduced in 2.23.3 which prevented apps using
   React Native 0.59 and below from building successfully
   [#441](https://github.com/bugsnag/bugsnag-react-native/pull/441)
+
 ## 2.23.4 (2020-01-06)
 
 ### Bug fixes
