@@ -10,6 +10,8 @@
 #define BSG_KSMachHeaders_h
 
 #import <mach/machine.h>
+#import <os/lock.h>
+#import <libkern/OSAtomic.h>
 
 /**
  * An encapsulation of the Mach header - either 64 or 32 bit, along with some additional information required for
@@ -36,8 +38,12 @@ typedef struct {
 
 static BSG_Mach_Binary_Images bsg_mach_binary_images;
 
+// MARK: - Locking
+
 /**
- * An OS-version-specific lock, used to synchronise access to the array of binary image info.
+ * An OS-version-specific lock, used to synchronise access to the array of binary image info.  A combination of
+ * compile-time determination of the OS and and run-time determination of the OS version is used to ensure that
+ * the correct lock mechanism is used.
  *
  * os_unfair_lock is available from specific OS versions onwards:
  *     https://developer.apple.com/documentation/os/os_unfair_lock
@@ -45,45 +51,15 @@ static BSG_Mach_Binary_Images bsg_mach_binary_images;
  * It deprecates OSSpinLock:
  *     https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/spinlock.3.html
  *
- *  The #defined BSG_DYLD_CACHE_LOCK/UNLOCK avoid spurious warnings on later OSs.
+ * The imported headers have specific version info: <os/lock.h> and <libkern/OSAtomic.h>
  */
 
-#if defined(__IPHONE_10_0) || defined(__MAC_10_12) || defined(__TVOS_10_0) || defined(__WATCHOS_3_0)
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wunguarded-availability"
-
-    #import <os/lock.h>
-    static os_unfair_lock bsg_mach_binary_images_access_lock = OS_UNFAIR_LOCK_INIT;
-
-    #ifndef BSG_DYLD_CACHE_LOCK
-    #define BSG_DYLD_CACHE_LOCK \
-        _Pragma("clang diagnostic push") \
-        _Pragma("clang diagnostic ignored \"-Wunguarded-availability\"") \
-        os_unfair_lock_lock(&bsg_mach_binary_images_access_lock); \
-        _Pragma("clang diagnostic pop")
-    #endif
-
-    #ifndef BSG_DYLD_CACHE_UNLOCK
-    #define BSG_DYLD_CACHE_UNLOCK \
-        _Pragma("clang diagnostic push") \
-        _Pragma("clang diagnostic ignored \"-Wunguarded-availability\"") \
-        os_unfair_lock_unlock(&bsg_mach_binary_images_access_lock); \
-        _Pragma("clang diagnostic pop")
-    #endif
-
-    #pragma clang diagnostic pop
-#else
-    #import <libkern/OSAtomic.h>
-    static OSSpinLock bsg_mach_binary_images_access_lock = OS_SPINLOCK_INIT;
-
-    #ifndef BSG_DYLD_CACHE_LOCK
-    #define BSG_DYLD_CACHE_LOCK OSSpinLockLock(&bsg_mach_binary_images_access_lock);
-    #endif
-
-    #ifndef BSG_DYLD_CACHE_UNLOCK
-    #define BSG_DYLD_CACHE_UNLOCK OSSpinLockUnlock(&bsg_mach_binary_images_access_lock);
-    #endif
-#endif
+void bsg_spin_lock(void);
+void bsg_spin_unlock(void);
+void bsg_unfair_lock(void);
+void bsg_unfair_unlock(void);
+void bsg_dyld_cache_lock(void);
+void bsg_dyld_cache_unlock(void);
 
 // MARK: - Replicate the DYLD API
 
@@ -125,5 +101,10 @@ void bsg_mach_binary_image_removed(const struct mach_header *mh, intptr_t slide)
  * Create an empty array with initial capacity to hold Mach header info.
  */
 BSG_Mach_Binary_Images *bsg_initialise_mach_binary_headers(uint32_t initialSize);
+
+/**
+ * Determines whether the OS supports unfair locks or not.
+ */
+void bsg_check_unfair_lock_support(void);
 
 #endif /* BSG_KSMachHeaders_h */
