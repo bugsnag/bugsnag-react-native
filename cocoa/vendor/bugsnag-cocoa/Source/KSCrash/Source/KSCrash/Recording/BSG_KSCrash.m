@@ -269,10 +269,10 @@ IMPLEMENT_EXCLUSIVE_SHARED_INSTANCE(BSG_KSCrash)
  * behaviour.
  */
 - (void)listenForLoadedBinaries {
+    bsg_check_unfair_lock_support();
     bsg_initialise_mach_binary_headers(BSG_INITIAL_MACH_BINARY_IMAGE_ARRAY_SIZE);
 
-    // Note: Internally, access to DYLD's binary image store is guarded by an OSSpinLock.  We therefore don't need to
-    // add additional guards around our access.
+    // Note: Access to DYLD's binary image store is guarded by locks.
     _dyld_register_func_for_remove_image(&bsg_mach_binary_image_removed);
     _dyld_register_func_for_add_image(&bsg_mach_binary_image_added);
 }

@@ -1,6 +1,13 @@
 Changelog
 =========
 
+## 2.23.9 (2020-06-08)
+
+## Bug fixes
+
+* (iOS) Fix DYLD lock mechanism preventing compilation on iOS <10.
+  [#675](https://github.com/bugsnag/bugsnag-cocoa/pull/675)
+
 ## 2.23.8 (2020-05-20)
 
 ## Bug fixes
