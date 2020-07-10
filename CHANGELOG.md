@@ -1,6 +1,20 @@
 Changelog
 =========
 
+## TBD
+
+## Bug fixes
+
+* (iOS) Fix incorrect string comparison of thread names in Mach exception handling
+  [#721](https://github.com/bugsnag/bugsnag-cocoa/pull/721)
+
+* (iOS) Move binary images store declaration from header file
+  [#725](https://github.com/bugsnag/bugsnag-cocoa/pull/725)
+
+* (iOS) Avoid dereference null pointer in JSON serialisation
+  [#637](https://github.com/bugsnag/bugsnag-cocoa/pull/637)
+  [Naugladur](https://github.com/Naugladur)
+
 ## 2.23.9 (2020-06-08)
 
 ## Bug fixes
