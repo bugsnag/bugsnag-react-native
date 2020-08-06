@@ -1,3 +1,15 @@
+### Deprecation notice
+
+We upgraded our React Native support in the latest all-in-one [JavaScript notifier repo](https://github.com/bugsnag/bugsnag-js).
+
+All projects running React Native 0.60+ should **upgrade to our new React Native notifier:** [@bugsnag/react-native](https://www.npmjs.com/package/@bugsnag/react-native). See the [upgrade guide](https://github.com/bugsnag/bugsnag-js/blob/master/packages/react-native/UPGRADING.md) for details on how to upgrade.
+
+This package is now deprecated, but will continue to be supported for older versions of React Native (pre 0.60) and it will continue to work with Bugsnag's API. However, it will no longer receive updates unless they are critical.
+
+Please upgrade at your earliest convenience.
+
+---
+
 # Bugsnag error monitoring & exception reporter for React Native
 [![Documentation](https://img.shields.io/badge/documentation-2.23.10-blue.svg)](http://docs.bugsnag.com/platforms/react-native/)
 
