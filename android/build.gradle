@@ -23,7 +23,7 @@ android {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 28)
         versionCode 4
-        versionName '2.23.9'
+        versionName '2.23.10'
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

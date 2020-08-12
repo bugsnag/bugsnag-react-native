@@ -25,7 +25,7 @@ Library versions:
 
 ```
 
-- cocoapods version (if any) (`pod -v`):
+- cocoapods version (if any) (`pod --version`):
 - iOS/Android version(s):
 - simulator/emulator or physical device?:
 - debug mode or production?:

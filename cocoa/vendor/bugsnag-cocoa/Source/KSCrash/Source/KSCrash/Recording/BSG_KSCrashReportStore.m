@@ -83,9 +83,10 @@ static NSString *const kCrashReportSuffix = @"-CrashReport-";
     if (dict != nil) {
         return dict;
     } else {
+        NSError *error = nil;
         NSMutableDictionary *fileContents = [NSMutableDictionary new];
         NSMutableDictionary *recrashReport =
-                [self readFile:[self pathToRecrashReportWithID:fileId] error:nil];
+                [self readFile:[self pathToRecrashReportWithID:fileId] error:&error];
         BSGDictInsertIfNotNil(fileContents, recrashReport, @BSG_KSCrashField_RecrashReport);
         return fileContents;
     }
