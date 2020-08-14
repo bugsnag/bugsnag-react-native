@@ -1,8 +1,13 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
+title: ''
+labels: ''
+assignees: ''
 
 ---
+
+<!-- Before creating, please check if somebody else has already reported your feature request. -->
 
 ### Description
 <!-- Is your feature request related to a problem? Please describe.
@@ -16,4 +21,4 @@ A clear and concise description of what the problem is. Ex. I'm always frustrate
 <!-- A clear and concise description of any alternative solutions or features you've considered. -->
 
 **Additional context**
-Add any other context about the feature request here.
+<!--Add any other context about the feature request here.-->
