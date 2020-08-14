@@ -7,9 +7,15 @@ When contacting support, please include as much information as necessary, includ
 
 - example code snippet
 - steps to reproduce
-- notifier version
-- environment / OS 
 - expected/actual behaviour 
+
+* Bugsnag version:
+* CocoaPods version (if any):
+* Xcode version (if any):
+* iOS/Android version(s):
+* simulator/emulator or physical device:
+* Using Hermes on Android?:
+* debug mode or production?:
 
 ## Bug or Feature Requests
 If you would like to raise a bug or feature request please do so by creating a [New Issue](https://github.com/bugsnag/bugsnag-react-native/issues/new/choose) and selecting bug or feature.
